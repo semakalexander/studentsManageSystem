@@ -10,7 +10,8 @@ module.exports = function (models) {
     router.get('/logOut', eSession.authenticatedUser, handler.logOut);
 
     router.post('/login', handler.login);
-    router.post('/createUser', handler.createUser);
+ //   router.post('/createUser', handler.createUser);
+    router.post('/registration', handler.checkRegisterFields, handler.register);
 
 
 
