@@ -15,5 +15,5 @@ module.exports = (function () {
         mongoose.Schemas = {};
     }
 
-    mongoose.Schemas.group = GroupSchema;
+    mongoose.Schemas.Group = GroupSchema;
 })();

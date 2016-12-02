@@ -1,5 +1,5 @@
 module.exports = function (app, db) {
-    'use strict'
+    'use strict';
 
     var models = require('../helpers/models.js')(db);
     var userRoute = require('./user')(models);

@@ -10,12 +10,11 @@ module.exports = function (models) {
     router.get('/logOut', eSession.authenticatedUser, handler.logOut);
 
     router.post('/login', handler.login);
- //   router.post('/createUser', handler.createUser);
-    router.post('/registration', handler.checkRegisterFields, handler.register);
+    router.post('/registration', handler.checkRegisterFields, handler.registration);
 
-
-
-    router.delete('/deleteUser/:id', handler.deleteUserById);
+    router.post('/createUser',eSession.authenticatedAdmin, handler.createUser);
+    router.patch('/editUser/:id', eSession.authenticatedAdmin, handler.editUserById);
+    router.delete('/deleteUser/:id', eSession.authenticatedAdmin, handler.deleteUserById);
 
     return router;
 };
