@@ -6,11 +6,13 @@ module.exports = function (app, db) {
     var groupRoute = require('./group')(models);
     var categoryRoute = require('./category')(models);
     var postRoute = require('./post')(models);
+    var subjectRoute = require('./subject')(models);
 
     app.use('/users', userRoute);
     app.use('/groups', groupRoute);
     app.use('/categories', categoryRoute);
     app.use('/posts', postRoute);
+    app.use('/subjects', subjectRoute);
 
     function errHandler(err, req, res, next) {
         var msg;

@@ -1,0 +1,47 @@
+var mongoose = require('mongoose');
+
+var subjectSchema = mongoose.Schemas.Subject;
+
+var Module = function (models) {
+    var subjectModel = models.get('subject', subjectSchema);
+
+    this.createSubject = function (req, res, next) {
+        var body = req.body;
+        var name = body.name;
+        if(!name || !name.length){
+            var err = new Error('Error fields!');
+            err.status = 400;
+            return next(err);
+        }
+
+        var subject = new subjectModel(body);
+        subject.save(function (err) {
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200).send(subject);
+        });
+    };
+
+    this.editSubjectById = function (req,res,next) {
+        var id = req.params.id;
+        var body = req.body;
+        subjectModel.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).exec(function (err, subject) {
+            if (err) {
+                return next(err);
+            }
+            res.status(200).send(subject);
+        });
+    };
+
+    this.deleteSubjectById = function (req, res, next) {
+        subjectModel.removeOne({_id: req.params.id}).exec(function (err, resp) {
+            if (err) {
+                return next(err);
+            }
+            res.status(200).send(resp);
+        })
+    };
+};
+module.exports = Module;
