@@ -3,8 +3,14 @@ module.exports = function (app, db) {
 
     var models = require('../helpers/models.js')(db);
     var userRoute = require('./user')(models);
+    var groupRoute = require('./group')(models);
+    var categoryRoute = require('./category')(models);
+    var postRoute = require('./post')(models);
 
     app.use('/users', userRoute);
+    app.use('/groups', groupRoute);
+    app.use('/categories', categoryRoute);
+    app.use('/posts', postRoute);
 
     function errHandler(err, req, res, next) {
         var msg;

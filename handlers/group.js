@@ -18,7 +18,7 @@ var Module = function (models) {
             return next(err);
         }
 
-        var group = new groupModel('group', groupSchema);
+        var group = new groupModel(body);
         group.save(function (err) {
             if (err) {
                 return next(err);
@@ -45,10 +45,8 @@ var Module = function (models) {
             }
             res.status(200).send(resp);
         })
-    }
-
+    };
 
 };
-
 
 module.exports = Module;
