@@ -1,6 +1,7 @@
 module.exports = (function () {
-    require('./user.js');
-    require('./group.js');
-    require('./category.js');
-    require('./post.js');
+    require('./user');
+    require('./group');
+    require('./category');
+    require('./post');
+    require('./subject');
 })();

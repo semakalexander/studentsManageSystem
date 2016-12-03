@@ -33,9 +33,30 @@ var Module = function (models) {
 
     //get
     this.getUsers = function (req, res, next) {
-        userModel.find({}, function (err, users) {
-            res.send(200, users);
+        var session = req.session;
+        var groupId;
+        userModel.findOne({_id: session.userId}, function (err, user) {
+            if (err) {
+                return next(err);
+            }
+            groupId = user.group;
+        });
+        userModel.find({group: groupId}, function (err, users) {
+            if (err) {
+                return next(err);
+            }
+            res.status(200).send(users);
 
+        });
+    };
+
+    this.getMarks = function (req, res, next) {
+        var session = req.session;
+        userModel.findOne({_id: session.userId}, function (err, user) {
+            if (err) {
+                return next(err);
+            }
+            res.status(200).send(user.marks);
         });
     };
 
@@ -43,6 +64,8 @@ var Module = function (models) {
         req.session.destroy();
         res.status(200).send('Done');
     };
+
+
     //end get
 
     //post
@@ -81,7 +104,7 @@ var Module = function (models) {
             session.loggedIn = true;
             session.userId = user._id;
             session.userName = user.firstName + ' ' + user.lastName;
-
+            session.role = user.role;
             res.status(200).send(user);
         });
 
@@ -141,7 +164,7 @@ var Module = function (models) {
     };
 
     this.deleteUserById = function (req, res, next) {
-        userModel.removeOne({_id: req.params.id}).exec(
+        userModel.remove({_id: req.params.id}).exec(
             function (err, resp) {
                 if (err) {
                     next(err);

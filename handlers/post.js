@@ -4,7 +4,17 @@ var mongoose = require('mongoose');
 var postSchema = mongoose.Schemas.Post;
 
 var Module = function (models) {
-    var postModel = models.get('post', postModel);
+    var postModel = models.get('post', postSchema);
+
+    this.getAllPosts = function (req,res,next) {
+        postModel.find({}, function (err, posts) {
+            if(err) {
+                return next(err);
+            }
+            res.status(200).send(posts);
+        });
+    };
+
 
     this.createPost = function (req, res, next) {
         var body = req.body;
@@ -44,7 +54,7 @@ var Module = function (models) {
     };
 
     this.deletePostById = function (req, res, next) {
-        postModel.removeOne({_id: req.params.id}).exec(function (err, resp) {
+        postModel.remove({_id: req.params.id}).exec(function (err, resp) {
             if (err) {
                 return next(err);
             }

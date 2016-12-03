@@ -1,14 +1,13 @@
 var mongoose = require('mongoose');
 
-var userSchema = mongoose.Schema.User;
-var userModel = models.get('user', userSchema);
 
 var err;
 var role;
-var session = req.session;
-var wasLogged = session && session.loggedIn && session.userId;
 
 function authenticatedUser(req, res, next) {
+    var session = req.session;
+    var wasLogged = session && session.loggedIn && session.userId;
+
     if (wasLogged) {
         next();
     }
@@ -20,14 +19,11 @@ function authenticatedUser(req, res, next) {
 }
 
 function authenticatedTeacher(req, res, next) {
-    userModel.findOne({_id: session.userId}, function (err, user) {
-        if (err) {
-            next(err);
-        }
-        role = user.role;
-    });
+    var session = req.session;
+    var wasLogged = session && session.loggedIn && session.userId;
 
-    if (wasLogged && role == 'Teacher') {
+
+    if (wasLogged && session.role.toLowerCase() === 'teacher' ) {
         next();
     }
     else {
@@ -38,14 +34,11 @@ function authenticatedTeacher(req, res, next) {
 }
 
 function authenticatedAdmin(req, res, next) {
-    userModel.findOne({_id: session.userId}, function (err, user) {
-        if (err) {
-            next(err);
-        }
-        role = user.role;
-    });
+    var session = req.session;
+    var wasLogged = session && session.loggedIn && session.userId;
 
-    if(wasLogged && role == 'Admin'){
+
+    if(wasLogged && session.role.toLowerCase() === 'admin'){
         next();
     }
     else{

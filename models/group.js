@@ -5,7 +5,7 @@ module.exports = (function () {
     var GroupSchema = mongoose.Schema({
         name: {type: String, required: true},
         curator: {type: ObjectId, ref: 'user'},
-        subjects: [{type: String}],
+        subjects: [{type: ObjectId, ref: 'subject'}],
         students: [{type: ObjectId, ref: 'user', default: null}]
     });
 

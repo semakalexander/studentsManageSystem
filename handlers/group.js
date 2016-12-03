@@ -5,6 +5,15 @@ var groupSchema = mongoose.Schemas.Group;
 var Module = function (models) {
     var groupModel = models.get('group', groupSchema);
 
+    this.getAllGroups = function (req,res,next) {
+        groupModel.find({}, function (err, groups) {
+            if(err) {
+                return next(err);
+            }
+            res.status(200).send(groups);
+        });
+    };
+
     this.createGroup = function (req, res, next) {
         var body = req.body;
         var name = body.name;
@@ -39,7 +48,7 @@ var Module = function (models) {
     };
 
     this.deleteGroupById = function (req, res, next) {
-        groupModel.removeOne({_id: req.params.id}).exec(function (err, resp) {
+        groupModel.remove({_id: req.params.id}).exec(function (err, resp) {
             if (err) {
                 return next(err);
             }

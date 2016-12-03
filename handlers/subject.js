@@ -5,6 +5,15 @@ var subjectSchema = mongoose.Schemas.Subject;
 var Module = function (models) {
     var subjectModel = models.get('subject', subjectSchema);
 
+    this.getAllSubjects = function (req,res,next) {
+        subjectModel.find({}, function (err, subjects) {
+            if(err) {
+                return next(err);
+            }
+             res.status(200).send(subjects);
+        });
+    };
+
     this.createSubject = function (req, res, next) {
         var body = req.body;
         var name = body.name;
@@ -36,7 +45,7 @@ var Module = function (models) {
     };
 
     this.deleteSubjectById = function (req, res, next) {
-        subjectModel.removeOne({_id: req.params.id}).exec(function (err, resp) {
+        subjectModel.remove({_id: req.params.id}).exec(function (err, resp) {
             if (err) {
                 return next(err);
             }
