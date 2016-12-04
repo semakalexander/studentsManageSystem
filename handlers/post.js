@@ -23,7 +23,7 @@ var Module = function (models) {
         var content = body.content;
 
         var err;
-        if (!title.length || !category || content) {
+        if (!title.length || !category || !content) {
             err = new Error('Error fields');
             err.status = 400;
             return next(err);

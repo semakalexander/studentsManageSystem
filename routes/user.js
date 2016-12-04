@@ -8,7 +8,8 @@ module.exports = function (models) {
 
     router.get('/', eSession.authenticatedUser, handler.getUsers);
     router.get('/logOut', eSession.authenticatedUser, handler.logOut);
-
+    router.get('/marks', eSession.authenticatedUser, handler.getMarks);
+router.get('/forgotPassword', handler.forgotPassword);
     router.post('/login', handler.login);
     router.post('/registration', handler.checkRegisterFields, handler.registration);
 

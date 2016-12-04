@@ -8,7 +8,7 @@ module.exports = (function () {
         password: {type: String, required: true},
         firstName: {type: String, required: true},
         lastName: {type: String, required: true},
-        role: {type: String, required: true, default: 'user'},
+        role: {type: String, required: true, default: 'student'},
         course: {type: Number, enum: [1, 2, 3, 4, 5, 6]},
         age: {type: Number},
         group: {type: ObjectId, ref: 'group', default: null},

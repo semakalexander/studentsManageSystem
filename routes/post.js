@@ -10,9 +10,9 @@ module.exports = function(models){
     
     router.post('/create',eSession.authenticatedTeacher, handler.createPost);
 
-    router.patch('edit/:id', eSession.authenticatedTeacher, handler.editPostById);
+    router.patch('/edit/:id', eSession.authenticatedTeacher, handler.editPostById);
 
-    router.delete('delete/:id', eSession.authenticatedTeacher, handler.deletePostById);
+    router.delete('/delete/:id', eSession.authenticatedTeacher, handler.deletePostById);
 
 
     return router;

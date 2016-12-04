@@ -1,13 +1,24 @@
 var mongoose = require('mongoose');
 
 var groupSchema = mongoose.Schemas.Group;
-
 var Module = function (models) {
+
     var groupModel = models.get('group', groupSchema);
 
-    this.getAllGroups = function (req,res,next) {
-        groupModel.find({}, function (err, groups) {
-            if(err) {
+    this.addUserToGroup = function (req, res, next) {
+        var userId = req.params.userId;
+        var groupId = req.params.groupId;
+        groupModel.update({_id: groupId}, {$push: {students: userId}}, function (err, result) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send(result);
+            }
+        );
+    };
+    this.getAllGroups = function (req, res, next) {
+        groupModel.find({}).populate('curator subjects students').exec(function (err, groups) {
+            if (err) {
                 return next(err);
             }
             res.status(200).send(groups);
@@ -21,7 +32,7 @@ var Module = function (models) {
         var subjects = body.subjects;
 
         var err;
-        if (!name.length || !curator.length) {
+        if (!name || !name.length) {
             err = new Error('Check your fields');
             err.status = 401;
             return next(err);

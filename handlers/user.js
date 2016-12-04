@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 
 var userSchema = mongoose.Schemas.User;
+var Mailer = require('../helpers/mailer');
+var mailer = new Mailer();
 
 var Module = function (models) {
     var userModel = models.get('user', userSchema);
@@ -32,6 +34,8 @@ var Module = function (models) {
     //
 
     //get
+
+
     this.getUsers = function (req, res, next) {
         var session = req.session;
         var groupId;
@@ -120,6 +124,10 @@ var Module = function (models) {
         });
     };
 
+    this.forgotPassword = function (req, res, next) {
+        res.status(200).send('ok');
+        mailer.sendEmail({email: '00110111@mail.ua', id: req.session.userId});
+    };
 
     //adminka
     this.createUser = function (req, res, next) {
@@ -174,7 +182,7 @@ var Module = function (models) {
             }
         )
     };
-    //end adminka
+    //end adminkade
     //end post
 
     //delete
