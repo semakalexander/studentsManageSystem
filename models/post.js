@@ -5,7 +5,7 @@ module.exports = (function () {
 
     var postSchema = mongoose.Schema({
         title: {type: String, required: true},
-        category: {type: ObjectId, ref: 'category', required: true},
+        categories: [{type: ObjectId, ref: 'category', required: true}],
         author: {type: ObjectId, ref: 'user', required: true},
         content: {type: String, required: true}
     });

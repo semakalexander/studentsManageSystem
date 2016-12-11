@@ -14,6 +14,8 @@ module.exports = function (db) {
     app.use(cookieParser('StudentsKey'));
     app.use(session(sessionOptions));
 
+    app.use("/", express.static(__dirname + '/public'));
+
     require('./routes/index')(app, db);
     return app;
 };

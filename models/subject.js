@@ -3,7 +3,6 @@ module.exports = (function () {
 
     var subjectSchema = mongoose.Schema({
         name: {type: String, required: true}
-
     });
 
     mongoose.model('subject', subjectSchema);

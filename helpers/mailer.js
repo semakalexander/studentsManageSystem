@@ -23,7 +23,7 @@ module.exports = function () {
             to: email,
             subject: 'Forgot password?',
             generateTextFromHTML: true,
-            html: 'Посилання на выднвлення <a href="' + link + '">link</a>'
+            html: 'Посилання на відновлення <a href="' + link + '">link</a>'
         };
 
         var transport = nodemailer.createTransport(noReplay);

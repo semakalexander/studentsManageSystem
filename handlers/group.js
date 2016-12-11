@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var request = require('request');
 
 var groupSchema = mongoose.Schemas.Group;
 var Module = function (models) {
@@ -8,7 +9,8 @@ var Module = function (models) {
     this.addUserToGroup = function (req, res, next) {
         var userId = req.params.userId;
         var groupId = req.params.groupId;
-        groupModel.update({_id: groupId}, {$push: {students: userId}}, function (err, result) {
+
+        groupModel.findOneAndUpdate({_id: groupId}, {$push: {'students': userId}}, function (err, result) {
                 if (err) {
                     return next(err);
                 }
@@ -16,6 +18,15 @@ var Module = function (models) {
             }
         );
     };
+
+    this.deleteUserFromGroup = function (req, res, next) {
+        var userId = req.params.userId;
+        var groupId = req.params.groupId;
+
+        //
+
+    };
+
     this.getAllGroups = function (req, res, next) {
         groupModel.find({}).populate('curator subjects students').exec(function (err, groups) {
             if (err) {
