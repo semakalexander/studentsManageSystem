@@ -37,21 +37,27 @@ var Module = function (models) {
 
 
     this.getUsers = function (req, res, next) {
-        var session = req.session;
-        var groupId;
-        userModel.findOne({_id: session.userId}, function (err, user) {
-            if (err) {
-                return next(err);
-            }
-            groupId = user.group;
-        });
-        userModel.find({group: groupId}, function (err, users) {
+        userModel.find({}, function (err, users) {
             if (err) {
                 return next(err);
             }
             res.status(200).send(users);
-
         });
+        // var session = req.session;
+        // var groupId;
+        // userModel.findOne({_id: session.userId}, function (err, user) {
+        //     if (err) {
+        //         return next(err);
+        //     }
+        //     groupId = user.group;
+        // });
+        // userModel.find({group: groupId}, function (err, users) {
+        //     if (err) {
+        //         return next(err);
+        //     }
+        //     res.status(200).send(users);
+        //
+        // });
     };
 
     this.getMarks = function (req, res, next) {

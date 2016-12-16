@@ -28,7 +28,7 @@ var Module = function (models) {
             err.status = 400;
             return next(err);
         }
-
+        
         var session = req.session;
         body.author = session.userId;
 
