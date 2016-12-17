@@ -5,6 +5,7 @@ module.exports = function (db) {
     var MemoryStore = require('connect-mongo')(session);
     var sessionOptions = require('./config/session')(db, MemoryStore);
     var cookieParser = require('cookie-parser');
+    var path = require('path');
 
     var app = express();
 
@@ -14,7 +15,7 @@ module.exports = function (db) {
     app.use(cookieParser('StudentsKey'));
     app.use(session(sessionOptions));
 
-    app.use("/", express.static(__dirname + '/public'));
+    app.use(express.static(path.join(__dirname + '/public')));
 
     require('./routes/index')(app, db);
     return app;

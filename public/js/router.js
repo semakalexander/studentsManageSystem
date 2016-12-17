@@ -3,25 +3,24 @@ define([
     'underscore',
     'backbone',
     'views/users/list'
-], function ($, _, Backbone) {
+], function ($, _, Backbone, UsersListView) {
     var AppRouter = Backbone.Router.extend({
         routes: {
-            '/users': 'showUsers',
-            '*actions': 'defaultAction'
+            "": "index",
+            "users": "users"
         }
     });
 
     var initialize = function () {
         var app_router = new AppRouter();
-        app_router.on('showUsers', function () {
+
+        app_router.on("route:users", function () {
             var usersListView = new UsersListView();
-            usersListView.render();
         });
 
-        app_router.on('defaultAction', function (actions) {
-            console.log('No route: ', actions);
-        });
-        Backbone.history.start();
+
+
+        Backbone.history.start({pushState: false});
     };
 
     return {

@@ -7,18 +7,20 @@ define([
 ], function ($, _, Backbone, UserCollection, usersListTemplate) {
     var UsersListView = Backbone.View.extend({
         el: $('#container'),
+        template: _.template(usersListTemplate),
         initialize: function () {
-            this.collection = new UserCollection();
-            this.collection.add({firstName: 'Alexander'});
-            var compiledTemplate = _.template(usersListTemplate, {users: this.collection.models});
-            this.el.html(compiledTemplate);
+            var userCollection = new UserCollection();
+            var self = this;
+            userCollection.fetch({
+                success: function (collection) {
+                    self.collection = collection;
+                    self.render();
+                }
+            });
         },
         render: function () {
-            var data = this.fetch();
-            console.log(data);
-            var compiledTemplate = _.template(usersListTemplate, {users: data});
-            console.log('compiled  = '+ compiledTemplate);
-            this.el.html(compiledTemplate);
+            var compiledTemplate = this.template({users: this.collection.models});
+            this.$el.html(compiledTemplate);
         }
     });
     return UsersListView;
