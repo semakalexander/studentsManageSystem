@@ -6,6 +6,7 @@ define([
         defaults:{
             email: "",
             password: "",
+            login: "",
             firstName: "",
             lastName: "",
             role: "",
