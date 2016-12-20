@@ -7,11 +7,7 @@ module.exports = function (models) {
     var handler = new Handler(models);
 
     router.get('/', handler.getUsers);
-    router.get('/logOut', eSession.authenticatedUser, handler.logOut);
     router.get('/marks', eSession.authenticatedUser, handler.getMarks);
-    router.get('/forgotPassword', handler.forgotPassword);
-    router.post('/login', handler.login);
-    router.post('/registration', handler.checkRegisterFields, handler.registration);
 
     router.post('/createUser',eSession.authenticatedAdmin, handler.createUser);
     router.patch('/editUser/:id', eSession.authenticatedAdmin, handler.editUserById);

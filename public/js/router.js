@@ -2,10 +2,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'views/home',
-    'views/users/list',
-    'views/account/login',
-    'views/account/registration'
+    'views/home/HomeView',
+    'views/users/ListView',
+    'views/account/LoginView',
+    'views/account/RegistrationView'
 ], function ($, _, Backbone, HomeView, UsersListView, LoginView, RegistrationView) {
     var AppRouter = Backbone.Router.extend({
         routes: {
@@ -25,6 +25,7 @@ define([
 
         app_router.on("route:users", function () {
             var usersListView = new UsersListView();
+            usersListView.getUserFromDB();
         });
 
 

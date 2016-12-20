@@ -2,24 +2,29 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'collections/users',
+    '../../collections/users/users',
     'text!templates/users/list.html'
 ], function ($, _, Backbone, UserCollection, usersListTemplate) {
     var UsersListView = Backbone.View.extend({
         el: $('#container'),
         template: _.template(usersListTemplate),
         initialize: function () {
-            var userCollection = new UserCollection();
+            this.collection = new UserCollection();
+            this.collection.bind('reset', this.render, this);
+        },
+        getUserFromDB: function () {
             var self = this;
-            userCollection.fetch({
+            this.collection.fetch({
                 success: function (collection) {
                     self.collection = collection;
-                    self.render();
-                }
+                },
+                reset:true
             });
         },
+
         render: function () {
             var compiledTemplate = this.template({users: this.collection.models});
+
             this.$el.html(compiledTemplate);
         }
     });
