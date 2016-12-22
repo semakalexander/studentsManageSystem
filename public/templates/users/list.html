@@ -1,4 +1,8 @@
+
+
+
 <table class="table table-bordered">
+    <thead>
     <tr>
         <th>Email</th>
         <th>First Name</th>
@@ -7,14 +11,20 @@
         <th>Course</th>
         <th>Age</th>
     </tr>
+    </thead>
+
     <% _.each(users, function(user){%>
-    <tr>
-        <td><span class="email"> <%= user.attributes.email %></span></td>
-        <td><span class="firstName"> <%= user.attributes.firstName %></span></td>
-        <td><span class="lastName"> <%= user.attributes.lastName %></span></td>
-        <td><span class="role"> <%= user.attributes.role %></span></td>
-        <td><span class="course"> <%= user.attributes.course %></span></td>
-        <td><span class="age"> <%= user.attributes.age %></span></td>
+    <tr id="<%=user._id%>">
+        <td><span class="email"> <%= user.email %></span></td>
+        <td><span class="firstName"> <%= user.firstName %></span></td>
+        <td><span class="lastName"> <%= user.lastName %></span></td>
+        <td><span class="role"> <%= user.role %></span></td>
+        <td><span class="course"> <%= user.course %></span></td>
+        <td><span class="age"> <%= user.age %></span></td>
+        <td>
+            <button class="btn btn-warning btn-edit">Edit</button>
+            <button class="btn btn-danger btn-delete">Delete</button>
+        </td>
     </tr>
     <% });%>
 </table>

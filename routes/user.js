@@ -6,7 +6,7 @@ var eSession = require('../handlers/session.js');
 module.exports = function (models) {
     var handler = new Handler(models);
 
-    router.get('/', handler.getUsers);
+    router.get('/', handler.getAllUsers);
     router.get('/marks', eSession.authenticatedUser, handler.getMarks);
 
     router.post('/createUser',eSession.authenticatedAdmin, handler.createUser);

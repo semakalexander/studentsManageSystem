@@ -8,10 +8,9 @@ var mailer = new Mailer();
 var Module = function (models) {
     var userModel = models.get('user', userSchema);
 
-    //get
 
 
-    this.getUsers = function (req, res, next) {
+    this.getAllUsers = function (req, res, next) {
         userModel.find({}, function (err, users) {
             if (err) {
                 return next(err);
@@ -48,12 +47,6 @@ var Module = function (models) {
 
 
 
-    //end get
-
-    //post
-
-
-    //adminka
     this.createUser = function (req, res, next) {
         var body = req.body;
         var email = body.email;
@@ -106,10 +99,6 @@ var Module = function (models) {
             }
         )
     };
-    //end adminkade
-    //end post
 
-    //delete
-    //end delete
 };
 module.exports = Module;
