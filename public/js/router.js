@@ -4,13 +4,15 @@ define([
     'backbone',
     'views/home/HomeView',
     'views/users/ListView',
+    'views/users/CRUDView',
     'views/account/LoginView',
     'views/account/RegistrationView'
-], function ($, _, Backbone, HomeView, UsersListView, LoginView, RegistrationView) {
+], function ($, _, Backbone, HomeView, UsersListView, CRUDView, LoginView, RegistrationView) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "index",
             "users": "users",
+            "users/CRUD": 'CRUD',
             "account/login": "login",
             "account/registration": "registration"
         }
@@ -25,9 +27,12 @@ define([
 
         app_router.on("route:users", function () {
             var usersListView = new UsersListView();
-            usersListView.getUserFromDB();
+            usersListView.getUsersFromDB();
         });
 
+        app_router.on("route:CRUD", function () {
+            var crudView = new CRUDView();
+        });
 
         app_router.on("route:login", function () {
             var loginView = new LoginView();

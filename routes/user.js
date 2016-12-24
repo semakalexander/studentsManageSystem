@@ -7,11 +7,11 @@ module.exports = function (models) {
     var handler = new Handler(models);
 
     router.get('/', handler.getAllUsers);
-    router.get('/marks', eSession.authenticatedUser, handler.getMarks);
+    router.get('/marks', handler.getMarks);
 
-    router.post('/createUser',eSession.authenticatedAdmin, handler.createUser);
-    router.patch('/editUser/:id', eSession.authenticatedAdmin, handler.editUserById);
-    router.delete('/deleteUser/:id', eSession.authenticatedAdmin, handler.deleteUserById);
+    router.post('/createUser', handler.createUser);
+    router.patch('/:id', handler.editUserById);
+    router.delete('/:id', handler.deleteUserById);
 
     return router;
 };
