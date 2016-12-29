@@ -9,12 +9,18 @@ define([
 ], function ($, _, Backbone, UserCollection, AddUserView, UserListView, CRUDTemplate) {
     var CRUDView = Backbone.View.extend({
         el: $('#container'),
+        collection: new UserCollection(),
         template: _.template(CRUDTemplate),
         events: {},
         addUserView: new AddUserView(),
         listView: new UserListView(),
         initialize: function () {
             this.render();
+            var self = this;
+            this.addUserView.on('addNewUser', function () {
+                self.listView.getUsersFromDB();
+                self.listView.render();
+            });
         },
         render: function () {
             this.$el.html(this.template());
@@ -25,7 +31,7 @@ define([
             this.listView.$el = this.$('#userListWrapper');
             this.listView.getUsersFromDB();
             this.listView.render();
-
+            return this;
         }
     });
     return CRUDView;

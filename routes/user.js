@@ -9,7 +9,7 @@ module.exports = function (models) {
     router.get('/', handler.getAllUsers);
     router.get('/marks', handler.getMarks);
 
-    router.post('/createUser', handler.createUser);
+    router.post('/', handler.createUser);
     router.patch('/:id', handler.editUserById);
     router.delete('/:id', handler.deleteUserById);
 

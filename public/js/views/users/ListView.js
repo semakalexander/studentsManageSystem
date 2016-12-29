@@ -71,6 +71,7 @@ define([
             var compiledTemplate = this.template({users: users, model: model});
 
             this.$el.html(compiledTemplate);
+            return this;
         }
     });
     return UsersListView;

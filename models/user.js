@@ -10,7 +10,7 @@ module.exports = (function () {
         firstName: {type: String, required: true},
         lastName: {type: String, required: true},
         role: {type: String, required: true, default: 'student'},
-        course: {type: Number, enum: [1, 2, 3, 4, 5, 6]},
+        course: {type: Number, enum: [1, 2, 3, 4, 5, 6], default: 1},
         age: {type: Number},
         group: {type: ObjectId, ref: 'group', default: null},
         marks: {ObjectId: Number} // { 'subject': mark }

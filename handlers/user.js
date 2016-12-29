@@ -65,6 +65,7 @@ var Module = function (models) {
         }
         shaSum.update(password);
         body.password = shaSum.digest('hex');
+        body.role = body.role || 'student';
         var user = new userModel(body);
 
 
@@ -74,7 +75,7 @@ var Module = function (models) {
             }
             res.status(200).send(user);
         });
-    };
+     };
 
     this.editUserById = function (req, res, next) {
         var id = req.params.id;
