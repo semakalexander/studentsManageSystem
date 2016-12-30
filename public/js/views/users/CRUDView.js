@@ -5,7 +5,7 @@ define([
     'collections/users/users',
     'views/users/AddView',
     'views/users/ListView',
-    'text!templates/users/CRUD.html'
+    'text!templates/users/crud.html'
 ], function ($, _, Backbone, UserCollection, AddUserView, UserListView, CRUDTemplate) {
     var CRUDView = Backbone.View.extend({
         el: $('#container'),

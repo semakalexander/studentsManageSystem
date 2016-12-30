@@ -1,0 +1,16 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    <% _.each(subjects, function(subject){ %>
+        <tr data-id="<%=subject._id%>">
+            <td><%= subject.name%></td>
+            <td>later</td>
+        </tr>
+    <% }); %>
+    </tbody>
+</table>

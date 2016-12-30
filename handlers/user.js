@@ -15,7 +15,9 @@ var Module = function (models) {
             if (err) {
                 return next(err);
             }
-            res.status(200).send(users);
+            setTimeout(function () {
+                res.status(200).send(users);
+            }, 1000);
         });
         // var session = req.session;
         // var groupId;

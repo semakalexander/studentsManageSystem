@@ -17,6 +17,7 @@ define([
             this
                 .render()
                 .collection.fetch();
+
         },
         onBtnAddUser: function (e) {
             e.preventDefault();

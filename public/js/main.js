@@ -8,7 +8,10 @@ require.config({
         underscore: 'libs/underscore/underscore',
         backbone: 'libs/backbone/backbone',
         text: 'libs/text/text',
-        templates: '../templates/'
+        models: 'models/',
+        collections: 'collections/',
+        templates: '../templates/',
+        views:'views/'
     },
     shim: {
         underscore: {
