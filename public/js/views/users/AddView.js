@@ -7,36 +7,36 @@ define([
     'text!templates/users/add.html'
 ], function ($, _, Backbone, UserModel, UserCollection, AddTemplate) {
     var AddView = Backbone.View.extend({
-        el: $('#container'),
+        el: $('#userAddWrapper'),
         template: _.template(AddTemplate),
-        collection: new UserCollection(),
-        events: {
-            'click #btnAddUser': 'onBtnAddUser'
+        events: {},
+        initialize: function (options) {
+            this.collection = options.collection;
         },
-        initialize: function () {
-            this
-                .render()
-                .collection.fetch();
+        subscribeOnBtnAdd: function () {
+            var self = this;
+            this.$('#btnAddUser').on('click', function (e) {
+                e.preventDefault();
+                var $form = $('form');
+                var $inputs = $form.find('div input');
 
-        },
-        onBtnAddUser: function (e) {
-            e.preventDefault();
-            var $form = $('form');
-            var $inputs = $form.find('div input');
-            var data = {};
-            for (var i = 0, length = $inputs.length; i < length; i++) {
-                data[$inputs[i]['name']] = $inputs[i]['value'];
-            }
-            data['login'] = data['firstName'] + data['lastName'];
-            var user = new UserModel(data);
+                var data = {};
+                for (var i = 0, length = $inputs.length; i < length; i++) {
+                    data[$inputs[i]['name']] = $inputs[i]['value'];
+                    $inputs[i].value = '';
+                }
+                data['login'] = data['firstName'] + data['lastName'];
+                var user = new UserModel(data);
 
-            user.save();
+                user.save();
 
-            this.trigger('addNewUser');
-            this.render();
+                self.trigger('addNewUser');
+
+            });
         },
         render: function () {
             this.$el.html(this.template());
+            this.subscribeOnBtnAdd();
             return this;
         }
     });

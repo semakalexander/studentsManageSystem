@@ -13,18 +13,18 @@
     <tbody>
 
         <% _.each(users, function(user){%>
-        <tr id="<%=user._id%>">
+        <tr data-id="<%=user._id%>">
 
-        <% if(model && user._id == model._id){ %>
-            <td><input type="text" class="email" value="<%=model.email%>"></td>
-            <td><input type="text" class="firstName" value="<%=model.firstName%>"></td>
-            <td><input type="text" class="lastName" value="<%=model.lastName%>"></td>
-            <td><input type="text" class="role" value="<%=model.role%>"></td>
-            <td><input type="text" class="course" value="<%=model.course%>"></td>
-            <td><input type="text" class="age" value="<%=model.age%>"></td>
+        <% if(userId && user._id == userId){ %>
+            <td><input type="text" name="email" value="<%=user.email%>"></td>
+            <td><input type="text" name="firstName" value="<%=user.firstName%>"></td>
+            <td><input type="text" name="lastName" value="<%=user.lastName%>"></td>
+            <td><input type="text" name="role" value="<%=user.role%>"></td>
+            <td><input type="text" name="course" value="<%=user.course%>"></td>
+            <td><input type="text" name="age" value="<%=user.age%>"></td>
             <td>
-                <button class="btn btn-success btn-edit-save">Save</button>
-                <button class="btn btn-danger btn-edit-cancel">Cancel</button>
+                <button class="btn btn-success btn-user-edit-save">Save</button>
+                <button class="btn btn-danger btn-user-edit-cancel">Cancel</button>
             </td>
         <% } else {%>
             <td><span class="email"> <%= user.email %></span></td>
@@ -34,8 +34,8 @@
             <td><span class="course"> <%= user.course %></span></td>
             <td><span class="age"> <%= user.age %></span></td>
             <td>
-                <button class="btn btn-warning btn-edit">Edit</button>
-                <button class="btn btn-danger btn-delete">Delete</button>
+                <button class="btn btn-warning btn-user-edit">Edit</button>
+                <button class="btn btn-danger btn-user-delete">Delete</button>
             </td>
             <%}%>
         </tr>

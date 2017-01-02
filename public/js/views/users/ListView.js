@@ -7,16 +7,11 @@ define([
     'text!templates/users/list.html'
 ], function ($, _, Backbone, UserModel, UserCollection, usersListTemplate) {
     var UsersListView = Backbone.View.extend({
-        el: $('#container'),
+        el: $('#userListWrapper'),
         template: _.template(usersListTemplate),
-        events: {
-            'click .btn-delete': 'onBtnDeleteUser',
-            'click .btn-edit': 'onBtnEditUser',
-            'click .btn-edit-cancel': 'onBtnEditCancel',
-            'click .btn-edit-save': 'onBtnEditSave'
-        },
-        initialize: function () {
-            this.collection = new UserCollection();
+        events: {},
+        initialize: function (options) {
+            this.collection = options.collection;
             this.collection.bind('reset', this.render, this);
             this.collection.bind('change', this.render, this);
         },
@@ -29,48 +24,56 @@ define([
                 reset: true
             });
         },
-        onBtnDeleteUser: function (e) {
-            var $target = $(e.target);
-            var $tr = $target.closest('tr');
-            var userId = $tr.attr('id');
-            var user = this.collection.get(userId);
+        subscribeOnBtns: function () {
             var self = this;
-            user.destroy({
-                success: function () {
-                    self.getUsersFromDB();
-                    self.render();
+
+            this.$('.btn-user-edit').on('click', function (e) {
+                var $target = $(e.target);
+                var $tr = $target.closest('tr');
+                var userId = $tr.attr('data-id');
+
+                self.render({userId: userId});
+            });
+
+            this.$('.btn-user-delete').on('click', function (e) {
+                var $target = $(e.target);
+                var $tr = $target.closest('tr');
+                var userId = $tr.attr('data-id');
+                var user = self.collection.get(userId);
+
+                user.destroy({
+                    success: function () {
+                        self.getUsersFromDB();
+                    }
+                })
+            });
+
+            this.$('.btn-user-edit-save').on('click', function (e) {
+                var $target = $(e.target);
+                var $tr = $target.closest('tr');
+                var $td = $target.closest('td');
+                var userId = $tr.attr('data-id');
+                var user = self.collection.get(userId);
+                var $inputs = $td.siblings('td').children('input');
+                var data = {};
+                for (var i = 0, length = $inputs.length; i < length; i++) {
+                    data[$inputs[i]['name']] = $inputs[i]['value'];
                 }
-            })
-        },
-        onBtnEditUser: function (e) {
-            var $target = $(e.target);
-            var $tr = $target.closest('tr');
-            var userId = $tr.attr('id');
-            var user = this.collection.get(userId).toJSON();
-            this.render(user);
-        },
-        onBtnEditCancel: function () {
-            this.render();
-        },
-        onBtnEditSave: function (e) {
-            var $target = $(e.target);
-            var $tr = $target.closest('tr');
-            var $td = $target.closest('td');
-            var userId = $tr.attr('id');
-            var user = this.collection.get(userId);
-            var $inputs = $td.siblings('td').children('input');
-            var data = {};
-            for (var i = 0, length = $inputs.length; i < length; i++) {
-                data[$inputs[i]['className']] = $inputs[i]['value'];
-            }
 
-            user.save(data, {patch: true});
+                user.save(data, {patch: true});
+            });
+
+            this.$('.btn-user-edit-cancel').on('click', function (e) {
+                self.render();
+            });
         },
-        render: function (model) {
+        render: function (options) {
             var users = this.collection.toJSON();
-            var compiledTemplate = this.template({users: users, model: model});
+            var userId = options ? options.userId : undefined;
 
-            this.$el.html(compiledTemplate);
+            this.$el.html(this.template({users: users, userId: userId}));
+
+            this.subscribeOnBtns();
             return this;
         }
     });

@@ -1,16 +1,29 @@
 <table class="table">
     <thead>
-        <tr>
-            <th>Name</th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>Name</th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-    <% _.each(subjects, function(subject){ %>
-        <tr data-id="<%=subject._id%>">
-            <td><%= subject.name%></td>
-            <td>later</td>
-        </tr>
+    <% _.each(subjects, function(subject){%>
+
+    <tr data-id="<%= subject._id%>">
+        <% if(subjectId && subjectId == subject._id){%>
+        <td><input name="name" type="text" value="<%=subject.name%>"></td>
+        <td>
+            <button class="btn btn-success btn-subject-edit-save">Save</button>
+            <button class="btn btn-danger btn-subject-edit-cancel">Cancel</button>
+        </td>
+        <%} else {%>
+        <td><%= subject.name%></td>
+        <td>
+            <button class="btn btn-warning btn-subject-edit">Edit</button>
+            <button class="btn btn-danger btn-subject-delete">Delete</button>
+        </td>
+        <% }%>
+    </tr>
+
     <% }); %>
     </tbody>
 </table>

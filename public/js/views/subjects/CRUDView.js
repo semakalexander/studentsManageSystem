@@ -10,22 +10,33 @@ define([
     var CRUDView = Backbone.View.extend({
         el: $('#container'),
         template: _.template(crudTemplate),
-
+        collection: new SubjectCollection(),
         events: {},
         initialize: function () {
             this.render();
-            this.addView = new AddView();
-            this.listView = new ListView();
+
+            this.addView = new AddView({collection: this.collection});
+            this.renderAdd();
+            this.addView.subscribeOnAdd();
+            var self = this;
+            this.addView.on('addedNewSubject', function () {
+                self.listView.getSubjectsFromDb();
+            });
+
+            this.listView = new ListView({collection: this.collection});
+            this.renderList();
+
+        },
+        renderList: function () {
+            this.listView.$el = this.$('#subjectListWrapper');
+            this.listView.getSubjectsFromDb();
+        },
+        renderAdd: function () {
+            this.addView.$el = this.$('#subjectAddWrapper');
+            this.addView.render();
         },
         render: function () {
             this.$el.html(this.template());
-            this.listView.$el = this.$('#subjectListWrapper');
-
-            this.listView.getSubjectsFromDb();
-            this.listView.render();
-
-            this.addView.$el = this.$('#subjectAddWrapper');
-            this.addView.render();
 
 
             return this;

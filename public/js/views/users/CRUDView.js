@@ -12,25 +12,32 @@ define([
         collection: new UserCollection(),
         template: _.template(CRUDTemplate),
         events: {},
-        addUserView: new AddUserView(),
-        listView: new UserListView(),
         initialize: function () {
             this.render();
+
+
             var self = this;
-            this.addUserView.on('addNewUser', function () {
+            this.addView = new AddUserView({collection: this.collection});
+            this.renderAdd();
+            this.addView.on('addNewUser', function () {
                 self.listView.getUsersFromDB();
                 self.listView.render();
             });
+
+
+            this.listView = new UserListView({collection: this.collection});
+            this.renderList();
+        },
+        renderAdd: function () {
+          this.addView.$el = this.$('#userAddWrapper');
+          this.addView.render();
+        },
+        renderList: function () {
+            this.listView.$el = this.$('#userListWrapper');
+            this.listView.getUsersFromDB();
         },
         render: function () {
             this.$el.html(this.template());
-
-            this.addUserView.$el = this.$('#addUserWrapper');
-            this.addUserView.render();
-
-            this.listView.$el = this.$('#userListWrapper');
-            this.listView.getUsersFromDB();
-            this.listView.render();
             return this;
         }
     });

@@ -2,26 +2,31 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'models/subject/subject',
+    'collections/subjects/subjects',
     'text!templates/subjects/add.html'
-], function ($, _, Backbone, addSubjectTemplate) {
+], function ($, _, Backbone, SubjectModel, SubjectCollection, addSubjectTemplate) {
     var AddView = Backbone.View.extend({
-        el: $('#addSubjectWrapper'),
+        el: $('#subjectAddWrapper'),
         template: _.template(addSubjectTemplate),
-        events: {
+        events: {},
+        initialize: function (options) {
+            this.collection = options.collection;
         },
-        initialize: function () {
-            this.render();
+        subscribeOnAdd: function () {
+            var self = this;
             this.$('#btnAddSubject').on('click', function (e) {
                 e.preventDefault();
-            })
-        },
-        onBtnAddSubject: function (e) {
-            e.preventDefault();
-
+                var $input = $('#nameInput');
+                var name = $input.val();
+                var subject = new SubjectModel({name: name});
+                subject.save();
+                self.trigger('addedNewSubject');
+                $input[0].value = '';
+            });
         },
         render: function () {
             this.$el.html(this.template());
-
             return this;
         }
     });

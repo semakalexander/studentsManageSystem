@@ -9,15 +9,13 @@ var Module = function (models) {
     var userModel = models.get('user', userSchema);
 
 
-
     this.getAllUsers = function (req, res, next) {
         userModel.find({}, function (err, users) {
             if (err) {
                 return next(err);
             }
-            setTimeout(function () {
-                res.status(200).send(users);
-            }, 1000);
+
+            res.status(200).send(users);
         });
         // var session = req.session;
         // var groupId;
@@ -45,8 +43,6 @@ var Module = function (models) {
             res.status(200).send(user.marks);
         });
     };
-
-
 
 
     this.createUser = function (req, res, next) {
@@ -77,7 +73,7 @@ var Module = function (models) {
             }
             res.status(200).send(user);
         });
-     };
+    };
 
     this.editUserById = function (req, res, next) {
         var id = req.params.id;
