@@ -7,9 +7,9 @@ module.exports = function (models) {
     var handler = new Handler(models);
 
     router.get('/', handler.getAllCategories);
-    router.post('/create', eSession.authenticatedAdmin, handler.createCategory);
-    router.patch('/edit/:id', eSession.authenticatedAdmin, handler.editCategoryById);
-    router.delete('/delete/:id', eSession.authenticatedAdmin, handler.deleteCategoryById);
+    router.post('/', handler.createCategory);
+    router.patch('/:id', handler.editCategoryById);
+    router.delete('/:id', handler.deleteCategoryById);
 
     return router;
 };

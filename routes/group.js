@@ -8,11 +8,11 @@ module.exports = function (models) {
 
     router.get('/', handler.getAllGroups);
 
-    router.post('/:groupId/addUser/:userId', eSession.authenticatedTeacher, handler.addUserToGroup);
-    router.post('/create', eSession.authenticatedAdmin, handler.createGroup);
+    router.post('/:groupId/addUser/:userId',  handler.addUserToGroup);
+    router.post('/', handler.createGroup);
 
-    router.patch('/edit/:id', eSession.authenticatedAdmin, handler.editGroupById);
-    router.delete('/delete/:id', eSession.authenticatedAdmin, handler.deleteGroupById);
+    router.patch('/:id',handler.editGroupById);
+    router.delete('/:id', handler.deleteGroupById);
 
     return router;
 };

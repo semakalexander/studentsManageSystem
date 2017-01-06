@@ -20,12 +20,14 @@ define([
                 var $form = $('form');
                 var $inputs = $form.find('div input');
 
+
                 var data = {};
                 for (var i = 0, length = $inputs.length; i < length; i++) {
                     data[$inputs[i]['name']] = $inputs[i]['value'];
                     $inputs[i].value = '';
                 }
                 data['login'] = data['firstName'] + data['lastName'];
+                data['role'] = $('#role')[0]['value'];
                 var user = new UserModel(data);
 
                 user.save();

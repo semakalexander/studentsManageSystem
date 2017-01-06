@@ -21,7 +21,7 @@ define([
             this.renderAdd();
             this.addView.on('addNewUser', function () {
                 self.listView.getUsersFromDB();
-                self.listView.render();
+                alert('Success added!');
             });
 
 

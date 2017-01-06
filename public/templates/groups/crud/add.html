@@ -1,0 +1,19 @@
+<div class="panel-body">
+    <form class="form-inline">
+
+        <div class="form-group">
+            <label for="nameInput">Name</label>
+            <input id="nameInput" type="text" name="name" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="curatorSelect">Curator</label>
+            <select name="curator" id="curatorSelect" class="form-control">
+                <% _.each(teachers, function(teacher){ %>
+                <option value="<%= teacher._id %>"><%= teacher.login %></option>
+                <% }); %>
+            </select>
+        </div>
+        <input type="submit" id="btnAddGroup" class="btn btn-primary" value="Add New Group">
+    </form>
+</div>

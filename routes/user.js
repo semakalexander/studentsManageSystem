@@ -8,6 +8,7 @@ module.exports = function (models) {
 
     router.get('/', handler.getAllUsers);
     router.get('/marks', handler.getMarks);
+    router.get('/byCourse', handler.getUsersByCourse);
 
     router.post('/', handler.createUser);
     router.patch('/:id', handler.editUserById);

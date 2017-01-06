@@ -34,6 +34,15 @@ var Module = function (models) {
         // });
     };
 
+    this.getUsersByCourse = function (req, res, next) {
+        var course = req.body.course;
+        userModel.find({course: course}, function (err, users) {
+            if (err) {
+                return next(err);
+            }
+            res.status(200).send(users);
+        })
+    };
     this.getMarks = function (req, res, next) {
         var session = req.session;
         userModel.findOne({_id: session.userId}, function (err, user) {

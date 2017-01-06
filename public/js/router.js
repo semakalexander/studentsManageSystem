@@ -7,8 +7,10 @@ define([
     'views/users/CRUDView',
     'views/account/LoginView',
     'views/account/RegistrationView',
-    'views/subjects/CRUDView'
-], function ($, _, Backbone, HomeView, UsersListView, UsersCrudView, LoginView, RegistrationView, SubjectsCrudView) {
+    'views/subjects/CRUDView',
+    'views/groups/MainView',
+    'views/groups/crud/CrudView'
+], function ($, _, Backbone, HomeView, UsersListView, UsersCrudView, LoginView, RegistrationView, SubjectsCrudView, GroupsMainView, GroupsCrudView) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "index",
@@ -16,7 +18,9 @@ define([
             "users/crud": "usersCrud",
             "account/login": "login",
             "account/registration": "registration",
-            "subjects/crud": "subjectsCrud"
+            "subjects/crud": "subjectsCrud",
+            "groups/": "groups",
+            "groups/crud": "groupsCrud"
         }
     });
 
@@ -48,6 +52,15 @@ define([
         app_router.on("route:subjectsCrud", function () {
             var subjectsCrudView = new SubjectsCrudView();
         });
+
+        app_router.on("route:groups", function () {
+            var groupsMainView = new GroupsMainView();
+        });
+
+        app_router.on("route:groupsCrud", function () {
+            var groupsCrudView = new GroupsCrudView();
+        });
+
         Backbone.history.start({pushState: false});
     };
 

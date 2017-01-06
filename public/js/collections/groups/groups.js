@@ -1,15 +1,15 @@
 define([
     'underscore',
     'backbone',
-    'models/user/user'
+    'models/group/group'
 ], function (_, Backbone, UserModel) {
-    var UserCollection = Backbone.Collection.extend({
+    var GroupCollection = Backbone.Collection.extend({
         model: UserModel,
-        url: '/users/',
+        url: '/groups/',
         search: function (options) {
             var result = this.where(options);
-            return new UserCollection(result);
+            return new GroupCollection(result);
         }
     });
-    return UserCollection;
+    return GroupCollection;
 });

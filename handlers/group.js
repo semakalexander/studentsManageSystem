@@ -7,8 +7,8 @@ var Module = function (models) {
     var groupModel = models.get('group', groupSchema);
 
     this.addUserToGroup = function (req, res, next) {
-        var userId = req.params.userId;
-        var groupId = req.params.groupId;
+        var userId = req.body.userId;
+        var groupId = req.body.groupId;
 
         groupModel.findOneAndUpdate({_id: groupId}, {$push: {'students': userId}}, function (err, result) {
                 if (err) {
@@ -28,10 +28,17 @@ var Module = function (models) {
     };
 
     this.getAllGroups = function (req, res, next) {
-        groupModel.find({}).populate('curator subjects students').exec(function (err, groups) {
+        // groupModel.find({}, function (err, groups) {
+        //     if (err) {
+        //         next(err);
+        //     }
+        //    res.status(200).send(groups);
+        // });
+        groupModel.find({}).populate('').exec(function (err, groups) {
             if (err) {
                 return next(err);
             }
+            console.log(groups);
             res.status(200).send(groups);
         });
     };

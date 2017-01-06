@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-md-offset-1 col-md-2">
+        <select name="course" id="courseSelect" class="form-control">
+            <option value="0" disabled selected>Choose course</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+        </select>
+    </div>
+    <div class="col-md-offset-4 col-md-2">
+        <select name="group" id="groupSelect" class="form-control">
+            <% _.each(groups, function(group){ %>
+            <option value="<%=group.Id%>"><%=group.name%></option>
+            <% });%>
+        </select>
+    </div>
+</div>
