@@ -10,7 +10,7 @@
             <label for="curatorSelect">Curator</label>
             <select name="curator" id="curatorSelect" class="form-control">
                 <% _.each(teachers, function(teacher){ %>
-                <option value="<%= teacher._id %>"><%= teacher.login %></option>
+                <option value="<%= teacher._id %>"><%= teacher.firstName + ' ' + teacher.lastName %></option>
                 <% }); %>
             </select>
         </div>

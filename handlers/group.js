@@ -34,12 +34,13 @@ var Module = function (models) {
         //     }
         //    res.status(200).send(groups);
         // });
-        groupModel.find({}).populate('').exec(function (err, groups) {
+        groupModel.find({}).populate('curator students subjects').exec(function (err, groups) {
             if (err) {
                 return next(err);
             }
-            console.log(groups);
+
             res.status(200).send(groups);
+
         });
     };
 

@@ -27,7 +27,7 @@
         </td>
         <%} else {%>
         <td><%= group.name%></td>
-        <td><%= group.curator.login %></td>
+        <td><%= group.curator ? group.curator.login : 'null' %></td>
         <td>
             <button class="btn btn-warning btn-group-edit">Edit</button>
             <button class="btn btn-danger btn-group-delete">Delete</button>

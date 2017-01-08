@@ -24,9 +24,12 @@ define([
                     name: $nameInput.value,
                     curator: $curatorSelect.value
                 });
-                group.save();
-                $nameInput.value = '';
-                self.trigger('addedNewGroup');
+                group.save(null, {
+                    success: function () {
+                        $nameInput.value = '';
+                        self.trigger('addedNewGroup');
+                    }
+                });
 
             });
         },
