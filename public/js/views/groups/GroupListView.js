@@ -11,13 +11,16 @@ define([
         initialize: function (options) {
             this.userCollection = options.userCollection;
             this.groupCollection = options.groupCollection;
+            this.groupCollection.bind('change', this.render, this);
             this.render();
         },
         render: function (options) {
-            var groupName = options ? options.groupName : '';
-            var groups = this.groupCollection.search({name: groupName});
-            var users = groups.models.length ? groups.models[0].students.toJSON() : {};
-            this.$el.html(this.template({users: users}));
+            var groupId = options ? options.groupId : this.groupCollection.toJSON()[0]._id;
+            var groups = this.groupCollection
+                .search({_id: groupId})
+                .toJSON();
+            var users = groups.length ? groups[0].students : {};
+            this.$el.html(this.template({users: users, add:false}));
         }
     });
     return GroupListView;

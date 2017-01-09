@@ -14,7 +14,7 @@ define([
             this.render();
         },
         render: function () {
-            this.$el.html(this.template({groups: this.groupCollection.toJSON()}));
+            this.$el.html(this.template({groups: this.groupCollection.sort(name).toJSON()}));
         }
     });
     return HeaderView;

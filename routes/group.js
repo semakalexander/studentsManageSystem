@@ -8,7 +8,7 @@ module.exports = function (models) {
 
     router.get('/', handler.getAllGroups);
 
-    router.post('/:groupId/addUser/:userId',  handler.addUserToGroup);
+    router.post('/addToGroup',  handler.addUserToGroup);
     router.post('/', handler.createGroup);
 
     router.patch('/:id',handler.editGroupById);

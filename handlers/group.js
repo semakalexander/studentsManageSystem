@@ -2,13 +2,22 @@ var mongoose = require('mongoose');
 var request = require('request');
 
 var groupSchema = mongoose.Schemas.Group;
+var userSchema = mongoose.Schemas.User;
+
 var Module = function (models) {
 
     var groupModel = models.get('group', groupSchema);
+    var userModel = models.get('user', userModel);
 
     this.addUserToGroup = function (req, res, next) {
         var userId = req.body.userId;
         var groupId = req.body.groupId;
+
+        userModel.findOneAndUpdate({_id: userId} , {group:groupId}, function (err) {
+            if (err) {
+                return next(err);
+            }
+        });
 
         groupModel.findOneAndUpdate({_id: groupId}, {$push: {'students': userId}}, function (err, result) {
                 if (err) {

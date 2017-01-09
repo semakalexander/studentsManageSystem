@@ -37,7 +37,8 @@ define([
 
             this.courseListView = new CourseListView({
                 el: $('#courseList'),
-                userCollection: this.userCollection
+                userCollection: this.userCollection,
+                groupCollection: this.groupCollection
             });
 
             this.groupListView = new GroupListView({
@@ -49,11 +50,12 @@ define([
             var self = this;
             this.headerView.$('#courseSelect').on('change', function () {
                 var course = this.value;
-                self.courseListView.render({course: course});
+               var selectedGroupId = $('#groupSelect').value;
+                self.courseListView.render({course: course, selectedGroupId:selectedGroupId});
             });
             this.headerView.$('#groupSelect').on('change', function () {
-                var groupName = this.value;
-                self.groupListView.render({groupName: groupName});
+                var groupId = this.value;
+                self.groupListView.render({groupId: groupId});
             });
         }
     });
