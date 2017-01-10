@@ -1,0 +1,33 @@
+<ul class="pagination">
+    <%
+    var renderPage;
+    var linksQuantity = 11;
+    var linksOnSide = Math.floor(linksQuantity/2);
+    for(var i = 1, length = pagesQuantity; i <= length; i++){
+        renderPage = false;
+
+        if(pagesQuantity <= linksQuantity){
+            renderPage = true;
+        }
+        else {
+            if(currentPage <= Math.ceil(linksQuantity/2)){
+                if(i <= linksQuantity){
+                    renderPage = true;
+                }
+            }
+            else if(currentPage <= pagesQuantity - linksOnSide){
+                if(currentPage - linksOnSide <= i && i <= currentPage + linksOnSide){
+                    renderPage = true;
+                }
+            }
+            else {if(currentPage - (linksQuantity - 1) < i){
+                renderPage = true;
+            }}
+        }
+
+        if(renderPage){%>
+            <li class="pagination-link<%= currentPage == i ? ' active' : '' %>"><a href="" data-page="<%= i %>"><%= i %></a></li>
+        <%}
+    }
+    %>
+</ul>

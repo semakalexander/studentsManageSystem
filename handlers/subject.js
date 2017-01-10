@@ -5,19 +5,19 @@ var subjectSchema = mongoose.Schemas.Subject;
 var Module = function (models) {
     var subjectModel = models.get('subject', subjectSchema);
 
-    this.getAllSubjects = function (req,res,next) {
+    this.getAllSubjects = function (req, res, next) {
         subjectModel.find({}, function (err, subjects) {
-            if(err) {
+            if (err) {
                 return next(err);
             }
-             res.status(200).send(subjects);
+            res.status(200).send(subjects);
         });
     };
 
     this.createSubject = function (req, res, next) {
         var body = req.body;
         var name = body.name;
-        if(!name || !name.length){
+        if (!name || !name.length) {
             var err = new Error('Error fields!');
             err.status = 400;
             return next(err);
@@ -33,7 +33,7 @@ var Module = function (models) {
         });
     };
 
-    this.editSubjectById = function (req,res,next) {
+    this.editSubjectById = function (req, res, next) {
         var id = req.params.id;
         var body = req.body;
         subjectModel.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).exec(function (err, subject) {

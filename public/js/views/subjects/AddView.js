@@ -19,8 +19,10 @@ define([
                 e.preventDefault();
                 var $input = $('#nameInput');
                 var name = $input.val();
+
                 var subject = new SubjectModel({name: name});
                 subject.save();
+
                 self.trigger('addedNewSubject');
                 $input[0].value = '';
             });

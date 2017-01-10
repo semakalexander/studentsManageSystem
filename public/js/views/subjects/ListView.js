@@ -3,24 +3,29 @@ define([
     'underscore',
     'backbone',
     'collections/subjects/subjects',
+    'views/subjects/PaginationView',
     'text!templates/subjects/list.html'
-], function ($, _, Backbone, SubjectCollection, listSubjectsTemplate) {
+], function ($, _, Backbone, SubjectCollection, PaginationView, listSubjectsTemplate) {
     var ListView = Backbone.View.extend({
         el: $('#subjectListWrapper'),
         template: _.template(listSubjectsTemplate),
-        events: {},
+        page: 1,
+        perPage: 300,
         initialize: function (options) {
+            this.paginationView = new PaginationView();
             this.collection = options.collection;
             this.collection.bind('reset', this.render, this);
             this.collection.bind('change', this.render, this);
         },
-        getSubjectsFromDb: function () {
+        getSubjectsFromDb: function (options) {
+
             var self = this;
             this.collection.fetch({
                 success: function (collection) {
                     self.collection = collection;
                 },
-                reset: true
+                reset: true,
+                data: {pageNum: self.page}
             });
         },
         subscribeOnEditBtns: function () {
@@ -39,7 +44,7 @@ define([
                 var user = self.collection.get({_id: id});
                 user.destroy({
                     success: function () {
-                        self.getSubjectsFromDb();
+                        $tr.remove();
                     }
                 });
             });
@@ -63,12 +68,24 @@ define([
             this.$('.btn-subject-edit-cancel').on('click', function () {
                 self.render();
             });
+
+            this.$('.pagination-link').on('click', function (e) {
+                e.preventDefault();
+                self.page = $(e.target).data('page');
+                self.render();
+            });
         },
         render: function (options) {
             var subjects = this.collection.toJSON();
             var subjectId = options ? options.subjectId : undefined;
+            var start = (this.page - 1) * this.perPage;
 
-            this.$el.html(this.template({subjects: subjects, subjectId: subjectId}));
+            this.$el.html(this.template({subjects: subjects.slice(start, start + this.perPage), subjectId: subjectId}));
+            this.paginationView.$el = this.$('#pagination');
+            this.paginationView.render({
+                currentPage: this.page,
+                pagesQuantity: Math.ceil(subjects.length / this.perPage)
+            });
 
             this.subscribeOnEditBtns();
             return this;
