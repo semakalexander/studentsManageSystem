@@ -5,13 +5,14 @@ require.config({
     baseUrl: 'js',
     paths: {
         jquery: 'libs/jquery/dist/jquery',
+        jquery_ui: 'libs/jquery-ui/jquery-ui',
         underscore: 'libs/underscore/underscore',
         backbone: 'libs/backbone/backbone',
         text: 'libs/text/text',
         models: 'models/',
         collections: 'collections/',
         templates: '../templates/',
-        views:'views/'
+        views: 'views/'
     },
     shim: {
         underscore: {
@@ -20,6 +21,7 @@ require.config({
         jquery: {
             exports: '$'
         },
+        jquery_ui: ['jquery'],
         Backbone: ['jquery', 'underscore']
     }
 

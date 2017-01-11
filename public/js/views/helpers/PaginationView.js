@@ -2,7 +2,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!templates/subjects/pagination.html'
+    'text!templates/helpers/pagination.html'
 ], function ($, _, Backbone, paginationTemplate) {
     var PaginationView = Backbone.View.extend({
         el: $('#container'),

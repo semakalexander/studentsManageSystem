@@ -3,17 +3,18 @@ define([
     'underscore',
     'backbone',
     'collections/subjects/subjects',
-    'views/subjects/PaginationView',
+    'views/helpers/PaginationView',
     'text!templates/subjects/list.html'
 ], function ($, _, Backbone, SubjectCollection, PaginationView, listSubjectsTemplate) {
     var ListView = Backbone.View.extend({
         el: $('#subjectListWrapper'),
         template: _.template(listSubjectsTemplate),
         page: 1,
-        perPage: 300,
+        perPage: 8,
         initialize: function (options) {
             this.paginationView = new PaginationView();
             this.collection = options.collection;
+
             this.collection.bind('reset', this.render, this);
             this.collection.bind('change', this.render, this);
         },
@@ -24,8 +25,7 @@ define([
                 success: function (collection) {
                     self.collection = collection;
                 },
-                reset: true,
-                data: {pageNum: self.page}
+                reset: true
             });
         },
         subscribeOnEditBtns: function () {
@@ -81,6 +81,7 @@ define([
             var start = (this.page - 1) * this.perPage;
 
             this.$el.html(this.template({subjects: subjects.slice(start, start + this.perPage), subjectId: subjectId}));
+
             this.paginationView.$el = this.$('#pagination');
             this.paginationView.render({
                 currentPage: this.page,

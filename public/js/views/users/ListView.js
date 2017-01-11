@@ -4,14 +4,20 @@ define([
     'backbone',
     'models/user/user',
     'collections/users/users',
-    'text!templates/users/list.html'
-], function ($, _, Backbone, UserModel, UserCollection, usersListTemplate) {
+    'views/helpers/PaginationView',
+    'text!templates/users/list.html',
+    'jquery_ui'
+], function ($, _, Backbone, UserModel, UserCollection, PaginationView, usersListTemplate) {
     var UsersListView = Backbone.View.extend({
         el: $('#userListWrapper'),
         template: _.template(usersListTemplate),
         events: {},
+        page: 1,
+        perPage: 8,
         initialize: function (options) {
+            this.paginationView = new PaginationView();
             this.collection = options.collection;
+
             this.collection.bind('reset', this.render, this);
             this.collection.bind('change', this.render, this);
         },
@@ -28,6 +34,7 @@ define([
             var self = this;
 
             this.$('.btn-user-edit').on('click', function (e) {
+                self.trigger('startEdit');
                 var $target = $(e.target);
                 var $tr = $target.closest('tr');
                 var userId = $tr.attr('data-id');
@@ -43,7 +50,9 @@ define([
 
                 user.destroy({
                     success: function () {
+                        self.trigger('endEdit');
                         self.getUsersFromDB();
+
                     }
                 })
             });
@@ -61,18 +70,39 @@ define([
                 }
 
                 user.save(data, {patch: true});
+                self.trigger('endEdit');
             });
 
             this.$('.btn-user-edit-cancel').on('click', function (e) {
+                self.middleTableRender();
+                self.render();
+                self.trigger('endEdit');
+            });
+
+            this.$('.pagination-link').on('click', function (e) {
+                e.preventDefault();
+                self.page = $(e.target).data('page');
                 self.render();
             });
+        },
+        largeTableRender:function () {
+            this.$el.switchClass('col-md-9','col-md-12', 0);
+        },
+        middleTableRender:function () {
+            this.$el.switchClass('col-md-12','col-md-9', 250);
         },
         render: function (options) {
             var users = this.collection.toJSON();
             var userId = options ? options.userId : undefined;
+            var start = (this.page - 1) * this.perPage;
 
-            this.$el.html(this.template({users: users, userId: userId}));
+            this.$el.html(this.template({users: users.slice(start, start+ this.perPage), userId: userId}));
 
+            this.paginationView.$el = this.$('#pagination');
+            this.paginationView.render({
+                currentPage: this.page,
+                pagesQuantity: Math.ceil(users.length / this.perPage)
+            });
             this.subscribeOnBtns();
             return this;
         }

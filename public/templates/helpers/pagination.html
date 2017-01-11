@@ -1,8 +1,14 @@
 <ul class="pagination">
     <%
     var renderPage;
-    var linksQuantity = 11;
+    var linksQuantity = 9; //better if it's odd
+
     var linksOnSide = Math.floor(linksQuantity/2);
+
+    if(currentPage > 1 + linksOnSide){%>
+        <li class="pagination-link"><a href="" data-page="1"><%= 1 %></a></li>
+    <%}
+
     for(var i = 1, length = pagesQuantity; i <= length; i++){
         renderPage = false;
 
@@ -20,14 +26,17 @@
                     renderPage = true;
                 }
             }
-            else {if(currentPage - (linksQuantity - 1) < i){
+            else if(currentPage - linksOnSide <= i){
                 renderPage = true;
-            }}
+            }
         }
 
         if(renderPage){%>
             <li class="pagination-link<%= currentPage == i ? ' active' : '' %>"><a href="" data-page="<%= i %>"><%= i %></a></li>
         <%}
     }
-    %>
+
+    if(currentPage < pagesQuantity - linksOnSide){%>
+    <li class="pagination-link"><a href="" data-page="<%= pagesQuantity%>"><%= pagesQuantity %></a></li>
+   <%}%>
 </ul>

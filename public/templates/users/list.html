@@ -1,9 +1,9 @@
-<table class="table table-bordered table-condensed">
+<table class="table table-bordered ">
     <thead>
     <tr>
-        <th>Email</th>
-        <th>First Name</th>
         <th>Last Name</th>
+        <th>First Name</th>
+        <th>Email</th>
         <th>Role</th>
         <th>Course</th>
         <th>Age</th>
@@ -16,9 +16,9 @@
         <tr data-id="<%=user._id%>">
 
         <% if(userId && user._id == userId){ %>
-            <td><input type="text" name="email" value="<%=user.email%>"></td>
-            <td><input type="text" name="firstName" value="<%=user.firstName%>"></td>
             <td><input type="text" name="lastName" value="<%=user.lastName%>"></td>
+            <td><input type="text" name="firstName" value="<%=user.firstName%>"></td>
+            <td><input type="text" name="email" value="<%=user.email%>"></td>
             <td><input type="text" name="role" value="<%=user.role%>"></td>
             <td><input type="text" name="course" value="<%=user.course%>"></td>
             <td><input type="text" name="age" value="<%=user.age%>"></td>
@@ -27,9 +27,9 @@
                 <button class="btn btn-danger btn-user-edit-cancel">Cancel</button>
             </td>
         <% } else {%>
-            <td><span class="email"> <%= user.email %></span></td>
-            <td><span class="firstName"> <%= user.firstName %></span></td>
             <td><span class="lastName"> <%= user.lastName %></span></td>
+            <td><span class="firstName"> <%= user.firstName %></span></td>
+            <td><span class="email"> <%= user.email %></span></td>
             <td><span class="role"> <%= user.role %></span></td>
             <td><span class="course"> <%= user.course %></span></td>
             <td><span class="age"> <%= user.age %></span></td>
@@ -43,3 +43,4 @@
     </tbody>
 </table>
 
+<div id="pagination" class="col-md-offset-3"></div>

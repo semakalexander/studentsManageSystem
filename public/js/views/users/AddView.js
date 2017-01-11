@@ -4,7 +4,8 @@ define([
     'backbone',
     'models/user/user',
     'collections/users/users',
-    'text!templates/users/add.html'
+    'text!templates/users/add.html',
+    'jquery_ui'
 ], function ($, _, Backbone, UserModel, UserCollection, AddTemplate) {
     var AddView = Backbone.View.extend({
         el: $('#userAddWrapper'),
@@ -36,6 +37,12 @@ define([
 
             });
         },
+        hide: function () {
+          this.$el.hide(0);
+        },
+        show:function () {
+            this.$el.show(500);
+        },
         render: function () {
             this.$el.html(this.template());
             this.subscribeOnBtnAdd();
@@ -44,3 +51,5 @@ define([
     });
     return AddView;
 });
+
+

@@ -27,6 +27,17 @@ define([
 
             this.listView = new UserListView({collection: this.collection});
             this.renderList();
+
+            this.listView.on('startEdit', function () {
+                self.addView.hide();
+                self.listView.largeTableRender();
+            });
+
+            this.listView.on('endEdit', function () {
+                self.listView.middleTableRender();
+                self.addView.show();
+
+            })
         },
         renderAdd: function () {
           this.addView.$el = this.$('#userAddWrapper');
