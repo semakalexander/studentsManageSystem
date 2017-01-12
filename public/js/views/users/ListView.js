@@ -11,11 +11,10 @@ define([
     var UsersListView = Backbone.View.extend({
         el: $('#userListWrapper'),
         template: _.template(usersListTemplate),
-        events: {},
+        paginationView: new PaginationView(),
         page: 1,
         perPage: 8,
         initialize: function (options) {
-            this.paginationView = new PaginationView();
             this.collection = options.collection;
 
             this.collection.bind('reset', this.render, this);
@@ -52,7 +51,6 @@ define([
                     success: function () {
                         self.trigger('endEdit');
                         self.getUsersFromDB();
-
                     }
                 })
             });
@@ -83,20 +81,21 @@ define([
                 e.preventDefault();
                 self.page = $(e.target).data('page');
                 self.render();
+                self.trigger('endEdit');
             });
         },
-        largeTableRender:function () {
-            this.$el.switchClass('col-md-9','col-md-12', 0);
+        largeTableRender: function () {
+            this.$el.switchClass('col-md-9', 'col-md-12', 0);
         },
-        middleTableRender:function () {
-            this.$el.switchClass('col-md-12','col-md-9', 250);
+        middleTableRender: function () {
+            this.$el.switchClass('col-md-12', 'col-md-9', 250);
         },
         render: function (options) {
             var users = this.collection.toJSON();
             var userId = options ? options.userId : undefined;
             var start = (this.page - 1) * this.perPage;
 
-            this.$el.html(this.template({users: users.slice(start, start+ this.perPage), userId: userId}));
+            this.$el.html(this.template({users: users.slice(start, start + this.perPage), userId: userId}));
 
             this.paginationView.$el = this.$('#pagination');
             this.paginationView.render({

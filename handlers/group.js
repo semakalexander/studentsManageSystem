@@ -7,13 +7,13 @@ var userSchema = mongoose.Schemas.User;
 var Module = function (models) {
 
     var groupModel = models.get('group', groupSchema);
-    var userModel = models.get('user', userModel);
+    var userModel = models.get('user', userSchema);
 
     this.addUserToGroup = function (req, res, next) {
         var userId = req.body.userId;
         var groupId = req.body.groupId;
 
-        userModel.findOneAndUpdate({_id: userId} , {group:groupId}, function (err) {
+        userModel.findOneAndUpdate({_id: userId}, {group: groupId}, function (err) {
             if (err) {
                 return next(err);
             }
@@ -29,10 +29,23 @@ var Module = function (models) {
     };
 
     this.deleteUserFromGroup = function (req, res, next) {
-        var userId = req.params.userId;
-        var groupId = req.params.groupId;
+        var userId = req.body.userId;
+        var groupId = req.body.groupId;
 
-        //
+        userModel.findOneAndUpdate({_id: userId}, {group: null}, function (err) {
+            if (err) {
+                return next(err);
+            }
+        });
+
+        groupModel.findOneAndUpdate({_id: groupId}, {$pop: {'students': userId}}, function (err, result) {
+            //POP not correct!!!
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send(result);
+            }
+        );
 
     };
 

@@ -21,7 +21,6 @@ define([
                 var $form = $('form');
                 var $inputs = $form.find('div input');
 
-
                 var data = {};
                 for (var i = 0, length = $inputs.length; i < length; i++) {
                     data[$inputs[i]['name']] = $inputs[i]['value'];

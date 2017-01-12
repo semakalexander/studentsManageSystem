@@ -6,10 +6,15 @@
     </tr>
     </thead>
     <tbody>
-    <% _.each(users, function(user){ %>
+    <%if(!users.length){%>
+        <tr>
+            <td>No data.</td>
+        </tr>
+   <% }
+     _.each(users, function(user){ %>
     <tr data-id="<%= user._id %>">
-        <td><%= user.firstName %></td>
-        <td><%= user.lastName %></td>
+        <td class="firstName"><%= user.firstName %></td>
+        <td class="lastName"><%= user.lastName %></td>
         <td>
             <% if(add){%>
             <button class="btn btn-success btn-add-to-group">Add To Group</button>
@@ -22,3 +27,4 @@
     </tbody>
 </table>
 
+<div id="pagination<%=add ? 'Course' : 'Group'%>" class="col-md-offset-3"></div>
