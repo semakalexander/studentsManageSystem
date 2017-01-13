@@ -2,13 +2,12 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'collections/subjects/subjects',
     'views/helpers/PaginationView',
-    'text!templates/subjects/list.html'
-], function ($, _, Backbone, SubjectCollection, PaginationView, listSubjectsTemplate) {
+    'text!templates/categories/list.html'
+], function ($, _, Backbone, PaginationView, listCategoriesTemplate) {
     var ListView = Backbone.View.extend({
-        el: $('#subjectListWrapper'),
-        template: _.template(listSubjectsTemplate),
+        el: $('#categoryListWrapper'),
+        template: _.template(listCategoriesTemplate),
         page: 1,
         perPage: 8,
         initialize: function (options) {
@@ -18,7 +17,7 @@ define([
             this.collection.bind('reset', this.render, this);
             this.collection.bind('change', this.render, this);
         },
-        getSubjectsFromDb: function () {
+        getCategoriesFromDb: function (options) {
             var self = this;
             this.collection.fetch({
                 success: function (collection) {
@@ -30,14 +29,14 @@ define([
         subscribeOnEditBtns: function () {
             var self = this;
 
-            this.$('.btn-subject-edit').on('click', function (e) {
+            this.$('.btn-category-edit').on('click', function (e) {
                 var $tr = $(e.target).closest('tr');
 
                 var id = $tr.attr('data-id');
-                self.render({subjectId: id});
+                self.render({categoryId: id});
             });
 
-            this.$('.btn-subject-delete').on('click', function (e) {
+            this.$('.btn-category-delete').on('click', function (e) {
                 var $tr = $(e.target).closest('tr');
                 var id = $tr.attr('data-id');
                 var user = self.collection.get({_id: id});
@@ -48,12 +47,12 @@ define([
                 });
             });
 
-            this.$('.btn-subject-edit-save').on('click', function (e) {
+            this.$('.btn-category-edit-save').on('click', function (e) {
                 var $target = $(e.target);
                 var $tr = $target.closest('tr');
                 var $td = $target.closest('td');
-                var subjectId = $tr.attr('data-id');
-                var subject = self.collection.get(subjectId);
+                var categoryId = $tr.attr('data-id');
+                var category = self.collection.get(categoryId);
                 var $inputs = $td.siblings('td').children('input');
 
                 var data = {};
@@ -61,10 +60,10 @@ define([
                     data[$inputs[i]['name']] = $inputs[i]['value'];
                 }
 
-                subject.save(data, {patch: true});
+                category.save(data, {patch: true});
             });
 
-            this.$('.btn-subject-edit-cancel').on('click', function () {
+            this.$('.btn-category-edit-cancel').on('click', function () {
                 self.render();
             });
 
@@ -75,16 +74,16 @@ define([
             });
         },
         render: function (options) {
-            var subjects = this.collection.toJSON();
-            var subjectId = options ? options.subjectId : undefined;
+            var categories = this.collection.toJSON();
+            var categoryId = options ? options.categoryId : undefined;
             var start = (this.page - 1) * this.perPage;
 
-            this.$el.html(this.template({subjects: subjects.slice(start, start + this.perPage), subjectId: subjectId}));
+            this.$el.html(this.template({categories: categories.slice(start, start + this.perPage), categoryId: categoryId}));
 
             this.paginationView.$el = this.$('#pagination');
             this.paginationView.render({
                 currentPage: this.page,
-                pagesQuantity: Math.ceil(subjects.length / this.perPage)
+                pagesQuantity: Math.ceil(categories.length / this.perPage)
             });
 
             this.subscribeOnEditBtns();

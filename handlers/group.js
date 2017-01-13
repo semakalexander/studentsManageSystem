@@ -38,8 +38,7 @@ var Module = function (models) {
             }
         });
 
-        groupModel.findOneAndUpdate({_id: groupId}, {$pop: {'students': userId}}, function (err, result) {
-            //POP not correct!!!
+        groupModel.findOneAndUpdate({_id: groupId}, {$pull: {'students': userId}}, function (err, result) {
                 if (err) {
                     return next(err);
                 }

@@ -2,10 +2,10 @@ define([
     'underscore',
     'backbone'
 ], function (_, Backbone) {
-    var SubjectModel = Backbone.Model.extend({
-        urlRoot: 'subjects/',
+    var CategoryModel = Backbone.Model.extend({
+        urlRoot: 'categories/',
         idAttribute: '_id'
     });
-    return SubjectModel;
+    return CategoryModel;
 });
 

@@ -1,0 +1,23 @@
+<table class="table table-condensed">
+    <tbody>
+    <% _.each(categories, function(category){%>
+    <tr data-id="<%= category._id%>">
+        <% if(categoryId && categoryId == category._id){%>
+        <td><input name="name" type="text" value="<%=category.name%>"></td>
+        <td>
+            <button class="btn btn-success btn-category-edit-save">Save</button>
+            <button class="btn btn-danger btn-category-edit-cancel">Cancel</button>
+        </td>
+        <%} else {%>
+        <td><%= category.name%></td>
+        <td>
+            <button class="btn btn-warning btn-category-edit">Edit</button>
+            <button class="btn btn-danger btn-category-delete">Delete</button>
+        </td>
+        <% }%>
+    </tr>
+    <% }); %>
+    </tbody>
+</table>
+
+<div id="pagination" class="col-md-offset-4"></div>
