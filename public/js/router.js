@@ -10,9 +10,10 @@ define([
     'views/subjects/CRUDView',
     'views/groups/MainView',
     'views/groups/crud/CrudView',
-    'views/categories/MainView'
+    'views/categories/MainView',
+    'views/profiles/TeacherProfile'
 ], function ($, _, Backbone, HomeView, UsersListView, UsersCrudView, LoginView, RegistrationView, SubjectsCrudView,
-             GroupsMainView, GroupsCrudView, CategoriesMainView) {
+             GroupsMainView, GroupsCrudView, CategoriesMainView, TeacherProfileView) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "index",
@@ -23,7 +24,8 @@ define([
             "subjects/crud": "subjectsCrud",
             "groups/": "groups",
             "groups/crud": "groupsCrud",
-            "categories/crud": "categoriesCrud"
+            "categories/crud": "categoriesCrud",
+            "profiles/teacher":"teacherProfile"
         }
     });
 
@@ -67,6 +69,11 @@ define([
         app_router.on("route:categoriesCrud", function () {
             var categoriesCrudView = new CategoriesMainView();
         });
+
+        app_router.on("route:teacherProfile", function () {
+            var teacherProfile = new TeacherProfileView();
+        });
+
 
         Backbone.history.start({pushState: false});
     };

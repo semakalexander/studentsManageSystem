@@ -1,0 +1,11 @@
+<% _.each(posts, function(post){%>
+<div class="panel panel-success">
+    <div class="panel-heading"><%= post.title %></div>
+    <div class="panel-body"> <%= post.content %></div>
+    <div class="panel-footer">
+        <% _.each(post.categories, function(category){ %>
+            <a class="category" href="/#posts/<%= category.name %>"> <%= category.name %></a>
+        <% }); %>
+    </div>
+</div>
+<% }); %>

@@ -1,0 +1,27 @@
+<div class="panel panel-primary">
+    <div class="panel-heading"> Add New Post</div>
+    <div class="panel-body">
+        <form>
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="categories">Categories(hold ctrl or shift (or drag with the mouse) to select more than one):</label>
+                <select multiple size="3" name="categories" id="categories" class="form-control">
+                    <% _.each(categories, function(category){ %>
+                    <option value="<%= category._id %>"> <%= category.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea name="content" id="content" rows="12" class="form-control"></textarea>
+            </div>
+
+            <button id="btnAddNewPost" class="btn btn-primary pull-right">Add Post</button>
+        </form>
+    </div>
+</div>

@@ -8,11 +8,11 @@ module.exports = function(models){
 
     router.get('/', handler.getAllPosts);
     
-    router.post('/create',eSession.authenticatedTeacher, handler.createPost);
+    router.post('/', handler.createPost);
 
-    router.patch('/edit/:id', eSession.authenticatedTeacher, handler.editPostById);
+    router.patch('/:id',  handler.editPostById);
 
-    router.delete('/delete/:id', eSession.authenticatedTeacher, handler.deletePostById);
+    router.delete('/:id', handler.deletePostById);
 
 
     return router;
