@@ -7,7 +7,7 @@ var Module = function (models) {
     var postModel = models.get('post', postSchema);
 
     this.getAllPosts = function (req, res, next) {
-        postModel.find({}).populate('categories').exec(function (err, posts) {
+        postModel.find({}).populate('categories author').exec(function (err, posts) {
             if (err) {
                 return next(err);
             }

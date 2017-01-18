@@ -2,16 +2,19 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!templates/posts/list.html'
-], function ($, _, Backbone, postListTemplate) {
+    'collections/posts/posts',
+    'text!templates/posts/profileList.html'
+], function ($, _, Backbone, PostCollection, postListTemplate) {
     var PostListView = Backbone.View.extend({
-        el: $('#container'),
+        el: $('#postListWrapper'),
         template: _.template(postListTemplate),
+        collection: new PostCollection(),
         initialize: function (options) {
             this.posts = options.posts;
+            this.render();
         },
         render: function () {
-            this.$el.html(this.template({posts:this.posts}));
+            this.$el.html(this.template({posts: this.posts}));
         }
     });
     return PostListView;

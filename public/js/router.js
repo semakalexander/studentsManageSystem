@@ -11,9 +11,10 @@ define([
     'views/groups/MainView',
     'views/groups/crud/CrudView',
     'views/categories/MainView',
-    'views/profiles/TeacherProfile'
+    'views/profiles/TeacherProfile',
+    'views/posts/PostsWallView'
 ], function ($, _, Backbone, HomeView, UsersListView, UsersCrudView, LoginView, RegistrationView, SubjectsCrudView,
-             GroupsMainView, GroupsCrudView, CategoriesMainView, TeacherProfileView) {
+             GroupsMainView, GroupsCrudView, CategoriesMainView, TeacherProfileView, PostsWallView) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "index",
@@ -25,7 +26,8 @@ define([
             "groups/": "groups",
             "groups/crud": "groupsCrud",
             "categories/crud": "categoriesCrud",
-            "profiles/teacher":"teacherProfile"
+            "profiles/teacher": "teacherProfile",
+            "posts/:category": "postsByCategory"
         }
     });
 
@@ -72,6 +74,10 @@ define([
 
         app_router.on("route:teacherProfile", function () {
             var teacherProfile = new TeacherProfileView();
+        });
+
+        app_router.on("route:postsByCategory", function (category) {
+            var postsView = new PostsWallView({category: category});
         });
 
 

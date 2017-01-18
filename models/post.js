@@ -7,11 +7,12 @@ module.exports = (function () {
         title: {type: String, required: true},
         categories: [{type: ObjectId, ref: 'category', required: true}],
         author: {type: ObjectId, ref: 'user', required: true},
-        content: {type: String, required: true}
+        content: {type: String, required: true},
+        dateOfCreation: {type: Date, required: true, default: new Date()}
     });
     mongoose.model('post', postSchema);
 
-    if(!mongoose.Schemas){
+    if (!mongoose.Schemas) {
         mongoose.Schemas = {};
     }
 

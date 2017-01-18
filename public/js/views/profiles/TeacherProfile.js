@@ -7,7 +7,7 @@ define([
     'collections/users/users',
     'models/user/user',
     'views/posts/AddPostView',
-    'views/posts/PostListView',
+    'views/posts/ProfilePostListView',
     'views/profiles/ProfileInfo',
     'text!templates/profiles/teacherProfile.html'
 ], function ($, _, Backbone, CategoryCollection, PostCollection, UserCollection, UserModel, AddPostView, PostListView,
@@ -61,7 +61,9 @@ define([
             this.$('#addPostLoader').show();
             var self = this;
 
-            var posts = this.postCollection.search({author: this.model['_id']}).toJSON();
+            var posts = _.filter(this.postCollection.toJSON(), function (post) {
+                return post.author._id == self.model._id;
+            });
             this.postListView = new PostListView({posts: posts});
             this.postListView.$el = this.$('#postListWrapper');
             this.postListView.render();
