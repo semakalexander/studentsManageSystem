@@ -1,0 +1,120 @@
+#btnAddNewPost {
+    width: 150px;
+}
+
+table td {
+    text-align: center;
+}
+
+.category {
+    background-color: #81ffa7;
+    border-radius: 35px;
+    color: black;
+}
+
+.modal-background {
+    display: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    z-index: 1;
+    position: fixed;
+    background-color: rgba(5, 15, 12, 0.9);
+}
+
+.modal-background > div {
+    display: none;
+    margin: 2% 20%;
+    border-radius: 25px;
+}
+
+.btn-close {
+    display: block;
+    color: white;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    font-size: 38px;
+    text-align: center;
+    font-weight: bold;
+
+    opacity: 0.5;
+}
+
+.btn-post-close {
+    display: block;
+    color: black;
+    float: right;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    font-size: 38px;
+    text-align: center;
+    font-weight: bold;
+
+    opacity: 0.5;
+}
+
+.btn-close:hover,
+.btn-close:focus,
+.btn-post-close:hover,
+.btn-post-close:focus {
+    cursor: pointer;
+    opacity: 1;
+}
+
+.post-content {
+    white-space: pre-wrap;
+}
+
+#btnAddCollapse {
+    display: none;
+}
+
+#addPostLoader {
+    display: none;
+}
+
+.loader {
+    border: 4px solid grey;
+    border-radius: 50%;
+    border-top: 4px solid black;
+    width: 25px;
+    height: 25px;
+    animation: spin 1s linear infinite;
+}
+
+.loader-full {
+    display: none;
+    position: absolute;
+    border: 14px solid black;
+    border-radius: 50%;
+    border-top: 14px solid white;
+
+    width: 300px;
+    height: 300px;
+    margin: 5% 35%;
+    animation: spin 1s linear infinite;
+    z-index: 2;
+    opacity: 0.6;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    20% {
+        transform: rotate(120deg);
+    }
+    80% {
+        transform: rotate(240deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

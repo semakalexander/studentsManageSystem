@@ -6,9 +6,9 @@ var postSchema = mongoose.Schemas.Post;
 var Module = function (models) {
     var postModel = models.get('post', postSchema);
 
-    this.getAllPosts = function (req,res,next) {
+    this.getAllPosts = function (req, res, next) {
         postModel.find({}).populate('categories').exec(function (err, posts) {
-            if(err) {
+            if (err) {
                 return next(err);
             }
             res.status(200).send(posts);
@@ -28,7 +28,7 @@ var Module = function (models) {
             err.status = 400;
             return next(err);
         }
-        
+
         var session = req.session;
         body.author = session.userId;
 

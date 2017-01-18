@@ -1,14 +1,31 @@
-    <div class="row">
-        <div class="col-md-8">
-          <div class="row">
+<div class="row container-fluid">
+    <div id="fullLoader" class="loader-full"></div>
 
-              <div id="addPostWrapper"></div>
-          </div>
-            <div class="row">
-                <div id="postListWrapper"></div>
+    <div class="col-md-8">
+
+        <div class="row">
+            <div id="addPostLoader" class="loader"></div>
+
+            <button id="btnAddCollapse" class="btn btn-info" type="button">
+                Do you want to add new post?
+            </button>
+            <div class="modal-background">
+                <div>
+                    <span class="btn-close">&times;</span>
+                    <div id="addPostWrapper"></div>
+                </div>
             </div>
         </div>
-        <div class="col-md-3 col-md-offset-1">
-            <div id="profileInfoWrapper"></div>
+
+        <div class="row">
+            <div id="postListLoader" class="loader"></div>
+            <div id="postListWrapper"></div>
         </div>
+
     </div>
+
+    <div class="col-md-offset-2 col-md-2">
+        <div id="profileInfoLoader" class="loader"></div>
+        <div id="profileInfoWrapper"></div>
+    </div>
+</div>

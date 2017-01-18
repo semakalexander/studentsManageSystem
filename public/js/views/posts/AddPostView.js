@@ -10,6 +10,13 @@ define([
         template: _.template(addPostTemplate),
         initialize: function (options) {
             this.collection = options.categoryCollection;
+            this.postCollection = options.postCollection;
+        },
+        hide: function () {
+            this.$el.hide(450);
+        },
+        show: function () {
+            this.$el.show(450);
         },
         subscribeOnBtns: function () {
             var self = this;
@@ -25,22 +32,24 @@ define([
                 var content = $content.val();
 
                 var post = new PostModel({
-                    title:title,
-                    categories:categories,
-                    content:content
+                    title: title,
+                    categories: categories,
+                    content: content
                 });
 
-                post.save();
+                post.save({},{
+                    success: function () {
+                        self.trigger('addedNewPost');
+                        $title.val('');
+                        $categories.val('');
+                        $content.val('');
+                    }
+                });
 
-                self.trigger('addedNewPost');
-                $title.val('');
-                $categories.val('');
-                $content.val('');
             });
         },
         render: function () {
-            this.$el.html(this.template({categories:this.collection.toJSON()}));
-
+            this.$el.html(this.template({categories: this.collection.toJSON()}));
             this.subscribeOnBtns();
         }
     });

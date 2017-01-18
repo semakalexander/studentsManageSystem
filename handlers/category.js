@@ -5,9 +5,9 @@ var categorySchema = mongoose.Schemas.Category;
 var Module = function (models) {
     var categoryModel = models.get('category', categorySchema);
 
-    this.getAllCategories = function (req,res,next) {
+    this.getAllCategories = function (req, res, next) {
         categoryModel.find({}, function (err, categories) {
-            if(err) {
+            if (err) {
                 return next(err);
             }
             res.status(200).send(categories);
@@ -18,7 +18,7 @@ var Module = function (models) {
         var body = req.body;
         var categoryName = body.name;
 
-        if(!categoryName){
+        if (!categoryName) {
             var err = new Error('error fields');
             err.status = 400;
             return next(err);
@@ -34,7 +34,7 @@ var Module = function (models) {
         });
     };
 
-    this.editCategoryById = function (req,res,next) {
+    this.editCategoryById = function (req, res, next) {
         var id = req.params.id;
         var body = req.body;
         categoryModel.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).exec(function (err, category) {
