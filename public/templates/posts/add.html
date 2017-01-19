@@ -8,7 +8,7 @@
             </div>
 
             <div class="form-group">
-                <label for="categories">Categories(hold ctrl or shift (or drag with the mouse) to select more than one):</label>
+                <label for="categories">Categories(hold <kbd>ctrl</kbd> or <kbd>shift</kbd> (or drag with the mouse) to select more than one):</label>
                 <select multiple size="3" name="categories" id="categories" class="form-control">
                     <% _.each(categories, function(category){ %>
                     <option value="<%= category._id %>"> <%= category.name %></option>

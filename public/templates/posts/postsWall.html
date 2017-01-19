@@ -1,22 +1,25 @@
-<div class="row">
-    <div class="col-md-offset-3 col-md-6">
-        <% _.each(posts, function(post){%>
-        <div data-id="<%= post._id %>" class="panel panel-success">
-            <div class="panel-heading"><%= post.title %></div>
-            <div>
+<div class="container-fluid">
+    <% _.each(posts, function(post){ %>
+    <div class="row">
+        <div data-id="<%= post._id %>" class="blog-post col-md-offset-2 col-md-8">
+            <h2 class="blog-post-title text-center"><%=post.title%></h2>
+            <ul class="tags">
                 <% _.each(post.categories, function(category){ %>
-                <a class="category" href="/#posts/<%= category.name %>"> <%= category.name %></a>
+                <li><a href="/#posts/<%= category.name %>" class="tag"> <%= category.name %></a></li>
                 <% }); %>
+            </ul>
+            <div class="blog-post-content">
+                <p>
+                  <%= post.content %>
+                </p>
             </div>
-            <div class="panel-body">
-                <div class="post-content well"><%= post.content %></div>
+            <div class="blog-post-footer clearfix">
+            <% var date = (new Date(post.dateOfCreation)).toLocaleString(); %>
+            <span><%= date %></span>
+            <span class="author pull-right">Author: <a href="<%= '#profiles/' + post.author.login %>"><%= post.author.login %></a></span>
             </div>
-            <div class="panel-footer clearfix">
-                <% var date = (new Date(post.dateOfCreation)).toLocaleString(); %>
-                <span><%= date %></span>
-                <span class="author pull-right">Author: <a href="<%= '#profiles/' + post.author.login %>"><%= post.author.login %></a></span>
-            </div>
+
         </div>
-        <% }); %>
     </div>
+    <% }); %>
 </div>

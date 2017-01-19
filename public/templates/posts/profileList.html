@@ -1,19 +1,25 @@
-<% _.each(posts, function(post){%>
-<div data-id="<%= post._id %>" class="panel panel-success">
-    <span class="btn-post-close">&times;</span>
+<% _.each(posts, function(post){ %>
+    <div data-id="<%= post._id %>" class="blog-post">
+        <span class="btn-post-close">&times;</span>
 
-    <div class="panel-heading"><%= post.title %></div>
-    <div>
-        <% _.each(post.categories, function(category){ %>
-        <a class="category" href="/#posts/<%= category.name %>"> <%= category.name %></a>
-        <% }); %>
+        <h2 class="blog-post-title text-center"><%=post.title%></h2>
+        <ul class="tags">
+            <% _.each(post.categories, function(category){ %>
+            <li><a href="/#posts/<%= category.name %>" class="tag"> <%= category.name %></a></li>
+            <% }); %>
+        </ul>
+        <div class="blog-post-content">
+            <p>
+                <%= post.content %>
+            </p>
+        </div>
+        <div class="blog-post-footer clearfix">
+            <% var date = (new Date(post.dateOfCreation)).toLocaleString(); %>
+            <span><%= date %></span>
+            <span class="author pull-right">Author: <a href="<%= '#profiles/' + post.author.login %>"><%= post.author.login %></a></span>
+        </div>
+
     </div>
-    <div class="panel-body">
-        <div class="post-content well"><%= post.content %></div>
-    </div>
-    <div class="panel-footer clearfix">
-        <% var date = (new Date(post.dateOfCreation)).toLocaleString(); %>
-        <span><%= date %></span>
-    </div>
-</div>
 <% }); %>
+
+

@@ -7,8 +7,8 @@ table td {
 }
 
 .category {
-    background-color: #81ffa7;
-    border-radius: 35px;
+    background-color: #fff;
+    border-radius: 5%;
     color: black;
 }
 
@@ -96,9 +96,9 @@ table td {
     border-radius: 50%;
     border-top: 14px solid white;
 
-    width: 300px;
-    height: 300px;
-    margin: 5% 35%;
+    width: 230px;
+    height: 230px;
+    margin: 5% 40%;
     animation: spin 1s linear infinite;
     z-index: 2;
     opacity: 0.6;
@@ -117,4 +117,62 @@ table td {
     100% {
         transform: rotate(360deg);
     }
+}
+
+
+.blog-post-content {
+    font-family: "Open Sans";
+}
+
+.blog-post-content p{
+    white-space: pre-wrap;
+    background: rgba(139,217,110,0.1);
+}
+
+.tags {
+    list-style: none;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.tags li {
+    float: left;
+}
+
+.tag {
+    background: #48EB5A;
+    border-radius: 3px 0 0 3px;
+    color: white;
+    display: inline-block;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 20px 0 12px;
+    position: relative;
+    margin: 0 10px 10px 0;
+    text-decoration: none;
+    opacity: 0.8;
+}
+
+.tag::after {
+    background: #fff;
+    border-top: 13px solid transparent;
+    border-left: 10px solid #48EB5A;
+    border-bottom: 13px solid transparent;
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+
+}
+
+.tag:hover {
+    background-color: crimson;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tag:hover::after {
+    border-left-color: crimson;
 }
