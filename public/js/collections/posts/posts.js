@@ -9,6 +9,12 @@ define([
         search: function (options) {
             var result = this.where(options);
             return new PostCollection(result);
+        },
+        filterByAuthor:function (authorLogin) {
+            var result = this.filter(function (post) {
+                return post.get('author').login == authorLogin;
+            });
+            return new PostCollection(result);
         }
     });
     return PostCollection;

@@ -72,7 +72,7 @@ define([
                 if (!confirm('Really?')) {
                     return;
                 }
-                var id = $(e.target).closest('.panel').data('id');
+                var id = $(e.target).closest('.blog-post').data('id');
                 var post = self.postCollection.get(id);
                 post.destroy();
             });

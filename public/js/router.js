@@ -27,7 +27,8 @@ define([
             "groups/crud": "groupsCrud",
             "categories/crud": "categoriesCrud",
             "profiles/teacher": "teacherProfile",
-            "posts/:category": "postsByCategory"
+            "posts/:category": "postsByCategory",
+            "profiles/:author": "postsByAuthor"
         }
     });
 
@@ -80,6 +81,9 @@ define([
             var postsView = new PostsWallView({category: category});
         });
 
+        app_router.on("route:postsByAuthor", function (author) {
+            var postsView = new PostsWallView({author:author});
+        });
 
         Backbone.history.start({pushState: false});
     };

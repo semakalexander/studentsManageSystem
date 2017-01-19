@@ -113,20 +113,23 @@ table td {
     }
     80% {
         transform: rotate(240deg);
+
     }
     100% {
         transform: rotate(360deg);
+
     }
 }
-
 
 .blog-post-content {
     font-family: "Open Sans";
 }
 
-.blog-post-content p{
+.blog-post-content p {
     white-space: pre-wrap;
-    background: rgba(139,217,110,0.1);
+    background: rgba(139, 217, 210, 0.02);
+    font-family: "Verdana";
+    font-size: 16px;
 }
 
 .tags {
