@@ -15,5 +15,8 @@ module.exports = function (models) {
     router.patch('/:id',handler.editGroupById);
     router.delete('/:id', handler.deleteGroupById);
 
+    router.post('/getGroupsByTeacher', handler.getGroupsByTeacher);
+
+
     return router;
 };

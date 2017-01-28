@@ -1,0 +1,27 @@
+<table class="table table-condensed">
+    <tbody>
+    <%if(!subjects || !subjects.length){%>
+    <tr>
+        No Data
+    </tr>
+    <%} else {
+    _.each(subjects, function(subject){%>
+    <tr data-id="<%= subject._id%>">
+        <% if(add){%>
+        <td><%=subject.name%></td>
+        <td>
+            <button class="btn btn-success btn-subject-subscribe">Subscribe</button>
+        </td>
+        <%} else {%>
+        <td><%= subject.name%></td>
+        <td>
+            <button class="btn btn-danger btn-subject-unsubscribe">Unsubscribe</button>
+        </td>
+        <% }%>
+    </tr>
+
+    <% }); }%>
+    </tbody>
+</table>
+
+<div id="pagination<%=add ? 'Off' : 'On'%>" class="col-md-offset-4"></div>

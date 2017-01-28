@@ -8,13 +8,16 @@ define([
     'views/account/LoginView',
     'views/account/RegistrationView',
     'views/subjects/CRUDView',
+    'views/subjects/subscribeTeacher/MainView',
     'views/groups/MainView',
     'views/groups/crud/CrudView',
     'views/categories/MainView',
     'views/profiles/TeacherProfile',
-    'views/posts/PostsWallView'
+    'views/posts/PostsWallView',
+    'views/marks/MainView'
 ], function ($, _, Backbone, HomeView, UsersListView, UsersCrudView, LoginView, RegistrationView, SubjectsCrudView,
-             GroupsMainView, GroupsCrudView, CategoriesMainView, TeacherProfileView, PostsWallView) {
+             SubscribeTeacherMainView, GroupsMainView, GroupsCrudView, CategoriesMainView, TeacherProfileView,
+             PostsWallView, MarksMainView) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "index",
@@ -23,12 +26,14 @@ define([
             "account/login": "login",
             "account/registration": "registration",
             "subjects/crud": "subjectsCrud",
+            "subjects/subscribeTeacher": "subscribeTeacher",
             "groups/": "groups",
             "groups/crud": "groupsCrud",
             "categories/crud": "categoriesCrud",
             "profiles/teacher": "teacherProfile",
             "posts/:category": "postsByCategory",
-            "profiles/:author": "postsByAuthor"
+            "profiles/:author": "postsByAuthor",
+            "marks/": "marksOfGroupForTeacher"
         }
     });
 
@@ -83,6 +88,14 @@ define([
 
         app_router.on("route:postsByAuthor", function (author) {
             var postsView = new PostsWallView({author:author});
+        });
+
+        app_router.on("route:marksOfGroupForTeacher", function () {
+            var marksView = new MarksMainView();
+        });
+
+        app_router.on("route:subscribeTeacher", function () {
+            var subscribeTeacherMainView = new SubscribeTeacherMainView();
         });
 
         Backbone.history.start({pushState: false});

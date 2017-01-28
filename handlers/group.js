@@ -1,13 +1,27 @@
 var mongoose = require('mongoose');
-var request = require('request');
 
 var groupSchema = mongoose.Schemas.Group;
 var userSchema = mongoose.Schemas.User;
+var teacherGroupSchema = mongoose.Schemas.TeacherGroup;
 
 var Module = function (models) {
 
     var groupModel = models.get('group', groupSchema);
     var userModel = models.get('user', userSchema);
+    var teacherGroupModel = models.get('teacherGroup', teacherGroupSchema);
+
+    this.getGroupsByTeacher = function (req, res, next) {
+        var teacherId = req.body.teacherId;
+        teacherGroupModel
+            .find({teacher: teacherId})
+            .populate('groups')
+            .exec(function (err, teacherGroups) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send(teacherGroups);
+            });
+    };
 
     this.addUserToGroup = function (req, res, next) {
         var userId = req.body.userId;
@@ -49,12 +63,6 @@ var Module = function (models) {
     };
 
     this.getAllGroups = function (req, res, next) {
-        // groupModel.find({}, function (err, groups) {
-        //     if (err) {
-        //         next(err);
-        //     }
-        //    res.status(200).send(groups);
-        // });
         groupModel.find({}).populate('curator students subjects').exec(function (err, groups) {
             if (err) {
                 return next(err);

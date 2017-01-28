@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var connection;
 var app;
 
+mongoose.Promise = global.Promise;
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 require('./config/' + process.env.NODE_ENV);

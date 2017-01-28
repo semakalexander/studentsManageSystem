@@ -26,20 +26,19 @@ define([
                 var $tr = $(e.target).closest('tr');
                 var userId = $tr.attr('data-id');
 
-
                 $.ajax({
                     url: "/groups/deleteFromGroup",
                     method: "POST",
                     data: {
                         userId: userId,
                         groupId: self.groupId
-                    }
-                })
-                    .done(function () {
+                    },
+                    success: function () {
                         self.trigger('deleteFromGroup',{
                             tr:$tr
                         });
-                    });
+                    }
+                });
             });
 
 

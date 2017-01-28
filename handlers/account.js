@@ -95,15 +95,24 @@ var Module = function (models) {
 
     this.getLoggedUser = function (req, res, next) {
         var id = req.session.userId;
-        userModel.findById(id).exec(function (err, user) {
+        userModel.findById(id).populate('marks subjects').exec(function (err, user) {
             if (user != null) {
-                res.status(200).send(user.toJSON());
+                res.status(200).send(user);
             }
             else {
                 res.status(200).send();
 
             }
         });
+        // userModel.findById(id).exec(function (err, user) {
+        //     if (user != null) {
+        //         res.status(200).send(user.toJSON());
+        //     }
+        //     else {
+        //         res.status(200).send();
+        //
+        //     }
+        // });
     };
 
 };

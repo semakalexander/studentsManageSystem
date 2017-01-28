@@ -1,9 +1,62 @@
 var mongoose = require('mongoose');
 
 var subjectSchema = mongoose.Schemas.Subject;
+var teacherSubjectSchema = mongoose.Schemas.TeacherSubject;
 
 var Module = function (models) {
     var subjectModel = models.get('subject', subjectSchema);
+    var teacherSubjectModel = models.get('teacherSubject', teacherSubjectSchema);
+
+    this.getSubjectsByTeacher = function (req, res, next) {
+        var teacherId = req.body.teacherId;
+        teacherSubjectModel
+            .find({teacher: teacherId})
+            .populate('subjects')
+            .exec(function (err, teacherSubjects) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send(teacherSubjects);
+            });
+    };
+
+    this.subscribeTeacherOnSubject = function (req, res, next) {
+        var teacher = req.body.teacherId;
+        var subjectId = req.body.subjectId;
+        teacherSubjectModel
+            .findOneAndUpdate({teacher: teacher}, {$push: {'subjects': subjectId}}, {new: true})
+            .exec(function (err, teacherSubject) {
+                if (err) {
+                    return next(err);
+                }
+                if(teacherSubject==null){
+                    teacherSubject = new teacherSubjectModel({
+                        teacher: teacher,
+                        subjects: [subjectId]
+                    });
+                    teacherSubject.save(function(err){
+                        if (err) {
+                            return next(err);
+                        }
+                    });
+                }
+                res.status(200).send(teacherSubject);
+            });
+    };
+
+    this.unsubscribeTeacherOnSubject = function (req, res, next) {
+        var teacher = req.body.teacherId;
+        var subjectId = req.body.subjectId;
+        teacherSubjectModel
+            .findOneAndUpdate({teacher: teacher}, {$pull: {'subjects': subjectId}}, {new: true})
+            .exec(function (err, teacherSubject) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send(teacherSubject);
+            });
+    };
+
 
     this.getAllSubjects = function (req, res, next) {
         subjectModel.find({}, function (err, subjects) {

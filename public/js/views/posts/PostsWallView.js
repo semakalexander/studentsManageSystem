@@ -12,28 +12,27 @@ define([
         initialize: function (options) {
             this.posts = [];
             var self = this;
-
-            this.collection.fetch({
-                success: function () {
-                    if (options.category) {
-                        _.each(self.collection.models, function (post) {
-                            var categories = post.get('categories');
-                            _.each(categories, function (category) {
-                                if (category.name == options.category) {
-                                    self.posts.push(post.toJSON());
-                                }
+            if (options.category || options.author) {
+                this.collection.fetch({
+                    success: function () {
+                        if (options.category) {
+                            _.each(self.collection.models, function (post) {
+                                var categories = post.get('categories');
+                                _.each(categories, function (category) {
+                                    if (category.name == options.category) {
+                                        self.posts.push(post.toJSON());
+                                    }
+                                });
                             });
-                        });
+                        }
+                        else if (options.author) {
+                            self.posts = self.collection.filterByAuthor(options.author).toJSON();
+                        }
+                        self.render();
+
                     }
-                    else if (options.author) {
-                        self.posts = self.collection.filterByAuthor(options.author).toJSON();
-                    }
-                    self.render();
-
-                }
-            });
-
-
+                });
+            }
         },
         render: function () {
             this.$el.html(this.template({posts: this.posts}));

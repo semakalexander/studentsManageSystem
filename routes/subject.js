@@ -11,5 +11,9 @@ module.exports = function (models) {
     router.patch('/:id', handler.editSubjectById);
     router.delete('/:id', handler.deleteSubjectById);
 
+    router.post('/subscribeTeacherOnSubject', handler.subscribeTeacherOnSubject);
+    router.post('/unsubscribeTeacherOnSubject', handler.unsubscribeTeacherOnSubject);
+    router.post('/getSubjectsByTeacher', handler.getSubjectsByTeacher);
+
     return router;
 };
