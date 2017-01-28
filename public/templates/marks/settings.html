@@ -1,6 +1,6 @@
 
-<div class="form-group col-md-6">
-    <label for="groupSelect"></label>
+<div class="form-group col-md-4">
+    <label for="groupSelect">group</label>
     <select name="" id="groupSelect" class="form-control">
         <% _.each(groups, function(group){ %>
         <option value="<%=group._id%>"><%=group.name%></option>
@@ -9,8 +9,8 @@
 </div>
 
 
-<div class="form-group col-md-6">
-    <label for="subjectSelect"></label>
+<div class="form-group col-md-4">
+    <label for="subjectSelect">subject</label>
     <select name="" id="subjectSelect" class="form-control">
         <% _.each(subjects, function(subject){ %>
         <option value="<%=subject._id%>"><%=subject.name%></option>
@@ -19,8 +19,8 @@
 </div>
 
 
-<div class="form-group col-md-6">
-    <label for="monthSelect"></label>
+<div class="form-group col-md-4">
+    <label for="monthSelect">month</label>
     <select name="" id="monthSelect" class="form-control">
         <% var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         for(var i=0; i < months.length; i++){ %>

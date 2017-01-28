@@ -12,26 +12,41 @@ define([
     var MainView = Backbone.View.extend({
         el: $('#container'),
         template: _.template(mainTemplate),
+        groupCollection: new GroupCollection(),
+        userCollection: new UserCollection(),
         initialize: function () {
-            this.render();
-            this.marksOfGroupView = new MarksOfGroupView();
-            this.marksOfGroupView.$el = $('#listMarks');
-        },
-        subscribeOnSelects: function () {
-            this.marksOfGroupView.render({
-                selectedSubject: this.$('#subjectSelect').value,
-                selectedMonth: 'january'
-            });
             var self = this;
-            this.$('#subjectSelect').on('change', function () {
-                var subject = self.settingsView.$('#subjectSelect').value;
-                var month = self.settingsView.$('#monthSelect').value;
-                self.marksOfGroupView.render({
-                    selectedSubject: subject,
-                    selectedMonth: month
-                })
+            this.groupCollection.fetch({
+                success: function () {
+                    self.render();
+                }
             });
-            this.settingsView.$('#monthSelect').on('change', this.func);
+
+        },
+        afterSettingsRender: function () {
+            var self = this;
+            this.userCollection.fetch({
+                success: function () {
+                    self.marksOfGroupView = new MarksOfGroupView({
+                        el :$('#listMarks'),
+                        collection: self.userCollection
+                    });
+                    self.marksOfGroupView.render({
+                        selectedGroup: this.$('#groupSelect')[0].value,
+                        selectedSubject: this.$('#subjectSelect')[0].value,
+                        selectedMonth: 'january'
+                    });
+                    self.$('#subjectSelect').on('change', function () {
+                        var subject = self.settingsView.$('#subjectSelect')[0].value;
+                        var month = self.settingsView.$('#monthSelect')[0].value;
+                        self.marksOfGroupView.render({
+                            selectedSubject: subject,
+                            selectedMonth: month
+                        })
+                    });
+                    self.settingsView.$('#monthSelect').on('change', this.func);
+                }
+            });
         },
         func: function () {
             var subject = this.settingsView.$('#subjectSelect').value;
@@ -44,11 +59,10 @@ define([
         render: function () {
             this.$el.html(this.template());
             this.settingsView = new SettingsView({
-                el: $('#settingsMarks')
+                el: $('#settingsMarks'),
+                groupCollection: this.groupCollection
             });
-            this.settingsView.bind('rendered', this.subscribeOnSelects, this);
-
-
+            this.settingsView.bind('rendered', this.afterSettingsRender, this);
         }
     });
     return MainView;

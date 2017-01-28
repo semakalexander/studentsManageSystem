@@ -9,6 +9,7 @@ define([
         el: $('#settingsMarks'),
         template: _.template(settingsTemplate),
         initialize: function (options) {
+            this.groupCollection = options.groupCollection;
             this.getLoggedUser();
         },
         getLoggedUser: function () {
@@ -36,15 +37,11 @@ define([
         },
         getGroups: function () {
             var self = this;
-            $.ajax({
-                url: '/groups/getGroupsByTeacher/',
-                method: 'POST',
-                data: {teacherId: self.model._id},
-                success: function (teacherGroups) {
-                    self.groups = teacherGroups.length ? teacherGroups[0].groups : [];
-                    self.render();
-                }
+            var teacherGroups = _.filter(this.groupCollection.toJSON(), function (group) {
+                return group.curator._id == self.model._id;
             });
+            this.groups = teacherGroups.length ? teacherGroups : [];
+            this.render();
         },
         render: function () {
             this.$el.html(this.template({

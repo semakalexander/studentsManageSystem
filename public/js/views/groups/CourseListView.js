@@ -25,11 +25,6 @@ define([
                 var userId = $tr.attr('data-id');
                 var firstName = $tr.children('.firstName').html();
                 var lastName = $tr.children('.lastName').html();
-                var user = {
-                    _id: userId,
-                    firstName: firstName,
-                    lastName: lastName
-                };
 
                 var groupId = $('#groupSelect').val();
                 $.ajax({

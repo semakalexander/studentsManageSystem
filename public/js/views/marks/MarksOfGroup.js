@@ -8,16 +8,19 @@ define([
     var MarksOfGroupView = Backbone.View.extend({
         el: $('#listMarks'),
         template: _.template(marksOfGroupTemplate),
-        collection: new UserCollection(),
-        initialize: function () {
-            var self = this;
-            this.collection.fetch({});
+        initialize: function (options) {
+            this.collection = options.collection;
         },
         render: function (options) {
             var self = this;
-            var users = new UserCollection(this.collection.first(10));
+            var users = this.collection
+                .sort()
+                .toJSON()
+                .filter(function (user) {
+                    return user.group == options.selectedGroup;
+                });
             this.$el.html(this.template({
-                users: users.toJSON(),
+                users: users,
                 selectedMonth: options.selectedMonth,
                 selectedSubject: options.selectedSubject
             }));
