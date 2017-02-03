@@ -7,4 +7,5 @@ module.exports = (function () {
     require('./mark');
     require('./teacherSubject');
     require('./teacherGroup');
+    require('./comment');
 })();

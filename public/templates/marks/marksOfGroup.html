@@ -39,37 +39,37 @@
 
     <% _.each(users, function(user){ %>
 
-    <tr>
+    <tr data-id="<%= user._id %>">
         <td><%= user.firstName + ' ' + user.lastName%></td>
         <%
         var marks = [];
         if(user.marks && user.marks.length){
-           marks = users.marks[selectedSubject][selectedMonth];
+        marks = users.marks[selectedSubject][selectedMonth];
         }
         for(var i = 0; i< marks.length; i++){ %>
-        <td class="<%='day_'+(i+1)%>">
-            <select name="" id="<%= user._id%>">
-            <option value="-1"></option>
-            <option value="0">н</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
+        <td data-day="<%=(i+1)%>">
+            <select>
+                <option value="-1"></option>
+                <option value="0">н</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
         </td>
         <% }
         for(var i=marks.length; i<31; i++){%>
-        <td class="<%='day_'+(i+1)%>">
-            <select name="" id="<%= user._id%>">
-            <option value="-1"></option>
-            <option value="0">н</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select></td>
+        <td data-day="<%=(i+1)%>">
+            <select>
+                <option value="-1"></option>
+                <option value="0">н</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select></td>
         <%}
 
         %>

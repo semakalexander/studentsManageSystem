@@ -29,7 +29,6 @@ define([
                             self.posts = self.collection.filterByAuthor(options.author).toJSON();
                         }
                         self.render();
-
                     }
                 });
             }

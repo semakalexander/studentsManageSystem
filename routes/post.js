@@ -14,6 +14,8 @@ module.exports = function(models){
 
     router.delete('/:id', handler.deletePostById);
 
+    router.post('/writeComment', handler.writeComment);
+
 
     return router;
 };

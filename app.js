@@ -7,6 +7,11 @@ module.exports = function (db) {
     var cookieParser = require('cookie-parser');
     var path = require('path');
 
+    var socket = require('socket.io');
+    var http = require('http');
+    var io;
+    var server;
+
     var app = express();
 
     app.use(bodyParser.json({strict: false, inflate: true, limit: 1024 * 1024 * 200}));
@@ -17,6 +22,11 @@ module.exports = function (db) {
 
     app.use(express.static(path.join(__dirname + '/public')));
 
+    server = http.createServer(app);
+    io = socket(server);
+    app.set('io', io);
+    require('./helpers/socketEvents')(app);
+
     require('./routes/index')(app, db);
-    return app;
+    return server;
 };

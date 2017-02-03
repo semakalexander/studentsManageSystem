@@ -8,7 +8,8 @@ module.exports = (function () {
         categories: [{type: ObjectId, ref: 'category', required: true}],
         author: {type: ObjectId, ref: 'user', required: true},
         content: {type: String, required: true},
-        dateOfCreation: {type: Date, required: true, default: new Date()}
+        dateOfCreation: {type: Date, required: true, default: new Date()},
+        comments: [{type: ObjectId, ref: 'comment'}]
     });
     mongoose.model('post', postSchema);
 

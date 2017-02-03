@@ -1,8 +1,6 @@
 module.exports = (function () {
     var mongoose = require('mongoose');
 
-    var ObjectId = mongoose.Schema.Types.ObjectId;
-
     // модель набір оцінок.
     // місяць : масив оцінок, де перший елемент - загальна оцінка,
     // а всі інші це оцінки(або н-ки) за конкретний день(число це індекс елементу, значення - оцінки)

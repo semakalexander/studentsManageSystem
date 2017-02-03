@@ -2,18 +2,18 @@ var mongoose = require('mongoose');
 
 
 var postSchema = mongoose.Schemas.Post;
+var commentSchema = mongoose.Schemas.Comment;
 
 var Module = function (models) {
     var postModel = models.get('post', postSchema);
+    var commentModel = models.get('comment', commentSchema);
 
     this.getAllPosts = function (req, res, next) {
         postModel.find({}).populate('categories author').exec(function (err, posts) {
             if (err) {
                 return next(err);
             }
-            setTimeout(function () {
-                res.status(200).send(posts);
-            }, 100);
+            res.status(200).send(posts);
         });
     };
 
@@ -61,8 +61,31 @@ var Module = function (models) {
                 return next(err);
             }
             res.status(200).send(resp);
-        })
-    }
+        });
+    };
+
+    this.writeComment = function (req, res, next) {
+        var body = req.body;
+        var postId = body.postId;
+        var userId = req.session.userId;
+        var content = body.content;
+        var comment = new commentModel({
+            author: userId,
+            content: content
+        });
+        comment.save({
+            success: function () {
+                postModel
+                    .findOneAndUpdate({_id: postId}, {$push: {'comments': comment._id}}, {new: true})
+                    .exec(function (err, post) {
+                        if (err) {
+                            return next(err);
+                        }
+                        res.status(200).send(post);
+                    });
+            }
+        });
+    };
 };
 
 module.exports = Module;

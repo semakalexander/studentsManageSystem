@@ -98,6 +98,8 @@ define([
             var subscribeTeacherMainView = new SubscribeTeacherMainView();
         });
 
+
+
         Backbone.history.start({pushState: false});
     };
 

@@ -2,9 +2,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'collections/marks/marks',
     'collections/users/users',
     'text!templates/marks/marksOfGroup.html'
-], function ($, _, Backbone, UserCollection, marksOfGroupTemplate) {
+], function ($, _, Backbone, MarkCollection, UserCollection, marksOfGroupTemplate) {
     var MarksOfGroupView = Backbone.View.extend({
         el: $('#listMarks'),
         template: _.template(marksOfGroupTemplate),
@@ -19,20 +20,26 @@ define([
                 .filter(function (user) {
                     return user.group == options.selectedGroup;
                 });
+
             this.$el.html(this.template({
                 users: users,
                 selectedMonth: options.selectedMonth,
                 selectedSubject: options.selectedSubject
             }));
+
             this.$('select').on('change', function (e) {
-                var selectedSubject = '';
-                var arr = this.id.split('day');
-                var userId = arr[0];
-                var day = arr[1];
+                var selectedSubject = $('#subjectSelect')[0].value;
+                var day = $(e.target).closest('td').data('day');
+                var userId = $(e.target).closest('tr').data('id');
+
                 var user = self.collection.get(userId);
                 var marks = user.get('marks');
+                if (!marks[selectedSubject]) {
+
+                    marks[selectedSubject] = {};
+                }
                 marks[selectedSubject]['january'][day] = this.value;
-                user.set(marks);
+                user.save();
             });
         }
     });
