@@ -9,33 +9,20 @@ var Module = function (models) {
     var commentModel = models.get('comment', commentSchema);
 
     this.getAllPosts = function (req, res, next) {
-        var collection = 'users';
-
-        postModel.aggregate([
-            {
-                $project: {
-                    author: 1
-                }
-            },
-            {
-                $lookup: {
-                    from: collection,
-                    localField: 'author',
-                    foreignField: '_id',
-                    as: 'lookupAuthor'
-                }
-            }], function (err, result) {
-            if (err) {
-                console.log(err);
-                return next(err);
-            }
-            res.status(200).send(result);
-        });
-
-
         postModel
             .find({})
-            .populate('categories author comments comments.author')
+            .populate([{
+                path: "author"
+            },
+                {
+                    path: "categories"
+                },
+                {
+                    path: "comments",
+                    populate: {
+                        path: "author"
+                    }
+                }])
             .exec(function (err, posts) {
                 if (err) {
                     return next(err);
