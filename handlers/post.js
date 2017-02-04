@@ -9,12 +9,39 @@ var Module = function (models) {
     var commentModel = models.get('comment', commentSchema);
 
     this.getAllPosts = function (req, res, next) {
-        postModel.find({}).populate('categories author').exec(function (err, posts) {
+        var collection = 'users';
+
+        postModel.aggregate([
+            {
+                $project: {
+                    author: 1
+                }
+            },
+            {
+                $lookup: {
+                    from: collection,
+                    localField: 'author',
+                    foreignField: '_id',
+                    as: 'lookupAuthor'
+                }
+            }], function (err, result) {
             if (err) {
+                console.log(err);
                 return next(err);
             }
-            res.status(200).send(posts);
+            res.status(200).send(result);
         });
+
+
+        postModel
+            .find({})
+            .populate('categories author comments comments.author')
+            .exec(function (err, posts) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send(posts);
+            });
     };
 
 
@@ -67,23 +94,27 @@ var Module = function (models) {
     this.writeComment = function (req, res, next) {
         var body = req.body;
         var postId = body.postId;
-        var userId = req.session.userId;
         var content = body.content;
+
+        var userId = req.session.userId;
+
         var comment = new commentModel({
             author: userId,
             content: content
         });
-        comment.save({
-            success: function () {
-                postModel
-                    .findOneAndUpdate({_id: postId}, {$push: {'comments': comment._id}}, {new: true})
-                    .exec(function (err, post) {
-                        if (err) {
-                            return next(err);
-                        }
-                        res.status(200).send(post);
-                    });
+
+        comment.save(function (err) {
+            if (err) {
+                return next(err)
             }
+            postModel
+                .findOneAndUpdate({_id: postId}, {$push: {'comments': comment._id}}, {new: true})
+                .exec(function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.status(200).send(comment);
+                });
         });
     };
 };

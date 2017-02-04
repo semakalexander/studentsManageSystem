@@ -2,7 +2,7 @@
     <% _.each(posts, function(post){ %>
     <div class="row">
         <div data-id="<%= post._id %>" class="blog-post col-md-offset-2 col-md-8">
-            <h2 class="blog-post- title text-center"><%=post.title%></h2>
+            <h2 class="blog-post-title text-center"><%=post.title%></h2>
             <ul class="tags">
                 <% _.each(post.categories, function(category){ %>
                 <li><a href="/#posts/<%= category.name %>" class="tag"> <%= category.name %></a></li>
@@ -17,29 +17,24 @@
                 <span class="author pull-right">Author: <a href="<%= '#profiles/' + post.author.login %>"><%=post.author.firstName + ' ' + post.author.lastName%></a></span>
             </div>
             <div class="comments">
-                <h3>Comments</h3>
+                <h4>Comments</h4>
                 <div class="inner">
-                    <div class="comment clearfix">
-                        <div class="info">
-                            <img src="/images/default_user.png" alt="" class="profile_image">
-                            <span class="author">Мирослава Глебена</span>
-                            <span class="date pull-right">1/19/2017, 12:05:57 PM</span>
-                        </div>
-                        <p class="content">Content will be here</p>
-                    </div>
-                    <div class="comment clearfix">
-                        <div class="info">
-                            <img src="/images/default_user.png" alt="" class="profile_image">
-                            <span class="author">Анатолій Глебена</span>
-                            <span class="date pull-right">1/19/2122, 12:05:57 PM</span>
-                        </div>
-                        <p class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam
-                            deleniti deserunt dicta dolore inventore, itaque iure iusto, natus nobis sapiente temporibus
-                            voluptatem voluptatum! Aliquid nobis optio reiciendis tenetur unde.</p>
-                    </div>
+                    <% if(typeof post.comments != 'undefined' && post.comments.length){ %>
+                        <% _.each(post.comments, function(comment){ %>
+                            <div class="comment">
+                                <div class="info">
+                                    <img src="/images/default_user.png" alt="" class="profile_image">
+                                    <span class="author"><%= comment.author.firstName + ' ' + comment.author.lastName %></span>
+                                    <span class="date pull-right"><%= comment.dateOfCreation %></span>
+                                </div>
+                                <p class="content"><%= comment.content %></p>
+                            </div>
+                        <% }); %>
+                    <% } %>
                     <div class="new-comment clearfix">
                         <textarea rows="3" name="content" class="form-control"></textarea>
-                        <input type="button" name="writeComment" class="btn btn-sm btn-success pull-right" value="Add Comment">
+                        <input type="button" name="writeComment"
+                               class="btn btn-sm btn-success btn-add-comment pull-right" value="Add Comment">
                     </div>
                 </div>
             </div>

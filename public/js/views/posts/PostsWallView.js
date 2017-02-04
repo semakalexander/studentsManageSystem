@@ -34,7 +34,26 @@ define([
             }
         },
         render: function () {
+            var self = this;
             this.$el.html(this.template({posts: this.posts}));
+            this.$('.btn-add-comment').on('click',function (e) {
+                var btn = $(e.target);
+                var content = btn.siblings('textarea').val();
+                var postId = btn.closest('.blog-post').data('id');
+
+                $.ajax({
+                    url: "/posts/writeComment/",
+                    method: "POST",
+                    data: {
+                        postId: postId,
+                        content: content
+                    },
+                    success: function (comment) {
+                        self.render();
+                    }
+                });
+
+            });
         }
     });
     return PostsWallView;
