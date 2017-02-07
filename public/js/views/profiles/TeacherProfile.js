@@ -60,10 +60,13 @@ define([
             this.$('#postListLoader').remove();
             this.$('#addPostLoader').show();
             var self = this;
+            var posts = [];
+            if (this.postCollection.size()) {
+                posts = _.filter(this.postCollection.toJSON(), function (post) {
+                    return post.author._id == self.model._id;
+                });
+            }
 
-            var posts = _.filter(this.postCollection.toJSON(), function (post) {
-                return post.author._id == self.model._id;
-            });
             this.postListView = new PostListView({posts: posts});
             this.postListView.$el = this.$('#postListWrapper');
             this.postListView.render();
@@ -114,11 +117,11 @@ define([
             this.listenTo(this.addPostView, 'addedNewPost', function () {
                 self.$('.modal-background div').hide();
                 self.$('.modal-background').hide();
-                self.postCollection.fetch({reset:true});
+                self.postCollection.fetch({reset: true});
             });
 
         },
-        fullLoaderShow:function () {
+        fullLoaderShow: function () {
             this.$('#fullLoader').show();
             this.$('.modal-background').show();
         },

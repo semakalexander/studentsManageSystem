@@ -204,24 +204,24 @@ table td {
     margin-right: 14px;
 }
 
-.comments {
-    background: rgba(0, 10, 80, 0.03);
-    border-radius: 12px 15px 30px;
+.comments-section {
+    /*background: rgba(0, 10, 80, 0.03);*/
+    /*border-radius: 12px 15px 30px;*/
     padding: 4px 12px 4px 16px;
     margin-top: 8px;
 }
 
-.comments .inner {
+.comments-section .inner {
     box-shadow: inset 0 4px 8px 10px rgba(0, 0, 0, 0.01);
     background: rgba(0, 10, 80, 0.008);
     border-radius: 15px;
 }
 
 .comment .content {
-    background: #fff;
-    border-radius: 25px;
+    /*background: #fff;*/
+    /*border-radius: 25px;*/
     padding: 10px;
-    display: inline-block;
+    /*display: inline-block;*/
     margin-left: 50px;
     margin-right: 8px;
 }

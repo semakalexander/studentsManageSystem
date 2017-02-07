@@ -3,8 +3,9 @@ define([
     'underscore',
     'backbone',
     'collections/posts/posts',
-    'text!templates/posts/postsWall.html'
-], function ($, _, Backbone, PostCollection, postsWallTemplate) {
+    'text!templates/posts/postsWall.html',
+    'text!templates/posts/comment.html'
+], function ($, _, Backbone, PostCollection, postsWallTemplate, commentTemplate) {
     var PostsWallView = Backbone.View.extend({
         el: $('#container'),
         template: _.template(postsWallTemplate),
@@ -16,6 +17,7 @@ define([
                 this.collection.fetch({
                     success: function () {
                         if (options.category) {
+                            self.collection = self.collection.sort();
                             _.each(self.collection.models, function (post) {
                                 var categories = post.get('categories');
                                 _.each(categories, function (category) {
@@ -26,7 +28,7 @@ define([
                             });
                         }
                         else if (options.author) {
-                            self.posts = self.collection.filterByAuthor(options.author).toJSON();
+                            self.posts = self.collection.filterByAuthor(options.author).sort().toJSON();
                         }
                         self.render();
                     }
@@ -34,12 +36,15 @@ define([
             }
         },
         render: function () {
-            var self = this;
             this.$el.html(this.template({posts: this.posts}));
-            this.$('.btn-add-comment').on('click',function (e) {
-                var btn = $(e.target);
-                var content = btn.siblings('textarea').val();
-                var postId = btn.closest('.blog-post').data('id');
+
+            this.$('.btn-add-comment').on('click', function (e) {
+                var $btn = $(e.target);
+                var $post = $btn.closest('.blog-post');
+                var $text = $btn.siblings('textarea');
+
+                var content = $text.val();
+                var postId = $post.data('id');
 
                 $.ajax({
                     url: "/posts/writeComment/",
@@ -49,7 +54,9 @@ define([
                         content: content
                     },
                     success: function (comment) {
-                        self.render();
+                        var template = _.template(commentTemplate);
+                        $post.find('.comments').append(template({comment: comment}));
+                        $text.val('');
                     }
                 });
 

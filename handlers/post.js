@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 
-
 var postSchema = mongoose.Schemas.Post;
 var commentSchema = mongoose.Schemas.Comment;
 
@@ -13,16 +12,14 @@ var Module = function (models) {
             .find({})
             .populate([{
                 path: "author"
-            },
-                {
-                    path: "categories"
-                },
-                {
-                    path: "comments",
-                    populate: {
-                        path: "author"
-                    }
-                }])
+            }, {
+                path: "categories"
+            }, {
+                path: "comments",
+                populate: {
+                    path: "author"
+                }
+            }])
             .exec(function (err, posts) {
                 if (err) {
                     return next(err);
@@ -56,7 +53,6 @@ var Module = function (models) {
             res.status(200).send(post);
         });
     };
-
 
     this.editPostById = function (req, res, next) {
         var id = req.params.id;
@@ -100,7 +96,12 @@ var Module = function (models) {
                     if (err) {
                         return next(err);
                     }
-                    res.status(200).send(comment);
+                    comment.populate('author', function (err) {
+                        if (err) {
+                            return next(err);
+                        }
+                        res.status(200).send(comment);
+                    });
                 });
         });
     };

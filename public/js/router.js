@@ -61,7 +61,6 @@ define([
             var registrationView = new RegistrationView()
         });
 
-
         app_router.on("route:subjectsCrud", function () {
             var subjectsCrudView = new SubjectsCrudView();
         });

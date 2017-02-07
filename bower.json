@@ -22,6 +22,7 @@
     "text": "requirejs/text#^2.0.15",
     "jquery-ui": "^1.12.1",
     "moment": "^2.17.1",
-    "bootstrap": "^3.3.7"
+    "bootstrap": "^3.3.7",
+    "socket.io-client": "^1.7.2"
   }
 }
