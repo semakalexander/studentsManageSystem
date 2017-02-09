@@ -13,7 +13,8 @@ require.config({
         collections: 'collections/',
         templates: '../templates/',
         views: 'views/',
-        socketio: './libs/socket.io-client/dist/socket.io'
+        socketio: './libs/socket.io-client/dist/socket.io',
+        async: 'libs/async/dist/async'
     },
     shim: {
         underscore: {
@@ -24,13 +25,13 @@ require.config({
         },
         jquery_ui: ['jquery'],
         Backbone: ['jquery', 'underscore'],
-        'socketio':{
-            exports:'io'
+        'socketio': {
+            exports: 'io'
         }
     }
 
 });
 
-require(['app', 'socketio'], function (App,io) {
+require(['app', 'socketio'], function (App, io) {
     App.initialize(io);
 });

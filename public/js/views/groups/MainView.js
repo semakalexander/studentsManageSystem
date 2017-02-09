@@ -8,8 +8,10 @@ define([
     'views/groups/GroupListView',
     'views/groups/HeaderView',
     'text!templates/groups/main.html',
-    'text!templates/groups/groupRow.html'
-], function ($, _, Backbone, UserCollection, GroupCollection, CourseListView, GroupListView, HeaderView, mainTemplate, groupRowTemplate) {
+    'text!templates/groups/groupRow.html',
+    'async'
+], function ($, _, Backbone, UserCollection, GroupCollection, CourseListView, GroupListView,
+             HeaderView, mainTemplate, groupRowTemplate, async) {
     var MainView = Backbone.View.extend({
         el: $('#container'),
         template: _.template(mainTemplate),
@@ -18,15 +20,39 @@ define([
         events: {},
         initialize: function () {
             var self = this;
-            this.userCollection.fetch({
-                success: function () {
+
+            async.parallel([
+                function (cb) {
+                    self.userCollection.fetch({
+                        success: function () {
+                           cb();
+                        }
+                    });
+                },
+                function (cb) {
                     self.groupCollection.fetch({
                         success: function () {
-                            self.render();
+                          cb();
                         }
                     });
                 }
+            ], function (err) {
+                if(err){
+                    return;
+                }
+                self.render();
             });
+
+
+            // this.userCollection.fetch({
+            //     success: function () {
+            //         self.groupCollection.fetch({
+            //             success: function () {
+            //                 self.render();
+            //             }
+            //         });
+            //     }
+            // });
         },
         render: function () {
             this.$el.html(this.template());
@@ -60,7 +86,7 @@ define([
                 self.groupListView.groupId = this.value;
 
                 self.courseListView.course = +($('#courseSelect').val());
-                self.courseListView.groupId =  this.value;
+                self.courseListView.groupId = this.value;
 
                 self.groupListView.render();
                 self.courseListView.render();

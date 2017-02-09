@@ -3,8 +3,10 @@ define([
     'underscore',
     'backbone',
     'models/post/post',
-    'text!templates/posts/add.html'
-], function ($, _, Backbone, PostModel, addPostTemplate) {
+    'text!templates/posts/add.html',
+    'text!templates/helpers/notification.html',
+    'socketio'
+], function ($, _, Backbone, PostModel, addPostTemplate, notificationTemplate, io) {
     var AddPostView = Backbone.View.extend({
         el: $('#addPostWrapper'),
         template: _.template(addPostTemplate),
@@ -37,12 +39,15 @@ define([
                     content: content
                 });
 
-                post.save({},{
+                post.save({}, {
                     success: function () {
                         self.trigger('addedNewPost');
                         $title.val('');
                         $categories.val('');
                         $content.val('');
+                        // var socket = io.connect({});
+                        //
+                        // socket.emit('postAdded', {title: title});
                     }
                 });
 
@@ -50,6 +55,8 @@ define([
         },
         render: function () {
             this.$el.html(this.template({categories: this.collection.toJSON()}));
+
+
             this.subscribeOnBtns();
         }
     });

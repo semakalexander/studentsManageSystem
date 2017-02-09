@@ -12,6 +12,8 @@ define([
         template: _.template(mainTemplate),
         collection: new CategoryCollection(),
         initialize: function () {
+
+
             this.render();
 
             this.addView = new AddView({collection: this.collection});
@@ -24,6 +26,8 @@ define([
 
             this.listView = new ListView({collection: this.collection});
             this.renderList();
+
+            this.collection.bind('change', this.renderList, this);
         },
         renderList: function () {
             this.listView.$el = this.$('#categoryListWrapper');

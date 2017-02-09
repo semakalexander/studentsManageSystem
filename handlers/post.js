@@ -3,7 +3,8 @@ var mongoose = require('mongoose');
 var postSchema = mongoose.Schemas.Post;
 var commentSchema = mongoose.Schemas.Comment;
 
-var Module = function (models) {
+var Module = function (app, models) {
+    var io = app.get('io');
     var postModel = models.get('post', postSchema);
     var commentModel = models.get('comment', commentSchema);
 
@@ -50,6 +51,10 @@ var Module = function (models) {
             if (err) {
                 return next(err);
             }
+            io.emit('addedPost', {
+                title: title,
+                author: req.session.userName
+            });
             res.status(200).send(post);
         });
     };

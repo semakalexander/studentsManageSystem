@@ -1,6 +1,7 @@
 define([
     'jquery',
     'underscore',
+    'socketio',
     'backbone',
     'views/home/HomeView',
     'views/users/ListView',
@@ -14,10 +15,11 @@ define([
     'views/categories/MainView',
     'views/profiles/TeacherProfile',
     'views/posts/PostsWallView',
-    'views/marks/MainView'
-], function ($, _, Backbone, HomeView, UsersListView, UsersCrudView, LoginView, RegistrationView, SubjectsCrudView,
+    'views/marks/MainView',
+    'text!templates/helpers/notification.html'
+], function ($, _, io, Backbone, HomeView, UsersListView, UsersCrudView, LoginView, RegistrationView, SubjectsCrudView,
              SubscribeTeacherMainView, GroupsMainView, GroupsCrudView, CategoriesMainView, TeacherProfileView,
-             PostsWallView, MarksMainView) {
+             PostsWallView, MarksMainView, notificationTemplate) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "index",
@@ -39,6 +41,17 @@ define([
 
     var initialize = function () {
         var app_router = new AppRouter();
+
+        var socket = io.connect({});
+        socket.on('addedPost', function (data) {
+            var template = _.template(notificationTemplate);
+            $('#container').prepend((template({
+                title: data.title,
+                author: data.author
+            })));
+            var $not = $('.notification');
+            $('.notification').animate({bottom: '+=35'}, 250);
+        });
 
         app_router.on("route:index", function () {
             var homeView = new HomeView();
@@ -86,7 +99,7 @@ define([
         });
 
         app_router.on("route:postsByAuthor", function (author) {
-            var postsView = new PostsWallView({author:author});
+            var postsView = new PostsWallView({author: author});
         });
 
         app_router.on("route:marksOfGroupForTeacher", function () {
@@ -96,7 +109,6 @@ define([
         app_router.on("route:subscribeTeacher", function () {
             var subscribeTeacherMainView = new SubscribeTeacherMainView();
         });
-
 
 
         Backbone.history.start({pushState: false});

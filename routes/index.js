@@ -5,7 +5,7 @@ module.exports = function (app, db) {
     var userRoute = require('./user')(models);
     var groupRoute = require('./group')(models);
     var categoryRoute = require('./category')(models);
-    var postRoute = require('./post')(models);
+    var postRoute = require('./post')(app, models);
     var subjectRoute = require('./subject')(models);
     var accountRoute = require('./account')(models);
 

@@ -8,7 +8,7 @@ var Module = function (models) {
     var teacherSubjectModel = models.get('teacherSubject', teacherSubjectSchema);
 
     this.getSubjectsByTeacher = function (req, res, next) {
-        var teacherId = req.body.teacherId;
+        var teacherId = req.query.teacherId;
         teacherSubjectModel
             .find({teacher: teacherId})
             .populate('subjects')

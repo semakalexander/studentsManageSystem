@@ -13,7 +13,7 @@ module.exports = function (models) {
 
     router.post('/subscribeTeacherOnSubject', handler.subscribeTeacherOnSubject);
     router.post('/unsubscribeTeacherOnSubject', handler.unsubscribeTeacherOnSubject);
-    router.post('/getSubjectsByTeacher', handler.getSubjectsByTeacher);
+    router.get('/getSubjectsByTeacher', handler.getSubjectsByTeacher);
 
     return router;
 };

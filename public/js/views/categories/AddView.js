@@ -7,25 +7,38 @@ define([
     'text!templates/categories/add.html'
 ], function ($, _, Backbone, CategoryModel, CategoryCollection, addCategoryTemplate) {
     var AddView = Backbone.View.extend({
-        el: $('#categoryAddWrapper'),
+        el: '#categoryAddWrapper',
         template: _.template(addCategoryTemplate),
-        events: {},
+        events: {
+            "click #btnAddCategory" : "somefunc"
+        },
         initialize: function (options) {
             this.collection = options.collection;
         },
         subscribeOnAdd: function () {
             var self = this;
-            this.$('#btnAddCategory').on('click', function (e) {
-                e.preventDefault();
-                var $input = $('#nameInput');
-                var name = $input.val();
+            // this.$('#btnAddCategory').on('click', function (e) {
+            //     e.preventDefault();
+            //     var $input = $('#nameInput');
+            //     var name = $input.val();
+            //
+            //     var category = new CategoryModel({name: name});
+            //     category.save();
+            //
+            //     self.trigger('addedNewCategory');
+            //     $input[0].value = '';
+            // });
+        },
+        somefunc: function (e) {
+            e.preventDefault();
+            var $input = this.$el.find('#nameInput');
+            var name = $input.val();
 
-                var category = new CategoryModel({name: name});
-                category.save();
+            var category = new CategoryModel({name: name});
+            category.save();
 
-                self.trigger('addedNewCategory');
-                $input[0].value = '';
-            });
+            this.trigger('addedNewCategory');
+            $input[0].value = '';
         },
         render: function () {
             this.$el.html(this.template());

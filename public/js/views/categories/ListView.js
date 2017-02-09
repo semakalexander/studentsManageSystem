@@ -60,7 +60,12 @@ define([
                     data[$inputs[i]['name']] = $inputs[i]['value'];
                 }
 
-                category.save(data, {patch: true});
+                category.save(data, {
+                    patch: true,
+                    success: function (model) {
+                        self.collection.set(model, {remove:false});
+                    }
+                });
             });
 
             this.$('.btn-category-edit-cancel').on('click', function () {
@@ -78,7 +83,10 @@ define([
             var categoryId = options ? options.categoryId : undefined;
             var start = (this.page - 1) * this.perPage;
 
-            this.$el.html(this.template({categories: categories.slice(start, start + this.perPage), categoryId: categoryId}));
+            this.$el.html(this.template({
+                categories: categories.slice(start, start + this.perPage),
+                categoryId: categoryId
+            }));
 
             this.paginationView.$el = this.$('#pagination');
             this.paginationView.render({
