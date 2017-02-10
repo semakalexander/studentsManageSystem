@@ -44,15 +44,6 @@ define([
             });
 
 
-            // this.userCollection.fetch({
-            //     success: function () {
-            //         self.groupCollection.fetch({
-            //             success: function () {
-            //                 self.render();
-            //             }
-            //         });
-            //     }
-            // });
         },
         render: function () {
             this.$el.html(this.template());

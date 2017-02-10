@@ -8,34 +8,26 @@ define([
     'text!templates/categories/main.html'
 ], function ($, _, Backbone, CategoryCollection, AddView, ListView, mainTemplate) {
     var MainView = Backbone.View.extend({
-        el: $('#container'),
+        el: '#container',
         template: _.template(mainTemplate),
         collection: new CategoryCollection(),
         initialize: function () {
-
-
+            var self = this;
             this.render();
 
-            this.addView = new AddView({collection: this.collection});
-            this.renderAdd();
-            this.addView.subscribeOnAdd();
-            var self = this;
+            this.addView = new AddView({
+                el:'#categoryAddWrapper'
+            });
+            this.addView.render();
             this.addView.on('addedNewCategory', function () {
                 self.listView.getCategoriesFromDb();
             });
 
-            this.listView = new ListView({collection: this.collection});
-            this.renderList();
-
-            this.collection.bind('change', this.renderList, this);
-        },
-        renderList: function () {
-            this.listView.$el = this.$('#categoryListWrapper');
-            this.listView.getCategoriesFromDb();
-        },
-        renderAdd: function () {
-            this.addView.$el = this.$('#categoryAddWrapper');
-            this.addView.render();
+            this.listView = new ListView({
+                el: '#categoryListWrapper',
+                collection: this.collection
+            });
+            this.getCategoriesFromDb();
         },
         render: function () {
             this.$el.html(this.template());

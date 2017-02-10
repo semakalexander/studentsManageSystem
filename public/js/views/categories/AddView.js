@@ -10,35 +10,25 @@ define([
         el: '#categoryAddWrapper',
         template: _.template(addCategoryTemplate),
         events: {
-            "click #btnAddCategory" : "somefunc"
+            "click #btnAddCategory": "onBtnAdd"
         },
-        initialize: function (options) {
-            this.collection = options.collection;
+        initialize: function () {
         },
-        subscribeOnAdd: function () {
-            var self = this;
-            // this.$('#btnAddCategory').on('click', function (e) {
-            //     e.preventDefault();
-            //     var $input = $('#nameInput');
-            //     var name = $input.val();
-            //
-            //     var category = new CategoryModel({name: name});
-            //     category.save();
-            //
-            //     self.trigger('addedNewCategory');
-            //     $input[0].value = '';
-            // });
-        },
-        somefunc: function (e) {
+        onBtnAdd: function (e) {
             e.preventDefault();
+            var self = this;
             var $input = this.$el.find('#nameInput');
             var name = $input.val();
 
             var category = new CategoryModel({name: name});
-            category.save();
+            category.save({}, {
+                success:function () {
+                    self.trigger('addedNewCategory');
+                    $input[0].value = '';
+                }
+            });
 
-            this.trigger('addedNewCategory');
-            $input[0].value = '';
+
         },
         render: function () {
             this.$el.html(this.template());
