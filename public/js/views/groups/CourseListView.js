@@ -13,42 +13,43 @@ define([
         page: 1,
         perPage: 8,
         paginationView: new PaginationView({linksQuantity: 5}),
+        events: {
+            "click .btn-add-to-group": "onBtnAddToGroup",
+            "click .pagination-link": "onPaginationLink"
+        },
         initialize: function (options) {
             this.userCollection = options.userCollection;
             this.groupCollection = options.groupCollection;
             this.render();
         },
-        subscribeOnBtns: function () {
+        onBtnAddToGroup: function (e) {
             var self = this;
-            this.$('.btn-add-to-group').on('click', function (e) {
-                var $tr = $(e.target).closest('tr');
-                var userId = $tr.attr('data-id');
-                var firstName = $tr.children('.firstName').html();
-                var lastName = $tr.children('.lastName').html();
+            var $tr = $(e.target).closest('tr');
+            var userId = $tr.data('id');
+            var groupId = $('#groupSelect').val();
 
-                var groupId = $('#groupSelect').val();
-                $.ajax({
-                    url: "/groups/addToGroup/",
-                    method: "POST",
-                    data: {
-                        userId: userId,
-                        groupId: groupId
-                    }
-                })
-                    .done(function () {
-                        self.trigger('addToGroup', {
-                            tr: $tr
-                        });
+            $.ajax({
+                url: "/groups/addToGroup/",
+                method: "POST",
+                data: {
+                    userId: userId,
+                    groupId: groupId
+                },
+                success: function () {
+                    self.trigger('addToGroup', {
+                        tr: $tr
                     });
+                },
+                error: function (err) {
+                    alert('something wrong');
+                    console.log(err);
+                }
             });
-
-
-            this.$('.pagination-link').on('click', function (e) {
-                e.preventDefault();
-                self.page = $(e.target).data('page');
-                self.render();
-            });
-
+        },
+        onPaginationLink: function (e) {
+            e.preventDefault();
+            this.page = $(e.target).data('page');
+            this.render();
         },
         render: function () {
             var selectedGroupId = this.selectedGroupId || this.groupCollection.models[0].attributes['_id'];
@@ -69,9 +70,6 @@ define([
                 currentPage: this.page,
                 pagesQuantity: Math.ceil(users.length / this.perPage)
             });
-
-            this.subscribeOnBtns();
-
         }
     });
     return CourseListView;

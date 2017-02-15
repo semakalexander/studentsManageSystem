@@ -18,7 +18,7 @@ define([
             this.$('#btnAddSubject').on('click', function (e) {
                 e.preventDefault();
                 var $input = $('#nameInput');
-                var name = $input.val();
+                var name = _.escape($input.val().trim());
 
                 var subject = new SubjectModel({name: name});
                 subject.save();

@@ -25,27 +25,26 @@ define([
                 function (cb) {
                     self.userCollection.fetch({
                         success: function () {
-                           cb();
+                            cb();
                         }
                     });
                 },
                 function (cb) {
                     self.groupCollection.fetch({
                         success: function () {
-                          cb();
+                            cb();
                         }
                     });
                 }
             ], function (err) {
-                if(err){
+                if (err) {
                     return;
                 }
                 self.render();
             });
-
-
         },
         render: function () {
+            var self = this;
             this.$el.html(this.template());
             this.headerView = new HeaderView({
                 el: $('#header'),
@@ -65,7 +64,6 @@ define([
                 groupCollection: this.groupCollection
             });
 
-            var self = this;
             this.headerView.$('#courseSelect').on('change', function () {
                 self.courseListView.page = 1;
                 self.courseListView.course = +this.value;
@@ -86,9 +84,17 @@ define([
 
             this.courseListView.on('addToGroup', function (options) {
                 options.tr.remove();
+                var id = options.tr.data('id');
+                var gId = $('#groupSelect').val();
                 alert('add');
-                self.userCollection.fetch();
-                self.groupCollection.fetch();
+                self.userCollection.fetch({
+                    success: function () {
+                        var user = self.userCollection.get(id);
+                        user.set({group: gId});
+                        self.courseListView.render();
+                        self.groupListView.render();
+                    }
+                });
             });
 
             this.groupListView.on('deleteFromGroup', function (options) {

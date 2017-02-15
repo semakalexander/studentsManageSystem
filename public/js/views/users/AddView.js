@@ -23,7 +23,7 @@ define([
 
                 var data = {};
                 for (var i = 0, length = $inputs.length; i < length; i++) {
-                    data[$inputs[i]['name']] = $inputs[i]['value'];
+                    data[$inputs[i]['name']] = _.escape($inputs[i]['value'].trim());
                     $inputs[i].value = '';
                 }
                 data['login'] = data['firstName'] + data['lastName'];

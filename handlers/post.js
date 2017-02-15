@@ -25,7 +25,9 @@ var Module = function (app, models) {
                 if (err) {
                     return next(err);
                 }
-                res.status(200).send(posts);
+                setTimeout(function () {
+                    res.status(200).send(posts);
+                }, 40);
             });
     };
 

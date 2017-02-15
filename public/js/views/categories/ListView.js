@@ -44,7 +44,6 @@ define([
             var category = this.collection.get({_id: id});
             category.destroy({
                 success: function () {
-                    $tr.remove();
                     if(self.collection.size() <= (self.page -1) * self.perPage){
                         self.page--;
                     }
@@ -66,7 +65,12 @@ define([
 
             var data = {};
             for (var i = 0, length = $inputs.length; i < length; i++) {
-                data[$inputs[i]['name']] = $inputs[i]['value'];
+                var val = $inputs[i]['value'].trim();
+                if(val == ''){
+                    alert('bad '+$inputs[i]['name']+ ', man. bad');
+                    return;
+                }
+                data[$inputs[i]['name']] = val;
             }
 
             category.save(data, {
@@ -76,7 +80,6 @@ define([
                     self.render();
                 }
             });
-
         },
         onBtnEditCancel: function () {
             this.render();

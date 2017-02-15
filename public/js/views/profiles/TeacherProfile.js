@@ -2,6 +2,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'async',
     'collections/categories/categories',
     'collections/posts/posts',
     'collections/users/users',
@@ -9,56 +10,63 @@ define([
     'views/posts/AddPostView',
     'views/posts/ProfilePostListView',
     'views/profiles/ProfileInfo',
+    'text!templates/posts/onePost.html',
     'text!templates/profiles/teacherProfile.html'
-], function ($, _, Backbone, CategoryCollection, PostCollection, UserCollection, UserModel, AddPostView, PostListView,
-             ProfileInfoView, teacherProfileTemplate) {
+], function ($, _, Backbone, async, CategoryCollection, PostCollection, UserCollection, UserModel, AddPostView,
+             PostListView, ProfileInfoView, onePostTemplate, teacherProfileTemplate) {
     var TeacherProfileView = Backbone.View.extend({
         el: $('#container'),
         template: _.template(teacherProfileTemplate),
         model: new UserModel(),
         postCollection: new PostCollection(),
         categoryCollection: new CategoryCollection(),
-        events: {
-            "postCollectionFetched": "onPostCollectionFetched",
-            "categoryCollectionFetched": "onCategoryCollectionFetched"
-        },
+        events: {},
         initialize: function () {
-            this.listenTo(this, 'userGetted', this.onUserGetted);
-            this.listenTo(this.postCollection, 'reset', this.onPostCollectionFetched);
-            this.listenTo(this.categoryCollection, 'reset', this.onCategoryCollectionFetched);
-            this.render();
-            this.getLoggedUser();
-        },
-        onUserGetted: function () {
-            this.profileInfoRender();
-            this.postCollection.fetch({
-                reset: true
-            });
-        },
-        getLoggedUser: function () {
             var self = this;
-            $.ajax({
-                url: '/account/getLoggedUser/',
-                method: 'GET',
-                success: function (user) {
-                    self.model = user;
-                    self.trigger('userGetted');
+            async.waterfall([
+                function (cb) {
+                    $.ajax({
+                        url: '/account/getLoggedUser/',
+                        method: 'GET',
+                        success: function (user) {
+                            self.model = user;
+                            cb(null, user);
+                        }
+                    });
+                },
+                function (user, cb) {
+                    self.profileInfoRender();
+                    self.postCollection.fetch({
+                        reset: true,
+                        success: function () {
+                            cb();
+                        }
+                    });
+                },
+                function (cb) {
+                    self.postListRender();
+                    self.categoryCollection.fetch({
+                        reset: true,
+                        success: function () {
+                            cb();
+                        }
+                    });
+                },
+                function (cb) {
+                    self.addPostRender();
+                    cb();
                 }
+            ], function (err) {
+                if (err) {
+                    console.log(err);
+                }
+                self.listenTo(self.postCollection, 'destroy', this.postListRender);
             });
-        },
-        onPostCollectionFetched: function () {
-            this.listenTo(this.postCollection, 'destroy', this.postListRender);
-            this.postListRender();
-            this.categoryCollection.fetch({
-                reset: true
-            });
-        },
-        onCategoryCollectionFetched: function () {
-            this.addPostRender();
+            self.render();
+
         },
         postListRender: function () {
             this.$('#postListLoader').remove();
-            this.$('#addPostLoader').show();
             var self = this;
             var posts = [];
             if (this.postCollection.size()) {
@@ -72,20 +80,21 @@ define([
             this.postListView.render();
 
             $('.btn-post-close').on('click', function (e) {
-                if (!confirm('Really?')) {
-                    return;
-                }
-                var id = $(e.target).closest('.blog-post').data('id');
+                // if (!confirm('Really?')) {
+                //     return;
+                // }
+                var $post = $(e.target).closest('.blog-post');
+                var id = $post.data('id');
                 var post = self.postCollection.get(id);
                 post.destroy();
+                $post.remove();
             });
 
             this.fullLoaderHide();
-
-
         },
         profileInfoRender: function () {
             this.$('#profileInfoLoader').remove();
+            this.$('#addPostLoader').show();
             this.profileInfoView = new ProfileInfoView({user: this.model});
             this.profileInfoView.$el = this.$('#profileInfoWrapper');
             this.profileInfoView.render();
@@ -114,10 +123,11 @@ define([
                 }
             });
 
-            this.listenTo(this.addPostView, 'addedNewPost', function () {
+            this.listenTo(this.addPostView, 'addedNewPost', function (data) {
                 self.$('.modal-background div').hide();
                 self.$('.modal-background').hide();
-                self.postCollection.fetch({reset: true});
+                var template = _.template(onePostTemplate);
+                self.$('#postListWrapper').prepend(template({post:data.post}));
             });
 
         },

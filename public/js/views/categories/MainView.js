@@ -27,7 +27,7 @@ define([
                 el: '#categoryListWrapper',
                 collection: this.collection
             });
-            this.getCategoriesFromDb();
+            this.listView.getCategoriesFromDb();
         },
         render: function () {
             this.$el.html(this.template());

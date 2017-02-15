@@ -11,7 +11,7 @@
                 <label for="categories">Categories(hold <kbd>ctrl</kbd> or <kbd>shift</kbd> (or drag with the mouse) to select more than one):</label>
                 <select multiple size="3" name="categories" id="categories" class="form-control">
                     <% _.each(categories, function(category){ %>
-                    <option value="<%= category._id %>"> <%= category.name %></option>
+                    <option value="<%= category._id %>"><%= category.name %></option>
                     <% }); %>
                 </select>
             </div>

@@ -11,7 +11,7 @@ define([
     'views/subjects/CRUDView',
     'views/subjects/subscribeTeacher/MainView',
     'views/groups/MainView',
-    'views/groups/crud/CrudView',
+    'views/groups/crud/MainView',
     'views/categories/MainView',
     'views/profiles/TeacherProfile',
     'views/posts/PostsWallView',
@@ -45,12 +45,15 @@ define([
         var socket = io.connect({});
         socket.on('addedPost', function (data) {
             var template = _.template(notificationTemplate);
-            $('#container').prepend((template({
+            var notification = template({
                 title: data.title,
                 author: data.author
-            })));
-            var $not = $('.notification');
-            $('.notification').animate({bottom: '+=35'}, 250);
+            });
+            var $notification = $(notification);
+            $('#notifications').prepend($notification);
+            setTimeout(function () {
+                $notification.remove();
+            }, 4000);
         });
 
         app_router.on("route:index", function () {

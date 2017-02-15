@@ -1,0 +1,17 @@
+<div data-id="<%= post._id %>" class="blog-post col-md-11">
+    <span class="btn-post-close">&times;</span>
+
+    <h2 class="blog-post-title text-center"><%=post.title%></h2>
+    <ul class="tags">
+        <% _.each(post.categories, function(category){ %>
+        <li><a href="/#posts/<%= category %>" class="tag"> <%= category %></a></li>
+        <% }); %>
+    </ul>
+    <div class="blog-post-content">
+        <p><%= post.content %></p>
+    </div>
+    <div class="blog-post-footer clearfix">
+        <span><%= post.dateOfCreation.toLocaleString() %></span>
+    </div>
+
+</div>

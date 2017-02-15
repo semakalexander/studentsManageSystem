@@ -239,14 +239,17 @@ table td {
 .comment .author {
     font-size: 16px;
 }
-
-
-.notification{
-    position: fixed;
-    z-index: 9999;
+#notifications{
     bottom: 0;
-    right:20px;
+    right: 20px;
+    position: fixed;
+    width: 380px;
+}
+
+.notification {
+    z-index: 9999;
     padding: 15px;
+    margin-bottom: 10px;
     border-radius: 16px;
     background: #48EB5A;
     opacity: 1;
@@ -255,19 +258,23 @@ table td {
     /*background: rgba(355,355,355,0.8);*/
 }
 
-.notification .title{
+.notification .title {
     color: #000;
     font-size: 15px;
 }
 
-.notification .message{
-    margin: 15px;
+.notification img{
+    width:24px;
+}
+
+.notification .message {
+    margin: 10px 10px 10px 5px;
     color: black;
     font-family: "Open Sans";
     opacity: 1;
 }
 
-.btn-notification-close{
+.btn-notification-close {
     display: block;
     color: black;
     float: right;

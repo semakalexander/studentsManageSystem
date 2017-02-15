@@ -7,12 +7,16 @@ define([
     var ListView = Backbone.View.extend({
         el: $('#groupListWrapper'),
         template: _.template(listTemplate),
-        events: {},
+        events: {
+            "click .btn-group-edit": "onBtnGroupEdit",
+            "click .btn-group-delete": "onBtnGroupDelete",
+            "click .btn-group-edit-save": "onBtnGroupEditSave",
+            "click .btn-group-edit-cancel": "onBtnGroupEditCancel"
+        },
         initialize: function (options) {
             this.groupCollection = options.groupCollection;
             this.userCollection = options.userCollection;
 
-            this.groupCollection.bind('change', this.getGroupsFromDb, this);
             this.groupCollection.bind('reset', this.render, this);
 
             this.render();
@@ -26,47 +30,52 @@ define([
                 reset: true
             });
         },
-        subscribeOnBtns: function () {
+        onBtnGroupEdit: function (e) {
+            var $tr = $(e.target).closest('tr');
+            var selectedGroupId = $tr.data('id');
+            this.render({selectedGroupId: selectedGroupId});
+        },
+        onBtnGroupDelete: function (e) {
             var self = this;
-
-            this.$('.btn-group-edit').on('click', function (e) {
-                var $tr = $(e.target).closest('tr');
-                var selectedGroupId = $tr.attr('data-id');
-
-                self.render({selectedGroupId: selectedGroupId});
-            });
-
-            this.$('.btn-group-delete').on('click', function (e) {
-                var $tr = $(e.target).closest('tr');
-                var id = $tr.attr('data-id');
-                var group = self.groupCollection.get({_id: id});
-                group.destroy({
-                    success: function () {
-                        self.getGroupsFromDb();
-                    }
-                });
-            });
-
-            this.$('.btn-group-edit-save').on('click', function (e) {
-                var $target = $(e.target);
-                var $tr = $target.closest('tr');
-                var $td = $target.closest('td');
-                var groupId = $tr.attr('data-id');
-                var group = self.groupCollection.get(groupId);
-                var $inputs = $td.siblings('td').children();
-
-                var data = {};
-                for (var i = 0, length = $inputs.length; i < length; i++) {
-                    data[$inputs[i]['name']] = $inputs[i]['value'];
+            var $tr = $(e.target).closest('tr');
+            var id = $tr.attr('data-id');
+            var group = this.groupCollection.get({_id: id});
+            group.destroy({
+                success: function () {
+                    self.render();
                 }
-
-                group.save(data, {patch: true, wait:true});
             });
+        },
+        onBtnGroupEditSave: function (e) {
+            var self = this;
+            var $target = $(e.target);
+            var $tr = $target.closest('tr');
+            var $td = $target.closest('td');
+            var $inputs = $td.siblings('td').children();
 
-            this.$('.btn-group-edit-cancel').on('click', function () {
-                self.render();
+            var groupId = $tr.data('id');
+            var group = this.groupCollection.get(groupId);
+
+
+            var data = {};
+            for (var i = 0, length = $inputs.length; i < length; i++) {
+                var val = $inputs[i]['value'].trim();
+                if (val == '') {
+                    alert('bad ' + $inputs[i]['name'] + ', man. bad name');
+                    return;
+                }
+                data[$inputs[i]['name']] = val.trim();
+            }
+
+            group.save(data, {
+                patch: true,
+                success: function () {
+                    self.getGroupsFromDb();
+                }
             });
-
+        },
+        onBtnGroupEditCancel: function () {
+            this.render();
         },
         render: function (options) {
             var selectedGroupId = options ? options.selectedGroupId : undefined;
@@ -80,8 +89,6 @@ define([
                 teachers: teachers,
                 groups: groups
             }));
-            this.subscribeOnBtns();
-
         }
     });
     return ListView;

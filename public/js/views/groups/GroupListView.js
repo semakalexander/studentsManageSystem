@@ -12,6 +12,10 @@ define([
         page: 1,
         perPage: 8,
         paginationView: new PaginationView({linksQuantity: 7}),
+        events: {
+            "click .btn-delete-from-group": "onBtnDeleteFromGroup",
+            "click .pagination-link": "onPaginationLink"
+        },
         initialize: function (options) {
             this.userCollection = options.userCollection;
             this.groupCollection = options.groupCollection;
@@ -19,34 +23,29 @@ define([
             this.groupId = this.groupCollection.toJSON()[0]._id;
             this.render();
         },
-        subscribeOnBtns: function () {
+        onBtnDeleteFromGroup: function (e) {
             var self = this;
+            var $tr = $(e.target).closest('tr');
+            var userId = $tr.attr('data-id');
 
-            this.$('.btn-delete-from-group').on('click', function (e) {
-                var $tr = $(e.target).closest('tr');
-                var userId = $tr.attr('data-id');
-
-                $.ajax({
-                    url: "/groups/deleteFromGroup",
-                    method: "POST",
-                    data: {
-                        userId: userId,
-                        groupId: self.groupId
-                    },
-                    success: function () {
-                        self.trigger('deleteFromGroup',{
-                            tr:$tr
-                        });
-                    }
-                });
+            $.ajax({
+                url: "/groups/deleteFromGroup",
+                method: "POST",
+                data: {
+                    userId: userId,
+                    groupId: self.groupId
+                },
+                success: function () {
+                    self.trigger('deleteFromGroup', {
+                        tr: $tr
+                    });
+                }
             });
-
-
-            this.$('.pagination-link').on('click', function (e) {
-                e.preventDefault();
-                self.page = $(e.target).data('page');
-                self.render();
-            });
+        },
+        onPaginationLink: function (e) {
+            e.preventDefault();
+            this.page = $(e.target).data('page');
+            this.render();
         },
         render: function () {
             var group = this.groupCollection
@@ -63,7 +62,6 @@ define([
                 pagesQuantity: Math.ceil(users.length / this.perPage)
             });
 
-            this.subscribeOnBtns();
         }
     });
     return GroupListView;

@@ -2,12 +2,13 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'async',
     'collections/groups/groups',
     'collections/users/users',
     'views/groups/crud/AddView',
     'views/groups/crud/ListView',
     'text!templates/groups/crud/main.html'
-], function ($, _, Backbone, GroupCollection, UserCollection, AddView, ListView, mainTemplate) {
+], function ($, _, Backbone, async, GroupCollection, UserCollection, AddView, ListView, mainTemplate) {
     var CrudView = Backbone.View.extend({
         el: $('#container'),
         template: _.template(mainTemplate),
@@ -16,14 +17,26 @@ define([
         events: {},
         initialize: function () {
             var self = this;
-            this.groupCollection.fetch({
-                success: function () {
+            async.parallel([
+                function (cb) {
+                    self.groupCollection.fetch({
+                        success: function () {
+                            cb();
+                        }
+                    });
+                },
+                function (cb) {
                     self.userCollection.fetch({
                         success: function () {
-                            self.render();
+                            cb();
                         }
                     });
                 }
+            ], function (err) {
+                if(err){
+                    return;
+                }
+                self.render();
             });
         },
         render: function () {
@@ -39,7 +52,7 @@ define([
                 userCollection: this.userCollection
             });
             var self = this;
-            this.addView.on('addedNewGroup',function () {
+            this.addView.on('addedNewGroup', function () {
                 self.listView.getGroupsFromDb();
                 alert('Success added!');
             });
@@ -47,5 +60,4 @@ define([
         }
     });
     return CrudView;
-})
-;
+});

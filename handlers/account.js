@@ -97,7 +97,10 @@ var Module = function (models) {
         var id = req.session.userId;
         userModel.findById(id).populate('marks subjects').exec(function (err, user) {
             if (user != null) {
-                res.status(200).send(user);
+                setTimeout(function () {
+                    res.status(200).send(user);
+
+                },15);
             }
             else {
                 res.status(200).send();

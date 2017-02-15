@@ -16,9 +16,9 @@
             <select name="curator" id="selectedGroupCurator">
                 <option value="<%= group.curator._id %>" selected><%= group.curator.login %></option>
                 <% _.each(teachers, function(teacher){
-                if(teacher._id != group.curator._id){ %>
-                <option value="<%= teacher._id %>"><%= teacher.login %></option>
-                <% }}); %>
+                    if(teacher._id != group.curator._id){ %>
+                        <option value="<%= teacher._id %>"><%= teacher.login %></option>
+                    <% }}); %>
             </select>
         </td>
         <td>
