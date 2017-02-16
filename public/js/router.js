@@ -39,10 +39,10 @@ define([
         }
     });
 
-    var initialize = function () {
+    var initialize = function (socket) {
         var app_router = new AppRouter();
 
-        var socket = io.connect({});
+        // var socket = io.connect({});
         socket.on('addedPost', function (data) {
             var template = _.template(notificationTemplate);
             var notification = template({
@@ -51,9 +51,12 @@ define([
             });
             var $notification = $(notification);
             $('#notifications').prepend($notification);
+            // $('.notification').animate({bottom: '-=35'}, 250);
             setTimeout(function () {
-                $notification.remove();
-            }, 4000);
+                $notification.hide({bottom:'-=70'},500, function () {
+                        $notification.remove();
+                });
+            },4000);
         });
 
         app_router.on("route:index", function () {

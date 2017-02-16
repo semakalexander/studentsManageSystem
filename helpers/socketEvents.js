@@ -2,17 +2,26 @@ var SocketEvents = function (app) {
     var io = app.get('io');
 
     io.on('connect', function (socket) {
+        console.log(socket.id + ' connected');
+
         socket.emit('connectedOnServer');
 
         socket.on('clientConnected', function (data) {
-            console.log(data);
+
         });
 
         socket.on('postAdded', function (data) {
             console.log(data);
         });
 
+        socket.on('subscribeOnAuthor', function (data) {
+            var author = data.author;
+            socket.join(author);
+            console.log(socket.rooms);
+        });
+
         socket.on('disconnect', function () {
+            console.log(socket.id + ' disconnected');
             socket.disconnect();
         })
 
@@ -20,11 +29,8 @@ var SocketEvents = function (app) {
 
 
     this.addedNewPost = function (req, res, next) {
-        console.log('addedNewPost server');
-
-
         io.emit('addedPost', {
-            title:req.body.title,
+            title: req.body.title,
             author: req.session.userName
         });
 

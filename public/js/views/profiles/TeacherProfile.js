@@ -114,6 +114,7 @@ define([
             this.$('#btnAddCollapse').on('click', function () {
                 self.$('.modal-background').show();
                 self.$('.modal-background div').show();
+                self.$('#uploadPhotoWrapper').hide();
             });
 
             this.$('.modal-background').on('click', function (e) {

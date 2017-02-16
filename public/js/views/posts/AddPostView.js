@@ -6,7 +6,7 @@ define([
     'text!templates/posts/add.html',
     'text!templates/helpers/notification.html',
     'socketio'
-], function ($, _, Backbone, PostModel, addPostTemplate, notificationTemplate, io) {
+], function ($, _, Backbone, PostModel, addPostTemplate) {
     var AddPostView = Backbone.View.extend({
         el: '#addPostWrapper',
         template: _.template(addPostTemplate),

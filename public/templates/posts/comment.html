@@ -1,6 +1,6 @@
 <div class="comment">
     <div class="info">
-        <img src="/images/default_user.png" alt="" class="profile_image">
+        <img src="<%=comment.author.img%>" alt="" class="profile_image">
         <span class="author"><%= comment.author.firstName + ' ' + comment.author.lastName %></span>
         <% var date = (new Date(comment.dateOfCreation)).toLocaleString(); %>
         <span class="date pull-right"><%= date %></span>

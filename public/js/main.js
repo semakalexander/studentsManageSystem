@@ -24,10 +24,7 @@ require.config({
             exports: '$'
         },
         jquery_ui: ['jquery'],
-        Backbone: ['jquery', 'underscore'],
-        'socketio': {
-            exports: 'io'
-        }
+        Backbone: ['jquery', 'underscore']
     }
 
 });

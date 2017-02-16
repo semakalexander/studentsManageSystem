@@ -2,14 +2,19 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'socketio',
     'collections/posts/posts',
     'text!templates/posts/postsWall.html',
     'text!templates/posts/comment.html'
-], function ($, _, Backbone, PostCollection, postsWallTemplate, commentTemplate) {
+], function ($, _, Backbone, io, PostCollection, postsWallTemplate, commentTemplate) {
     var PostsWallView = Backbone.View.extend({
         el: $('#container'),
         template: _.template(postsWallTemplate),
         collection: new PostCollection(),
+        events: {
+            "click .btn-add-comment": "onBtnAddComment",
+            "click #btn-posts-subscribe":"onBtnPostsSubscribe"
+        },
         initialize: function (options) {
             this.posts = [];
             var self = this;
@@ -18,16 +23,10 @@ define([
                     success: function () {
                         if (options.category) {
                             self.collection = self.collection.sort();
-                            _.each(self.collection.models, function (post) {
-                                var categories = post.get('categories');
-                                _.each(categories, function (category) {
-                                    if (category.name == options.category) {
-                                        self.posts.push(post.toJSON());
-                                    }
-                                });
-                            });
+                            self.posts = self.collection.filterByCategory(options.category)
                         }
                         else if (options.author) {
+                            self.author = options.author;
                             self.posts = self.collection.filterByAuthor(options.author).sort().toJSON();
                         }
                         self.render();
@@ -35,32 +34,42 @@ define([
                 });
             }
         },
-        render: function () {
-            this.$el.html(this.template({posts: this.posts}));
+        onBtnAddComment: function (e) {
+            var $btn = $(e.target);
+            var $post = $btn.closest('.blog-post');
+            var $text = $btn.siblings('textarea');
 
-            this.$('.btn-add-comment').on('click', function (e) {
-                var $btn = $(e.target);
-                var $post = $btn.closest('.blog-post');
-                var $text = $btn.siblings('textarea');
+            var content = $text.val();
+            var postId = $post.data('id');
 
-                var content = $text.val();
-                var postId = $post.data('id');
-
-                $.ajax({
-                    url: "/posts/writeComment/",
-                    method: "POST",
-                    data: {
-                        postId: postId,
-                        content: content
-                    },
-                    success: function (comment) {
-                        var template = _.template(commentTemplate);
-                        $post.find('.comments').append(template({comment: comment}));
-                        $text.val('');
-                    }
-                });
-
+            $.ajax({
+                url: "/posts/writeComment/",
+                method: "POST",
+                data: {
+                    postId: postId,
+                    content: content
+                },
+                success: function (comment) {
+                    var template = _.template(commentTemplate);
+                    $post.find('.comments').append(template({comment: comment}));
+                    $text.val('');
+                }
             });
+
+        },
+        onBtnPostsSubscribe: function (e) {
+            var $btn = $(e.target);
+            var author = $btn.data('id');
+            socket.emit('subscribeOnAuthor',{
+                author:author
+            });
+        },
+        render: function () {
+            this.$el.html(this.template({
+                author:this.author,
+                posts: this.posts
+            }));
+
         }
     });
     return PostsWallView;

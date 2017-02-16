@@ -13,7 +13,8 @@ module.exports = (function () {
         course: {type: Number, enum: [1, 2, 3, 4, 5, 6], default: 1},
         age: {type: Number},
         group: {type: ObjectId, ref: 'group', default: null},
-        marks: [{ObjectId: ObjectId}]// { subject: mark }
+        marks: [{ObjectId: ObjectId}],// { subject: mark }
+        img: {type: String, required:true, default: 'images/profile_photos/default_user.png'}
     }, {collection: 'users'});
 
 

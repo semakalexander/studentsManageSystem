@@ -16,6 +16,19 @@ define([
             });
             return new PostCollection(result);
         },
+        filterByCategory: function (selectedCategory) {
+            var self =this;
+            var posts = [];
+            _.each(self.models, function (post) {
+                var categories = post.get('categories');
+                _.each(categories, function (category) {
+                    if (category.name == selectedCategory) {
+                        posts.push(post.toJSON());
+                    }
+                });
+            });
+            return posts;
+        },
         comparator: function (model) {
             var date = new Date(model.get('dateOfCreation'));
             return -date.getTime();
