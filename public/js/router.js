@@ -5,10 +5,10 @@ define([
     'backbone',
     'views/home/HomeView',
     'views/users/ListView',
-    'views/users/CRUDView',
+    'views/users/MainView',
     'views/account/LoginView',
     'views/account/RegistrationView',
-    'views/subjects/CRUDView',
+    'views/subjects/MainView',
     'views/subjects/subscribeTeacher/MainView',
     'views/groups/MainView',
     'views/groups/crud/MainView',
@@ -42,7 +42,6 @@ define([
     var initialize = function (socket) {
         var app_router = new AppRouter();
 
-        // var socket = io.connect({});
         socket.on('addedPost', function (data) {
             var template = _.template(notificationTemplate);
             var notification = template({
@@ -51,12 +50,11 @@ define([
             });
             var $notification = $(notification);
             $('#notifications').prepend($notification);
-            // $('.notification').animate({bottom: '-=35'}, 250);
             setTimeout(function () {
-                $notification.hide({bottom:'-=70'},500, function () {
-                        $notification.remove();
+                $notification.hide({bottom: '-=70'}, 500, function () {
+                    $notification.remove();
                 });
-            },4000);
+            }, 4000);
         });
 
         app_router.on("route:index", function () {
@@ -97,15 +95,21 @@ define([
         });
 
         app_router.on("route:teacherProfile", function () {
-            var teacherProfile = new TeacherProfileView();
+            var teacherProfile = new TeacherProfileView({socket: socket});
         });
 
         app_router.on("route:postsByCategory", function (category) {
-            var postsView = new PostsWallView({category: category});
+            var postsView = new PostsWallView({
+                socket: socket,
+                category: category
+            });
         });
 
         app_router.on("route:postsByAuthor", function (author) {
-            var postsView = new PostsWallView({author: author});
+            var postsView = new PostsWallView({
+                socket: socket,
+                author: author
+            });
         });
 
         app_router.on("route:marksOfGroupForTeacher", function () {

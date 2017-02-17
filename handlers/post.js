@@ -53,11 +53,16 @@ var Module = function (app, models) {
             if (err) {
                 return next(err);
             }
-            io.emit('addedPost', {
-                title: title,
-                author: req.session.userName
+            // io.emit('addedPost', {
+            //     title: title,
+            //     author: req.session.userName
+            // });
+            post.populate('author', function (err) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send(post);
             });
-            res.status(200).send(post);
         });
     };
 

@@ -10,11 +10,13 @@ var SocketEvents = function (app) {
 
         });
 
-        socket.on('postAdded', function (data) {
-            console.log(data);
+        socket.on('addedNewPost', function (data) {
+            socket.broadcast.emit('addedPost', data);
         });
 
         socket.on('subscribeOnAuthor', function (data) {
+            console.log('_from socket ' + socket.id);
+            console.log('_about socket '+ data.author);
             var author = data.author;
             socket.join(author);
             console.log(socket.rooms);

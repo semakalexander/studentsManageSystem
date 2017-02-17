@@ -14,6 +14,7 @@ define([
             "click #btnAddNewPost": "onBtnAddNewPost"
         },
         initialize: function (options) {
+            this.socket = options.socket;
             this.collection = options.categoryCollection;
             this.postCollection = options.postCollection;
         },
@@ -52,7 +53,7 @@ define([
             });
 
             post.save({}, {
-                success: function () {
+                success: function (xhr) {
                     self.trigger('addedNewPost', {
                         post: {
                             title: title,
@@ -65,6 +66,11 @@ define([
                     $content.val('');
                     _.each($categories, function(category){
                         category['selected'] = false;
+                    });
+                    var author = xhr.get('author');
+                    self.socket.emit('addedNewPost',{
+                        author: author.firstName + ' ' + author.lastName,
+                        title: xhr.get('title')
                     });
                 }
             });

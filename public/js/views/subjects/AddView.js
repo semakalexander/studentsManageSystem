@@ -7,25 +7,32 @@ define([
     'text!templates/subjects/add.html'
 ], function ($, _, Backbone, SubjectModel, SubjectCollection, addSubjectTemplate) {
     var AddView = Backbone.View.extend({
-        el: $('#subjectAddWrapper'),
+        el: '#subjectAddWrapper',
         template: _.template(addSubjectTemplate),
-        events: {},
-        initialize: function (options) {
-            this.collection = options.collection;
+        events: {
+            "click #btnAddSubject": "onBtnAddSubject"
         },
-        subscribeOnAdd: function () {
+        initialize: function (options) {
+        },
+        onBtnAddSubject: function (e) {
+            e.preventDefault();
             var self = this;
-            this.$('#btnAddSubject').on('click', function (e) {
-                e.preventDefault();
-                var $input = $('#nameInput');
-                var name = _.escape($input.val().trim());
-
-                var subject = new SubjectModel({name: name});
-                subject.save();
-
-                self.trigger('addedNewSubject');
-                $input[0].value = '';
+            var $input = $('#nameInput');
+            var name = _.escape($input.val().trim());
+            if(name == ''){
+                alert('bad name');
+                return;
+            }
+            var subject = new SubjectModel({name: name});
+            subject.save(null, {
+                success:function () {
+                    self.trigger('addedNewSubject',{
+                        subject:subject
+                    });
+                    $input[0].value = '';
+                }
             });
+
         },
         render: function () {
             this.$el.html(this.template());

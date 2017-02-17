@@ -8,7 +8,7 @@ define([
     'text!templates/posts/comment.html'
 ], function ($, _, Backbone, io, PostCollection, postsWallTemplate, commentTemplate) {
     var PostsWallView = Backbone.View.extend({
-        el: $('#container'),
+        el: '#container',
         template: _.template(postsWallTemplate),
         collection: new PostCollection(),
         events: {
@@ -16,8 +16,9 @@ define([
             "click #btn-posts-subscribe":"onBtnPostsSubscribe"
         },
         initialize: function (options) {
-            this.posts = [];
             var self = this;
+            this.socket = options.socket;
+            this.posts = [];
             if (options.category || options.author) {
                 this.collection.fetch({
                     success: function () {
@@ -60,7 +61,8 @@ define([
         onBtnPostsSubscribe: function (e) {
             var $btn = $(e.target);
             var author = $btn.data('id');
-            socket.emit('subscribeOnAuthor',{
+            alert(this.socket);
+            this.socket.emit('subscribeOnAuthor',{
                 author:author
             });
         },
@@ -69,7 +71,6 @@ define([
                 author:this.author,
                 posts: this.posts
             }));
-
         }
     });
     return PostsWallView;

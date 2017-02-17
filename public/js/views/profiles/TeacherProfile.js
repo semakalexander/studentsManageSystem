@@ -21,8 +21,9 @@ define([
         postCollection: new PostCollection(),
         categoryCollection: new CategoryCollection(),
         events: {},
-        initialize: function () {
+        initialize: function (options) {
             var self = this;
+            this.socket = options.socket;
             async.waterfall([
                 function (cb) {
                     $.ajax({
@@ -104,6 +105,7 @@ define([
             var self = this;
 
             this.addPostView = new AddPostView({
+                socket: this.socket,
                 categoryCollection: this.categoryCollection,
                 postCollection: this.postCollection
             });

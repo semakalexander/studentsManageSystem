@@ -6,7 +6,7 @@ define([
     'text!templates/posts/profileList.html'
 ], function ($, _, Backbone, PostCollection, postListTemplate) {
     var PostListView = Backbone.View.extend({
-        el: $('#postListWrapper'),
+        el: '#postListWrapper',
         template: _.template(postListTemplate),
         collection: new PostCollection(),
         initialize: function (options) {
