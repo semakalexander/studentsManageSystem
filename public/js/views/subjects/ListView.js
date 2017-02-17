@@ -48,7 +48,7 @@ define([
             for (var i = 0, length = $inputs.length; i < length; i++) {
                 var value = $inputs[i]['value'].trim();
                 if (value == '') {
-                    alert('bad ' + data[$inputs[i]['name']]);
+                    alert('bad ' +$inputs[i]['name']);
                     return;
                 }
                 data[$inputs[i]['name']] = value;

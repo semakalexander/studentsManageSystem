@@ -9,80 +9,79 @@ define([
     'jquery_ui'
 ], function ($, _, Backbone, UserModel, UserCollection, PaginationView, usersListTemplate) {
     var UsersListView = Backbone.View.extend({
-        el: $('#userListWrapper'),
+        el: '#userListWrapper',
         template: _.template(usersListTemplate),
         paginationView: new PaginationView(),
         page: 1,
         perPage: 8,
+        events: {
+            "click .btn-user-edit": "onBtnUserEdit",
+            "click .btn-user-edit-cancel": "onBtnUserEditCancel",
+            "click .btn-user-edit-save": "onBtnUserEditSave",
+            "click .btn-user-delete": "onBtnUserDelete",
+            "click .pagination-link": "onPaginationLink"
+        },
         initialize: function (options) {
             this.collection = options.collection;
 
-            this.collection.bind('reset', this.render, this);
+            this.collection.bind('add', this.render, this);
             this.collection.bind('change', this.render, this);
         },
-        getUsersFromDB: function () {
-            var self = this;
-            this.collection.fetch({
-                success: function (collection) {
-                    self.collection = collection;
-                },
-                reset: true
-            });
+        onBtnUserEdit: function (e) {
+            this.trigger('startEdit');
+            var userId = $(e.target).closest('tr').data('id');
+            this.render({userId: userId});
         },
-        subscribeOnBtns: function () {
+        onBtnUserEditCancel: function () {
+            this.trigger('endEdit');
+            this.render();
+        },
+        onBtnUserEditSave: function (e) {
             var self = this;
-
-            this.$('.btn-user-edit').on('click', function (e) {
-                self.trigger('startEdit');
-                var $target = $(e.target);
-                var $tr = $target.closest('tr');
-                var userId = $tr.attr('data-id');
-
-                self.render({userId: userId});
-            });
-
-            this.$('.btn-user-delete').on('click', function (e) {
-                var $target = $(e.target);
-                var $tr = $target.closest('tr');
-                var userId = $tr.attr('data-id');
-                var user = self.collection.get(userId);
-
-                user.destroy({
-                    success: function () {
-                        self.trigger('endEdit');
-                        self.getUsersFromDB();
-                    }
-                })
-            });
-
-            this.$('.btn-user-edit-save').on('click', function (e) {
-                var $target = $(e.target);
-                var $tr = $target.closest('tr');
-                var $td = $target.closest('td');
-                var userId = $tr.attr('data-id');
-                var user = self.collection.get(userId);
-                var $inputs = $td.siblings('td').children('input');
-                var data = {};
-                for (var i = 0, length = $inputs.length; i < length; i++) {
-                    data[$inputs[i]['name']] = $inputs[i]['value'];
+            var $target = $(e.target);
+            var $tr = $target.closest('tr');
+            var $td = $target.closest('td');
+            var userId = $tr.data('id');
+            var user = this.collection.get(userId);
+            var $inputs = $td.siblings('td').children('input');
+            var data = {};
+            for (var i = 0, length = $inputs.length; i < length; i++) {
+                var value = $inputs[i]['value'].trim();
+                if (value == '') {
+                    alert('bad ' + $inputs[i]['name']);
+                    return;
                 }
+                data[$inputs[i]['name']] = value;
+            }
 
-                user.save(data, {patch: true});
-                self.trigger('endEdit');
+            user.save(data, {
+                patch: true,
+                success: function (model) {
+                    self.collection.set(model, {remove: false});
+                }
             });
+            this.trigger('endEdit');
+        },
+        onBtnUserDelete: function (e) {
+            var self = this;
+            var userId = $(e.target).closest('tr').data('id');
+            var user = self.collection.get(userId);
 
-            this.$('.btn-user-edit-cancel').on('click', function (e) {
-                self.middleTableRender();
-                self.render();
-                self.trigger('endEdit');
-            });
-
-            this.$('.pagination-link').on('click', function (e) {
-                e.preventDefault();
-                self.page = $(e.target).data('page');
-                self.render();
-                self.trigger('endEdit');
-            });
+            user.destroy({
+                success: function () {
+                    if (self.collection.size() <= (self.page - 1) * self.perPage) {
+                        self.page--;
+                    }
+                    self.render();
+                    self.trigger('endEdit');
+                }
+            })
+        },
+        onPaginationLink: function (e) {
+            e.preventDefault();
+            this.page = $(e.target).data('page');
+            this.render();
+            this.trigger('endEdit');
         },
         largeTableRender: function () {
             this.$el.switchClass('col-md-9', 'col-md-12', 0);
@@ -102,7 +101,6 @@ define([
                 currentPage: this.page,
                 pagesQuantity: Math.ceil(users.length / this.perPage)
             });
-            this.subscribeOnBtns();
             return this;
         }
     });

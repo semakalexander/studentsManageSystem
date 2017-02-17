@@ -27,11 +27,6 @@ define([
                         collection: self.collection
                     });
                     self.addView.render();
-
-                    self.addView.on('addedNewSubject', function (data) {
-                        self.collection.add(data.subject);
-                    });
-
                 }
             });
             this.render();

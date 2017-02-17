@@ -8,44 +8,41 @@ define([
     'text!templates/users/crud.html'
 ], function ($, _, Backbone, UserCollection, AddUserView, UserListView, CRUDTemplate) {
     var CRUDView = Backbone.View.extend({
-        el: $('#container'),
+        el: '#container',
         collection: new UserCollection(),
         template: _.template(CRUDTemplate),
         events: {},
         initialize: function () {
-            this.render();
-
-
             var self = this;
-            this.addView = new AddUserView({collection: this.collection});
-            this.renderAdd();
-            this.addView.on('addNewUser', function () {
-                self.listView.getUsersFromDB();
-                alert('Success added!');
+            this.collection.fetch({
+                success: function () {
+                    self.addView = new AddUserView({
+                        $el: self.$('#userAddWrapper'),
+                        collection: self.collection
+                    });
+                    self.addView.render();
+
+
+                    self.listView = new UserListView({
+                        $el: self.$('#userListWrapper'),
+                        collection: self.collection
+                    });
+                    self.listView.render();
+
+
+                    self.listView.on('startEdit', function () {
+                        self.addView.hide();
+                        self.listView.largeTableRender();
+                    });
+
+                    self.listView.on('endEdit', function () {
+                        self.listView.middleTableRender();
+                        self.addView.show();
+
+                    });
+                }
             });
-
-
-            this.listView = new UserListView({collection: this.collection});
-            this.renderList();
-
-            this.listView.on('startEdit', function () {
-                self.addView.hide();
-                self.listView.largeTableRender();
-            });
-
-            this.listView.on('endEdit', function () {
-                self.listView.middleTableRender();
-                self.addView.show();
-
-            })
-        },
-        renderAdd: function () {
-          this.addView.$el = this.$('#userAddWrapper');
-          this.addView.render();
-        },
-        renderList: function () {
-            this.listView.$el = this.$('#userListWrapper');
-            this.listView.getUsersFromDB();
+            this.render();
         },
         render: function () {
             this.$el.html(this.template());

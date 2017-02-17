@@ -26,9 +26,7 @@ define([
             var subject = new SubjectModel({name: name});
             subject.save(null, {
                 success:function () {
-                    self.trigger('addedNewSubject',{
-                        subject:subject
-                    });
+                    self.collection.add(subject);
                     $input[0].value = '';
                 }
             });

@@ -81,9 +81,9 @@ define([
             this.postListView.render();
 
             $('.btn-post-close').on('click', function (e) {
-                // if (!confirm('Really?')) {
-                //     return;
-                // }
+                if (!confirm('Really?')) {
+                    return;
+                }
                 var $post = $(e.target).closest('.blog-post');
                 var id = $post.data('id');
                 var post = self.postCollection.get(id);
