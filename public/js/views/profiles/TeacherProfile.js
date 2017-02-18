@@ -15,12 +15,16 @@ define([
 ], function ($, _, Backbone, async, CategoryCollection, PostCollection, UserCollection, UserModel, AddPostView,
              PostListView, ProfileInfoView, onePostTemplate, teacherProfileTemplate) {
     var TeacherProfileView = Backbone.View.extend({
-        el: $('#container'),
+        el: '#container',
         template: _.template(teacherProfileTemplate),
         model: new UserModel(),
         postCollection: new PostCollection(),
         categoryCollection: new CategoryCollection(),
-        events: {},
+        events: {
+            "click .btn-post-close": "onBtnPostClose",
+            "click #btnAddCollapse": "onBtnAddCollapse",
+            "click .modal-background": "onModalBackground"
+        },
         initialize: function (options) {
             var self = this;
             this.socket = options.socket;
@@ -61,10 +65,31 @@ define([
                 if (err) {
                     console.log(err);
                 }
-                self.listenTo(self.postCollection, 'destroy', this.postListRender);
+                self.listenTo(self.postCollection, 'destroy', self.postListRender);
             });
             self.render();
 
+        },
+        onBtnPostClose: function (e) {
+            if (!confirm('Really?')) {
+                return;
+            }
+            var $post = $(e.target).closest('.blog-post');
+            var id = $post.data('id');
+            var post = this.postCollection.get(id);
+            post.destroy();
+        },
+        onBtnAddCollapse: function () {
+            this.$('.modal-background').show();
+            this.$('.modal-background div').show();
+
+            this.$('#uploadPhotoWrapper').hide();
+        },
+        onModalBackground: function (e) {
+            if (e.target.className == 'modal-background' || e.target.className == 'btn-close') {
+                this.$('.modal-background div').hide();
+                this.$('.modal-background').hide();
+            }
         },
         postListRender: function () {
             this.$('#postListLoader').remove();
@@ -79,17 +104,6 @@ define([
             this.postListView = new PostListView({posts: posts});
             this.postListView.$el = this.$('#postListWrapper');
             this.postListView.render();
-
-            $('.btn-post-close').on('click', function (e) {
-                if (!confirm('Really?')) {
-                    return;
-                }
-                var $post = $(e.target).closest('.blog-post');
-                var id = $post.data('id');
-                var post = self.postCollection.get(id);
-                post.destroy();
-                $post.remove();
-            });
 
             this.fullLoaderHide();
         },
@@ -113,24 +127,14 @@ define([
             this.addPostView.render();
 
             this.$('#btnAddCollapse').show();
-            this.$('#btnAddCollapse').on('click', function () {
-                self.$('.modal-background').show();
-                self.$('.modal-background div').show();
-                self.$('#uploadPhotoWrapper').hide();
-            });
-
-            this.$('.modal-background').on('click', function (e) {
-                if (e.target.className == 'modal-background' || e.target.className == 'btn-close') {
-                    self.$('.modal-background div').hide();
-                    self.$('.modal-background').hide();
-                }
-            });
 
             this.listenTo(this.addPostView, 'addedNewPost', function (data) {
+                var post = data.post;
+                self.postCollection.set(post, {remove:false});
                 self.$('.modal-background div').hide();
                 self.$('.modal-background').hide();
                 var template = _.template(onePostTemplate);
-                self.$('#postListWrapper').prepend(template({post:data.post}));
+                self.$('#postListWrapper').prepend(template({post: post.toJSON()}));
             });
 
         },

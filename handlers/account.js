@@ -18,7 +18,7 @@ var Module = function (models) {
         var lastName = body.lastName;
         var course = body.course;
         var age = body.age;
-        var group = body.group;
+        body.login = firstName+' '+ lastName;
 
         if (!email.length || !password.length || !firstName.length || !lastName.length) {
             err = new Error('Empty email or password or name');
@@ -44,7 +44,6 @@ var Module = function (models) {
         var password = body.password;
         var shaSum = crypto.createHash('sha256');
         var session = req.session;
-        var err;
 
         userModel.findOne({email: email}, function (err, user) {
             if (err) {
@@ -66,7 +65,6 @@ var Module = function (models) {
             else {
                 delete session.rememberMe;
                 session.cookie.expires = false;
-
             }
 
             session.loggedIn = true;

@@ -56,7 +56,6 @@ define([
                     $text.val('');
                 }
             });
-
         },
         onBtnPostsSubscribe: function (e) {
             var $btn = $(e.target);

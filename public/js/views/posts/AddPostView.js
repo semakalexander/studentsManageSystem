@@ -37,11 +37,6 @@ define([
                     return this.value;
                 })
                 .get();
-            var categoriesText = $categories
-                .map(function () {
-                    return this.text;
-                })
-                .get();
             var content = _.escape($content.val());
             var dateOfCreation =  new Date();
 
@@ -55,12 +50,7 @@ define([
             post.save({}, {
                 success: function (xhr) {
                     self.trigger('addedNewPost', {
-                        post: {
-                            title: title,
-                            categories: categoriesText,
-                            content: content,
-                            dateOfCreation: dateOfCreation
-                        }
+                        post: xhr
                     });
                     $title.val('');
                     $content.val('');

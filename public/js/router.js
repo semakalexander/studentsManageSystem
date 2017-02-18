@@ -6,7 +6,7 @@ define([
     'views/home/HomeView',
     'views/users/ListView',
     'views/users/MainView',
-    'views/account/LoginView',
+    'views/account/LogInView',
     'views/account/RegistrationView',
     'views/subjects/MainView',
     'views/subjects/subscribeTeacher/MainView',
@@ -17,15 +17,17 @@ define([
     'views/posts/PostsWallView',
     'views/marks/MainView',
     'text!templates/helpers/notification.html'
-], function ($, _, io, Backbone, HomeView, UsersListView, UsersCrudView, LoginView, RegistrationView, SubjectsCrudView,
+], function ($, _, io, Backbone, HomeView, UsersListView, UsersCrudView, LogInView, RegistrationView, SubjectsCrudView,
              SubscribeTeacherMainView, GroupsMainView, GroupsCrudView, CategoriesMainView, TeacherProfileView,
              PostsWallView, MarksMainView, notificationTemplate) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "index",
+            "home": "index",
             "users": "users",
             "users/crud": "usersCrud",
-            "account/login": "login",
+            "account/logIn": "logIn",
+            "account/logOut": "logOut",
             "account/registration": "registration",
             "subjects/crud": "subjectsCrud",
             "subjects/subscribeTeacher": "subscribeTeacher",
@@ -70,8 +72,21 @@ define([
             var usersCrudView = new UsersCrudView();
         });
 
-        app_router.on("route:login", function () {
-            var loginView = new LoginView();
+        app_router.on("route:logIn", function () {
+            var logInView = new LogInView();
+        });
+
+        app_router.on("route:logOut", function () {
+            $.ajax({
+                url: "account/logOut",
+                method: "POST",
+                success:function (xhr) {
+                    return Backbone.history.navigate("#home", {trigger:true});
+                },
+                error:function (xhr) {
+                    console.log(xhr);
+                }
+            });
         });
 
         app_router.on("route:registration", function () {
@@ -121,7 +136,7 @@ define([
         });
 
 
-        Backbone.history.start({pushState: false});
+        Backbone.history.start();
     };
 
     return {

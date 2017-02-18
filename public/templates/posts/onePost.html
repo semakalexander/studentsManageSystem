@@ -4,14 +4,14 @@
     <h2 class="blog-post-title text-center"><%=post.title%></h2>
     <ul class="tags">
         <% _.each(post.categories, function(category){ %>
-        <li><a href="/#posts/<%= category %>" class="tag"> <%= category %></a></li>
+        <li><a href="/#posts/<%= category.name %>" class="tag"><%= category.name %></a></li>
         <% }); %>
     </ul>
     <div class="blog-post-content">
         <p><%= post.content %></p>
     </div>
     <div class="blog-post-footer clearfix">
-        <span><%= post.dateOfCreation.toLocaleString() %></span>
+        <% var date = (new Date(post.dateOfCreation)).toLocaleString(); %>
+        <span><%= date %></span>
     </div>
-
 </div>

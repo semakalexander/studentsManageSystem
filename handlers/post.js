@@ -53,11 +53,7 @@ var Module = function (app, models) {
             if (err) {
                 return next(err);
             }
-            // io.emit('addedPost', {
-            //     title: title,
-            //     author: req.session.userName
-            // });
-            post.populate('author', function (err) {
+            post.populate('author categories', function (err) {
                 if (err) {
                     return next(err);
                 }
