@@ -8,34 +8,9 @@ var mailer = new Mailer();
 var Module = function (models) {
     var userModel = models.get('user', userSchema);
 
-    //middleware
-    this.checkRegisterFields = function (req, res, next) {
-        var err;
-        var body = req.body;
-        var email = body.email;
-        var password = body.password;
-        var firstName = body.firstName;
-        var lastName = body.lastName;
-        var course = body.course;
-        var age = body.age;
-        body.login = firstName+' '+ lastName;
-
-        if (!email.length || !password.length || !firstName.length || !lastName.length) {
-            err = new Error('Empty email or password or name');
-            err.status = 400;
-            return next(err);
-        }
-
-        var shaSum = crypto.createHash('sha256');
-        shaSum.update(password);
-        body.password = shaSum.digest('hex');
-
-        next();
-    };
-    //
     this.logOut = function (req, res, next) {
         req.session.destroy();
-        res.status(200).send('Done');
+        res.status(200).send();
     };
 
     this.login = function (req, res, next) {
@@ -86,36 +61,74 @@ var Module = function (models) {
         });
     };
 
-    this.forgotPassword = function (req, res, next) {
-        res.status(200).send('ok');
-        mailer.sendEmail({email: '00110111@mail.ua', id: req.session.userId});
+    this.forgotPasswordSubmit = function (req, res, next) {
+        var query = req.query;
+        if (typeof query.email === 'undefined') {
+            return next(new Error('should be email'));
+        }
+        var email = query.email;
+
+        userModel.findOne({email: email}, function (err, user) {
+            if (err) {
+                return next(err);
+            }
+            if(!user){
+                return next(new Error('В базі даних немає такого email'));
+            }
+
+            mailer.sendEmail({
+                email: email,
+                id: user.id,
+                key: user.password
+            });
+            res.status(200).send();
+        });
+    };
+
+    this.forgotPasswordAnswer = function (req, res, next) {
+        var query = req.query;
+        var id = query.id;
+        var key = query.key;
+        userModel.findById(id, function (err, user) {
+            if (err) {
+                return next(err);
+            }
+            if (user.password !== key) {
+                err = new Error('Invalid key');
+                return next(err);
+            }
+            res.status(200).send();
+        });
     };
 
     this.getLoggedUser = function (req, res, next) {
         var id = req.session.userId;
         userModel.findById(id).populate('marks subjects').exec(function (err, user) {
             if (user != null) {
-                setTimeout(function () {
-                    res.status(200).send(user);
-
-                },15);
+                res.status(200).send(user);
             }
             else {
                 res.status(200).send();
-
             }
         });
-        // userModel.findById(id).exec(function (err, user) {
-        //     if (user != null) {
-        //         res.status(200).send(user.toJSON());
-        //     }
-        //     else {
-        //         res.status(200).send();
-        //
-        //     }
-        // });
     };
 
+    this.changePassword = function (req, res, next) {
+        var id = req.params.id;
+        var password = req.body.password;
+        var shaSum = crypto.createHash('sha256');
+        shaSum.update(password);
+
+        userModel
+            .findOneAndUpdate({_id: id}, {$set: {password: shaSum.digest('hex')}})
+            .exec(function (err, user) {
+                if (err) {
+                    return next(err);
+                }
+
+                res.status(200).send(user);
+            });
+    };
 };
 
 module.exports = Module;

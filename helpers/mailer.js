@@ -15,8 +15,7 @@ module.exports = function () {
     this.sendEmail = function (options, cb) {
         var mailOptions;
         var email = options.email;
-        var link = 'http://localhost:3050/users/forgot/' + options.id;
-
+        var link = 'http://localhost:3030/#account/forgot/' + options.id + '/' + options.key;
 
         mailOptions = {
             from: 'sfder@gmail.com',

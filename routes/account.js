@@ -11,8 +11,11 @@ var userHandler = new UserHandler(models);
 
   	router.post('/logIn', handler.login);
     router.post('/registration', userHandler.createUser);
-    router.post('/logOut', eSession.authenticatedUser, handler.logOut);
+    router.post('/logOut', handler.logOut);
     router.get('/getLoggedUser', handler.getLoggedUser);
 
+    router.get('/forgotPasswordSubmit', handler.forgotPasswordSubmit);
+    router.get('/forgotPasswordAnswer', handler.forgotPasswordAnswer);
+    router.patch('/changePassword/:id', handler.changePassword);
     return router;
 };
