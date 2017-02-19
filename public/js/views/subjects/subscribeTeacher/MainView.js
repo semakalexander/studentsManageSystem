@@ -2,56 +2,67 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'async',
     'collections/subjects/subjects',
     'collections/users/users',
     'views/subjects/subscribeTeacher/SettingsView',
     'views/subjects/subscribeTeacher/SubscribeOnView',
     'views/subjects/subscribeTeacher/SubscribeOffView',
     'text!templates/subjects/subscribeTeacher/main.html'
-], function ($, _, Backbone, SubjectCollection, UserCollection, SettingView, SubscribeOnView, SubscribeOffView, mainTemplate) {
+], function ($, _, Backbone, async, SubjectCollection, UserCollection, SettingView, SubscribeOnView, SubscribeOffView, mainTemplate) {
     var MainView = Backbone.View.extend({
-        el: $('#container'),
+        el: '#container',
         template: _.template(mainTemplate),
         userCollection: new UserCollection(),
         subjectCollection: new SubjectCollection(),
         initialize: function () {
             var self = this;
             this.render();
-            this.userCollection.fetch({
-                success: function () {
-                    self.subjectCollection.fetch({
-                        success: function () {
-                            self.subscribeOnListView = new SubscribeOnView({
-                                el: $('#subscribeOn'),
-                                collection: self.subjectCollection
-                            });
-                            self.subscribeOffListView = new SubscribeOffView({
-                                el: $('#subscribeOff'),
-                                collection: self.subjectCollection
-                            });
+            async.parallel([
+                    function (cb) {
+                        self.userCollection.fetch({
+                            success: function () {
+                                self.settingsView = new SettingView({
+                                    el: $('#settings'),
+                                    userCollection: self.userCollection
+                                });
+                                cb(null);
+                            }
+                        });
+                    },
+                    function (cb) {
+                        self.subjectCollection.fetch({
+                            success: function () {
+                                self.subscribeOnListView = new SubscribeOnView({
+                                    el: $('#subscribeOn'),
+                                    collection: self.subjectCollection
+                                });
+                                self.subscribeOffListView = new SubscribeOffView({
+                                    el: $('#subscribeOff'),
+                                    collection: self.subjectCollection
+                                });
+                                self.subscribeOffListView.on('subjectSubscribed', function () {
+                                    self.subscribeOffListView.render();
+                                    self.subscribeOnListView.render();
+                                });
+                                self.subscribeOnListView.on('subjectUnsubscribed', function () {
+                                    self.subscribeOffListView.render();
+                                    self.subscribeOnListView.render();
 
-                            self.settingsView = new SettingView({
-                                el: $('#settings'),
-                                userCollection: self.userCollection
-                            });
+                                });
+                                cb(null);
+                            }
+                        });
+                    }
+                ],
+                function (err, results) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    self.renderLists();
 
-                            self.renderLists();
-
-
-                            self.subscribeOffListView.on('subjectSubscribed', function () {
-                                self.subscribeOffListView.render();
-                                self.subscribeOnListView.render();
-                            });
-                            self.subscribeOnListView.on('subjectUnsubscribed', function () {
-                                self.subscribeOffListView.render();
-                                self.subscribeOnListView.render();
-                            });
-                            self.listenTo(self.settingsView, 'teacherChange', self.renderLists);
-                        }
-                    });
-
-                }
-            });
+                    self.listenTo(self.settingsView, 'teacherChange', self.renderLists);
+                });
         },
         renderLists: function () {
             this.subscribeOnListView.page = 1;

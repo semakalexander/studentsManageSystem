@@ -6,46 +6,48 @@ define([
     'text!templates/subjects/subscribeTeacher/list.html'
 ], function ($, _, Backbone, PaginationView, listTemplate) {
     var ListOffView = Backbone.View.extend({
-        el: $('#subscribeOff'),
+        el: '#subscribeOff',
         template: _.template(listTemplate),
         page: 1,
         perPage: 8,
         paginationView: new PaginationView({linksQuantity: 5}),
-        initialize: function (options) {
+        events: {
+            "click .btn-subject-subscribe": "onBtnSubjectSubscribe",
+            "click .pagination-link": "onPaginationLink"
         },
-        subscribeOnBtns: function () {
-            var self = this;
-            this.$('.pagination-link').on('click', function (e) {
-                e.preventDefault();
-                self.page = $(e.target).data('page');
-                self.render();
-            });
+        initialize: function (options) {
 
-            this.$('.btn-subject-subscribe').on('click', function (e) {
-                var $tr = $(e.target).closest('tr');
-                var teacherId = $('#teacherSelect').val();
-                var subjectId = $tr.data('id');
-                $.ajax({
-                    url: "/subjects/subscribeTeacherOnSubject/",
-                    method: "POST",
-                    data: {
-                        teacherId: teacherId,
-                        subjectId: subjectId
-                    },
-                    success: function () {
-                        self.trigger('subjectSubscribed', {
-                            tr: $tr
-                        });
-                    }
-                });
+        },
+        onBtnSubjectSubscribe: function (e) {
+            var self = this;
+            var $tr = $(e.target).closest('tr');
+            var teacherId = $('#teacherSelect')[0].value;
+            var subjectId = $tr.data('id');
+            $.ajax({
+                url: "/subjects/subscribeTeacherOnSubject/",
+                method: "POST",
+                data: {
+                    teacherId: teacherId,
+                    subjectId: subjectId
+                },
+                success: function () {
+                    self.trigger('subjectSubscribed', {
+                        tr: $tr
+                    });
+                }
             });
+        },
+        onPaginationLink: function (e) {
+            e.preventDefault();
+            this.page = $(e.target).data('page');
+            this.render();
         },
         render: function () {
             var self = this;
             var teacher = $('#teacherSelect').val();
             $.ajax({
                 url: "/subjects/getSubjectsByTeacher",
-                method: "POST",
+                method: "GET",
                 data: {
                     teacherId: teacher
                 },
@@ -58,7 +60,6 @@ define([
                     }
 
                     var subjectsOff = [];
-
 
                     _.each(self.collection.models, function (subject) {
                         if (subjectsOn.indexOf(subject.get('_id')) < 0) {
@@ -78,8 +79,6 @@ define([
                         currentPage: self.page,
                         pagesQuantity: Math.ceil(subjectsOff.length / self.perPage)
                     });
-
-                    self.subscribeOnBtns();
                 }
             });
         }

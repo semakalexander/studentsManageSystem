@@ -6,46 +6,47 @@ define([
     'text!templates/subjects/subscribeTeacher/list.html'
 ], function ($, _, Backbone, PaginationView, listTemplate) {
     var ListOnView = Backbone.View.extend({
-        el: $('#subscribeOn'),
+        el: '#subscribeOn',
         template: _.template(listTemplate),
         page: 1,
         perPage: 8,
         paginationView: new PaginationView({linksQuantity: 5}),
+        events: {
+            "click .btn-subject-unsubscribe": "onBtnSubjectUnsubscribe",
+            "click .pagination-link": "onPaginationLink"
+        },
         initialize: function (options) {
         },
-        subscribeOnBtns: function () {
+        onBtnSubjectUnsubscribe: function (e) {
             var self = this;
-            this.$('.pagination-link').on('click', function (e) {
-                e.preventDefault();
-                self.page = $(e.target).data('page');
-                self.render();
+            var $tr = $(e.target).closest('tr');
+            var teacherId = $('#teacherSelect')[0].value;
+            var subjectId = $tr.data('id');
+            $.ajax({
+                url: "/subjects/unsubscribeTeacherOnSubject/",
+                method: "POST",
+                data: {
+                    teacherId: teacherId,
+                    subjectId: subjectId
+                },
+                success: function () {
+                    self.trigger('subjectUnsubscribed', {
+                        tr: $tr
+                    });
+                }
             });
-
-            this.$('.btn-subject-unsubscribe').on('click', function (e) {
-                var $tr = $(e.target).closest('tr');
-                var teacherId = $('#teacherSelect').val();
-                var subjectId = $tr.data('id');
-                $.ajax({
-                    url: "/subjects/unsubscribeTeacherOnSubject/",
-                    method: "POST",
-                    data: {
-                        teacherId: teacherId,
-                        subjectId: subjectId
-                    },
-                    success: function () {
-                        self.trigger('subjectUnsubscribed', {
-                            tr: $tr
-                        });
-                    }
-                });
-            });
+        },
+        onPaginationLink: function (e) {
+            e.preventDefault();
+            this.page = $(e.target).data('page');
+            this.render();
         },
         render: function () {
             var self = this;
-            var teacher = $('#teacherSelect').val();
+            var teacher = $('#teacherSelect')[0].value;
             $.ajax({
                 url: "/subjects/getSubjectsByTeacher",
-                method: "POST",
+                method: "GET",
                 data: {
                     teacherId: teacher
                 },
@@ -54,7 +55,6 @@ define([
                     if (res && res.length && res[0].subjects) {
                         subjectsOn = res[0].subjects;
                     }
-
 
                     var start = (self.page - 1) * self.perPage;
 
@@ -68,8 +68,6 @@ define([
                         currentPage: self.page,
                         pagesQuantity: Math.ceil(subjectsOn.length / self.perPage)
                     });
-
-                    self.subscribeOnBtns();
                 }
             });
         }

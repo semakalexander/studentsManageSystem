@@ -80,7 +80,6 @@ define([
             this.page = $(e.target).data('page');
             this.render();
         },
-
         render: function (options) {
             var subjects = this.collection.toJSON();
             var subjectId = options ? options.subjectId : undefined;
