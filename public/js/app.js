@@ -7,7 +7,8 @@ define([
     function ($, _, Backbone, Router) {
         var initialize = function (io) {
             var socket = io.connect({});
-            Router.initialize(socket);
+            var router = new Router(socket);
+            // Router.initialize(socket);
         };
 
         return {

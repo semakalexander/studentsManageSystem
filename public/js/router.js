@@ -39,109 +39,112 @@ define([
             "profiles/:author": "postsByAuthor",
             "posts/:category": "postsByCategory",
             "marks/": "marksOfGroupForTeacher"
+        },
+        execute: function (cb, args) {
+            if (this.view) {
+                this.view.undelegateEvents();
+            }
+            if (cb) {
+                cb.apply(this, args);
+            }
+        },
+        initialize: function (socket) {
+            socket.on('addedPost', function (data) {
+                var template = _.template(notificationTemplate);
+                var notification = template({
+                    title: data.title,
+                    author: data.author
+                });
+                var $notification = $(notification);
+                $('#notifications').prepend($notification);
+                setTimeout(function () {
+                    $notification.hide({bottom: '-=70'}, 500, function () {
+                        $notification.remove();
+                    });
+                }, 4000);
+            });
+
+            this.on("route:index", function () {
+                this.view = new HomeView();
+            });
+
+            this.on("route:usersCrud", function () {
+                this.view = new UsersCrudView();
+            });
+
+            this.on("route:logIn", function () {
+                this.view = new LogInView();
+            });
+
+            this.on("route:logOut", function () {
+                $.ajax({
+                    url: "account/logOut",
+                    method: "POST",
+                    success: function () {
+                        return Backbone.history.navigate("#home", {trigger: true});
+                    },
+                    error: function (xhr) {
+                        console.log(xhr);
+                    }
+                });
+            });
+
+            this.on("route:registration", function () {
+                this.view = new RegistrationView()
+            });
+
+            this.on("route:forgot", function (id, key) {
+                this.view = new ResetPasswordView({
+                    id: id,
+                    key: key
+                })
+            });
+
+            this.on("route:subjectsCrud", function () {
+                this.view = new SubjectsCrudView();
+            });
+
+            this.on("route:subscribeTeacher", function () {
+                this.view = new SubscribeTeacherMainView();
+            });
+
+            this.on("route:groups", function () {
+                this.view = new GroupsMainView();
+            });
+
+            this.on("route:groupsCrud", function () {
+                this.view = new GroupsCrudView();
+            });
+
+            this.on("route:categoriesCrud", function () {
+                this.view = new CategoriesMainView();
+            });
+
+            this.on("route:teacherProfile", function () {
+                this.view = new TeacherProfileView({socket: socket});
+            });
+
+            this.on("route:postsByAuthor", function (author) {
+                this.view = new PostsWallView({
+                    socket: socket,
+                    author: author
+                });
+            });
+
+            this.on("route:postsByCategory", function (category) {
+                this.view = new PostsWallView({
+                    socket: socket,
+                    category: category
+                });
+            });
+
+            this.on("route:marksOfGroupForTeacher", function () {
+                this.view = new MarksMainView();
+            });
+
+            Backbone.history.start();
         }
     });
 
-    var initialize = function (socket) {
-        var app_router = new AppRouter();
-
-        socket.on('addedPost', function (data) {
-            var template = _.template(notificationTemplate);
-            var notification = template({
-                title: data.title,
-                author: data.author
-            });
-            var $notification = $(notification);
-            $('#notifications').prepend($notification);
-            setTimeout(function () {
-                $notification.hide({bottom: '-=70'}, 500, function () {
-                    $notification.remove();
-                });
-            }, 4000);
-        });
-
-        app_router.on("route:index", function () {
-            var homeView = new HomeView();
-        });
-
-        app_router.on("route:usersCrud", function () {
-            var usersCrudView = new UsersCrudView();
-        });
-
-        app_router.on("route:logIn", function () {
-            var logInView = new LogInView();
-        });
-
-        app_router.on("route:logOut", function () {
-            $.ajax({
-                url: "account/logOut",
-                method: "POST",
-                success: function (xhr) {
-                    return Backbone.history.navigate("#home", {trigger: true});
-                },
-                error: function (xhr) {
-                    console.log(xhr);
-                }
-            });
-        });
-
-        app_router.on("route:registration", function () {
-            var registrationView = new RegistrationView()
-        });
-
-        app_router.on("route:forgot", function (id, key) {
-            var forgotView = new ResetPasswordView({
-                id: id,
-                key: key
-            })
-        });
-
-        app_router.on("route:subjectsCrud", function () {
-            var subjectsCrudView = new SubjectsCrudView();
-        });
-
-        app_router.on("route:subscribeTeacher", function () {
-            var subscribeTeacherMainView = new SubscribeTeacherMainView();
-        });
-
-        app_router.on("route:groups", function () {
-            var groupsMainView = new GroupsMainView();
-        });
-
-        app_router.on("route:groupsCrud", function () {
-            var groupsCrudView = new GroupsCrudView();
-        });
-
-        app_router.on("route:categoriesCrud", function () {
-            var categoriesCrudView = new CategoriesMainView();
-        });
-
-        app_router.on("route:teacherProfile", function () {
-            var teacherProfile = new TeacherProfileView({socket: socket});
-        });
-
-        app_router.on("route:postsByAuthor", function (author) {
-            var postsView = new PostsWallView({
-                socket: socket,
-                author: author
-            });
-        });
-
-        app_router.on("route:postsByCategory", function (category) {
-            var postsView = new PostsWallView({
-                socket: socket,
-                category: category
-            });
-        });
-
-        app_router.on("route:marksOfGroupForTeacher", function () {
-            var marksView = new MarksMainView();
-        });
-
-        Backbone.history.start();
-    };
-
-    return {
-        initialize: initialize
-    };
+    return AppRouter;
 });
