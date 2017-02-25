@@ -19,7 +19,7 @@ define([
         onBtnAddUser: function (e) {
             e.preventDefault();
             var self = this;
-            var $form = $('form');
+            var $form = $('#userAddPanel');
             var $inputs = $form.find('div input');
 
             var data = {};
@@ -29,7 +29,7 @@ define([
                     alert('bad ' + $inputs[i]['name']);
                     return;
                 }
-                data[$inputs[i]['name']] = value;
+                data[$inputs[i]['id']] = value;
             }
             data['login'] = data['firstName'] + data['lastName'];
             data['role'] = $('#role')[0]['value'];
@@ -39,7 +39,7 @@ define([
                 success: function () {
                     self.collection.add(user);
                     _.each($inputs, function (input) {
-                        input[i].value = '';
+                        input.value = '';
                     });
                 }
             });

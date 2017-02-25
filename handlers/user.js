@@ -18,21 +18,30 @@ var Module = function (models) {
 
             res.status(200).send(users);
         });
-        // var session = req.session;
-        // var groupId;
-        // userModel.findOne({_id: session.userId}, function (err, user) {
-        //     if (err) {
-        //         return next(err);
-        //     }
-        //     groupId = user.group;
-        // });
-        // userModel.find({group: groupId}, function (err, users) {
-        //     if (err) {
-        //         return next(err);
-        //     }
-        //     res.status(200).send(users);
-        //
-        // });
+    };
+
+    this.getUser = function (req, res, next) {
+        var id = req.params.id;
+        userModel
+            .findById(id)
+            .populate('notifications.elements')
+            .exec(function (err, user) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send(user);
+            })
+    };
+
+    this.resetNewNotificationsCount = function (req, res, next) {
+        var id = req.params.id;
+        userModel
+            .update({_id: id}, {$set: {'notifications.newCount': 0}}, function (err) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send();
+            })
     };
 
     this.getUsersByCourse = function (req, res, next) {
@@ -44,6 +53,7 @@ var Module = function (models) {
             res.status(200).send(users);
         })
     };
+
     this.getMarks = function (req, res, next) {
         var session = req.session;
         userModel.findOne({_id: session.userId}, function (err, user) {
@@ -53,7 +63,6 @@ var Module = function (models) {
             res.status(200).send(user.marks);
         });
     };
-
 
     this.createUser = function (req, res, next) {
         var body = req.body;
@@ -96,7 +105,7 @@ var Module = function (models) {
                 if (err) {
                     return next(err);
                 }
-                var data = {img:fileName};
+                var data = {img: fileName};
                 userModel.findOneAndUpdate({_id: id}, {$set: data}, {new: true}).exec(function (err, user) {
                     if (err) {
                         return next(err);
@@ -132,6 +141,27 @@ var Module = function (models) {
                 res.status(200).send(resp);
             }
         )
+    };
+
+    this.subscribeOnTeacher = function (req, res, next) {
+        var body = req.body;
+        var subscriberId = req.session.userId;
+        var teacherLogin = body.teacherLogin;
+        userModel
+            .findOneAndUpdate({login: teacherLogin}, {$addToSet: {'subscribers': subscriberId}})
+            .exec(function (err, user) {
+                if (err) {
+                    return next(err);
+                }
+                userModel
+                    .findOneAndUpdate({_id: subscriberId}, {$addToSet: {'subscribing': user._id}})
+                    .exec(function (err) {
+                        if (err) {
+                            return next(err);
+                        }
+                        res.status(200).send(user);
+                    });
+            });
     };
 
 };

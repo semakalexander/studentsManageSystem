@@ -5,7 +5,7 @@ module.exports = (function () {
     var commentSchema = mongoose.Schema({
         content: {type: String, required: true},
         author: {type: ObjectId, ref: 'user', required: true},
-        dateOfCreation: {type: Date, required: true, default: new Date()}
+        dateOfCreation: {type: Date, required: true}
         //postid
     });
 

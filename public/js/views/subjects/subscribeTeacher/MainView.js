@@ -48,14 +48,13 @@ define([
                                 self.subscribeOnListView.on('subjectUnsubscribed', function () {
                                     self.subscribeOffListView.render();
                                     self.subscribeOnListView.render();
-
                                 });
                                 cb(null);
                             }
                         });
                     }
                 ],
-                function (err, results) {
+                function (err) {
                     if (err) {
                         console.log(err);
                     }

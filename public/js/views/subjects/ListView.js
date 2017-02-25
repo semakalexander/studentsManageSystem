@@ -40,7 +40,7 @@ define([
             var $target = $(e.target);
             var $tr = $target.closest('tr');
             var $td = $target.closest('td');
-            var subjectId = $tr.attr('data-id');
+            var subjectId = $tr.data('id');
             var subject = this.collection.get(subjectId);
             var $inputs = $td.siblings('td').children('input');
 

@@ -72,7 +72,7 @@ var Module = function (models) {
             if (err) {
                 return next(err);
             }
-            if(!user){
+            if (!user) {
                 return next(new Error('В базі даних немає такого email'));
             }
 
@@ -103,14 +103,20 @@ var Module = function (models) {
 
     this.getLoggedUser = function (req, res, next) {
         var id = req.session.userId;
-        userModel.findById(id).populate('marks subjects').exec(function (err, user) {
-            if (user != null) {
-                res.status(200).send(user);
-            }
-            else {
-                res.status(200).send();
-            }
-        });
+        userModel
+            .findById(id)
+            .populate('marks subjects notifications.elements')
+            .exec(function (err, user) {
+                if (err) {
+                    return next(err);
+                }
+                if (user != null) {
+                    res.status(200).send(user);
+                }
+                else {
+                    res.status(200).send();
+                }
+            });
     };
 
     this.changePassword = function (req, res, next) {
@@ -129,6 +135,7 @@ var Module = function (models) {
                 res.status(200).send(user);
             });
     };
+
 };
 
 module.exports = Module;

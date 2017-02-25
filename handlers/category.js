@@ -10,10 +10,7 @@ var Module = function (models) {
             if (err) {
                 return next(err);
             }
-            setTimeout(function () {
-                res.status(200).send(categories);
-
-            }, 20);
+            res.status(200).send(categories);
         });
     };
 

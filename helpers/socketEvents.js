@@ -6,8 +6,12 @@ var SocketEvents = function (app) {
 
         socket.emit('connectedOnServer');
 
-        socket.on('clientConnected', function (data) {
+        socket.on('connectedOnClient', function (data) {
+            var count = data.user.notifications.newCount;
 
+            if (count) {
+                socket.emit('newNotifications', {notificationsCount: count});
+            }
         });
 
         socket.on('addedNewPost', function (data) {
@@ -15,8 +19,6 @@ var SocketEvents = function (app) {
         });
 
         socket.on('subscribeOnAuthor', function (data) {
-            console.log('_from socket ' + socket.id);
-            console.log('_about socket '+ data.author);
             var author = data.author;
             socket.join(author);
             console.log(socket.rooms);

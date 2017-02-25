@@ -9,6 +9,7 @@ define([
     'views/account/LogInView',
     'views/account/RegistrationView',
     'views/account/ResetPasswordView',
+    'views/notifications/MainView',
     'views/subjects/MainView',
     'views/subjects/subscribeTeacher/MainView',
     'views/groups/MainView',
@@ -19,8 +20,8 @@ define([
     'views/marks/MainView',
     'text!templates/helpers/notification.html'
 ], function ($, _, io, Backbone, HomeView, UsersListView, UsersCrudView, LogInView, RegistrationView, ResetPasswordView,
-             SubjectsCrudView, SubscribeTeacherMainView, GroupsMainView, GroupsCrudView, CategoriesMainView,
-             TeacherProfileView, PostsWallView, MarksMainView, notificationTemplate) {
+             NotificationsMainView, SubjectsCrudView, SubscribeTeacherMainView, GroupsMainView, GroupsCrudView,
+             CategoriesMainView, TeacherProfileView, PostsWallView, MarksMainView, notificationTemplate) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "index",
@@ -30,6 +31,7 @@ define([
             "account/logOut": "logOut",
             "account/registration": "registration",
             "account/forgot/:id/:key": "forgot",
+            "account/notifications": "notifications",
             "subjects/crud": "subjectsCrud",
             "subjects/subscribeTeacher": "subscribeTeacher",
             "groups/": "groups",
@@ -62,6 +64,23 @@ define([
                         $notification.remove();
                     });
                 }, 4000);
+            });
+
+            socket.on('connectedOnServer', function () {
+                $.ajax({
+                    url: "account/getLoggedUser",
+                    method: "GET",
+                    success: function (xhr) {
+                        if (xhr) {
+                            socket.emit('connectedOnClient', {user: xhr});
+                        }
+                    }
+                });
+            });
+
+            socket.on('newNotifications', function (data) {
+                var count = data.notificationsCount;
+                $('#notifications-count').html(count);
             });
 
             this.on("route:index", function () {
@@ -98,6 +117,10 @@ define([
                     id: id,
                     key: key
                 })
+            });
+
+            this.on("route:notifications", function () {
+                this.view = new NotificationsMainView({});
             });
 
             this.on("route:subjectsCrud", function () {

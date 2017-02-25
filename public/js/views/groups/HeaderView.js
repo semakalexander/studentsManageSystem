@@ -5,7 +5,7 @@ define([
     'text!templates/groups/header.html'
 ], function ($, _, Backbone, headerTemplate) {
     var HeaderView = Backbone.View.extend({
-        el: $('#header'),
+        el: '#header',
         template: _.template(headerTemplate),
         events: {},
         initialize: function (options) {

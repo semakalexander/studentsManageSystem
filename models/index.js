@@ -1,11 +1,12 @@
 module.exports = (function () {
-    require('./user');
-    require('./group');
     require('./category');
+    require('./comment');
+    require('./group');
+    require('./mark');
+    require('./notification');
     require('./post');
     require('./subject');
-    require('./mark');
-    require('./teacherSubject');
     require('./teacherGroup');
-    require('./comment');
+    require('./teacherSubject');
+    require('./user');
 })();

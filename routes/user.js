@@ -9,11 +9,14 @@ module.exports = function (models) {
     var multipartMiddleware = new multipart();
 
     router.get('/', handler.getAllUsers);
+    router.get('/:id', handler.getUser);
     router.get('/marks', handler.getMarks);
     router.get('/byCourse', handler.getUsersByCourse);
 
     router.post('/', handler.createUser);
     router.post('/uploadProfilePhoto', multipartMiddleware, handler.uploadProfilePhoto);
+    router.patch('/subscribeOnTeacher', handler.subscribeOnTeacher);
+    router.patch('/resetNotificationsCount/:id', handler.resetNewNotificationsCount);
     router.patch('/:id', handler.editUserById);
     router.delete('/:id', handler.deleteUserById);
 

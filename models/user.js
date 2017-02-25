@@ -11,10 +11,16 @@ module.exports = (function () {
         lastName: {type: String, required: true},
         role: {type: String, required: true, default: 'student'},
         course: {type: Number, enum: [1, 2, 3, 4, 5, 6], default: 1},
-        age: {type: Number},
+        age: {type: Number, default: 18},
         group: {type: ObjectId, ref: 'group', default: null},
         marks: [{ObjectId: ObjectId}],// { subject: mark }
-        img: {type: String, required:true, default: 'images/profile_photos/default_user.png'}
+        img: {type: String, required: true, default: 'images/profile_photos/default_user.png'},
+        subscribers: [{type: ObjectId, ref: 'user'}],
+        subscribing: [{type: ObjectId, ref: 'user'}],
+        notifications: {
+            elements: [{type: ObjectId, ref: 'notification'}],
+            newCount: {type: Number, default: 0}
+        }
     }, {collection: 'users'});
 
 

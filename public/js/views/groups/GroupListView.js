@@ -6,7 +6,7 @@ define([
     'text!templates/groups/courseList.html'
 ], function ($, _, Backbone, PaginationView, groupListTemplate) {
     var GroupListView = Backbone.View.extend({
-        el: $('#groupList'),
+        el: '#groupList',
         template: _.template(groupListTemplate),
         groupId: null,
         page: 1,

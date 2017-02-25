@@ -2,8 +2,6 @@ var mongoose = require('mongoose');
 
 
 var err;
-var role;
-
 function authenticatedUser(req, res, next) {
     var session = req.session;
     var wasLogged = session && session.loggedIn && session.userId;

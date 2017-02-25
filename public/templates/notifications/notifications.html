@@ -1,0 +1,10 @@
+<% _.each(notifications.new, function(notification){ %>
+<div class="notification alert alert-success">
+    <span class="message"><%= notification.message %></span>
+</div>
+<% }); %>
+<% _.each(notifications.old, function(notification){ %>
+    <div class="notification alert alert-info">
+        <span class="message"><%= notification.message %></span>
+    </div>
+<% }); %>

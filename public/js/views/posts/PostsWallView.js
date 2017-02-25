@@ -13,7 +13,7 @@ define([
         collection: new PostCollection(),
         events: {
             "click .btn-add-comment": "onBtnAddComment",
-            "click #btn-posts-subscribe":"onBtnPostsSubscribe"
+            "click #btn-posts-subscribe": "onBtnPostsSubscribe"
         },
         initialize: function (options) {
             var self = this;
@@ -48,7 +48,8 @@ define([
                 method: "POST",
                 data: {
                     postId: postId,
-                    content: content
+                    content: content,
+                    dateOfCreation: new Date()
                 },
                 success: function (comment) {
                     var template = _.template(commentTemplate);
@@ -60,14 +61,27 @@ define([
         onBtnPostsSubscribe: function (e) {
             var $btn = $(e.target);
             var author = $btn.data('id');
-            alert(this.socket);
-            this.socket.emit('subscribeOnAuthor',{
-                author:author
+            $.ajax({
+                url: "users/subscribeOnTeacher",
+                method: "PATCH",
+                data: {
+                    teacherLogin: author
+                },
+                success: function (xhr) {
+                    alert('profit');
+                },
+                error: function (xhr) {
+                    alert('error');
+                    console.log(xhr)
+                }
             });
+            // this.socket.emit('subscribeOnAuthor',{
+            //     author:author
+            // });
         },
         render: function () {
             this.$el.html(this.template({
-                author:this.author,
+                author: this.author,
                 posts: this.posts
             }));
         }

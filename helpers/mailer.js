@@ -35,7 +35,7 @@ module.exports = function () {
                 }
             }
             else {
-                console.log('Message sent: ' + response.message);
+                console.log('Message sent to ' + response.accepted);
                 if (cb && (typeof cb === 'function')) {
                     cb(null, response);
                 }

@@ -13,7 +13,7 @@ define([
 ], function ($, _, Backbone, UserCollection, GroupCollection, CourseListView, GroupListView,
              HeaderView, mainTemplate, groupRowTemplate, async) {
     var MainView = Backbone.View.extend({
-        el: $('#container'),
+        el: '#container',
         template: _.template(mainTemplate),
         userCollection: new UserCollection(),
         groupCollection: new GroupCollection(),

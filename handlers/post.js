@@ -2,11 +2,15 @@ var mongoose = require('mongoose');
 
 var postSchema = mongoose.Schemas.Post;
 var commentSchema = mongoose.Schemas.Comment;
+var notificationSchema = mongoose.Schemas.Notification;
+var userSchema = mongoose.Schemas.User;
 
 var Module = function (app, models) {
     var io = app.get('io');
     var postModel = models.get('post', postSchema);
     var commentModel = models.get('comment', commentSchema);
+    var notificationModel = models.get('notification', notificationSchema);
+    var userModel = models.get('user', userSchema);
 
     this.getAllPosts = function (req, res, next) {
         postModel
@@ -25,9 +29,7 @@ var Module = function (app, models) {
                 if (err) {
                     return next(err);
                 }
-                setTimeout(function () {
-                    res.status(200).send(posts);
-                }, 40);
+                res.status(200).send(posts);
             });
     };
 
@@ -46,52 +48,84 @@ var Module = function (app, models) {
         }
 
         var session = req.session;
-        body.author = session.userId;
+        var userId = session.userId;
+        body.author = userId;
 
         var post = new postModel(body);
         post.save(function (err) {
             if (err) {
                 return next(err);
             }
-            post.populate('author categories', function (err) {
+
+            var notification = new notificationModel({
+                message: req.session.userName + ' виклав новий пост "' + title + '"',
+                dateOfCreation: new Date()
+            });
+
+            notification.save(function (err, savedNotification) {
                 if (err) {
                     return next(err);
                 }
-                res.status(200).send(post);
+                userModel
+                    .update({subscribing: userId}, {
+                        $push: {
+                            'notifications.elements': savedNotification._id
+                        },
+                        $inc: {
+                            'notifications.newCount': 1
+                        }
+                    }, function (err) {
+                        if (err) {
+                            return next(err);
+                        }
+                        post.populate('categories', function (err) {
+                            if (err) {
+                                return next(err);
+                            }
+                            res.status(200).send(post);
+                        });
+                    });
             });
+
         });
     };
 
     this.editPostById = function (req, res, next) {
         var id = req.params.id;
         var body = req.body;
-        postModel.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).exec(function (err, post) {
-            if (err) {
-                return next(err);
-            }
-            res.status(200).send(post);
-        });
+        postModel
+            .findOneAndUpdate({_id: id}, {$set: body}, {new: true})
+            .exec(function (err, post) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send(post);
+            });
     };
 
     this.deletePostById = function (req, res, next) {
-        postModel.remove({_id: req.params.id}).exec(function (err, resp) {
-            if (err) {
-                return next(err);
-            }
-            res.status(200).send(resp);
-        });
+        postModel
+            .remove({_id: req.params.id})
+            .exec(function (err, resp) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send(resp);
+            });
     };
 
     this.writeComment = function (req, res, next) {
         var body = req.body;
         var postId = body.postId;
         var content = body.content;
+        var dateOfCreation = body.dateOfCreation;
 
         var userId = req.session.userId;
 
         var comment = new commentModel({
             author: userId,
-            content: content
+            content: content,
+            dateOfCreation: dateOfCreation
         });
 
         comment.save(function (err) {
