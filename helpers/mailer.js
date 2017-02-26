@@ -1,4 +1,5 @@
 module.exports = function () {
+    var self = this;
     var nodemailer = require('nodemailer');
 
     var noReplay = {
@@ -12,19 +13,8 @@ module.exports = function () {
         tls: {rejectUnauthorized: false}
     };
 
-    this.sendEmail = function (options, cb) {
-        var mailOptions;
-        var email = options.email;
-        var link = 'http://localhost:3030/#account/forgot/' + options.id + '/' + options.key;
 
-        mailOptions = {
-            from: 'sfder@gmail.com',
-            to: email,
-            subject: 'Forgot password?',
-            generateTextFromHTML: true,
-            html: 'Посилання на відновлення <a href="' + link + '">link</a>'
-        };
-
+    this.sendEmail = function (mailOptions, cb) {
         var transport = nodemailer.createTransport(noReplay);
 
         transport.sendMail(mailOptions, function (err, response) {
@@ -41,5 +31,37 @@ module.exports = function () {
                 }
             }
         });
-    }
+    };
+
+    this.sendEmailResetPassword = function (options, cb) {
+        var mailOptions;
+        var email = options.email;
+        var link = 'http://localhost:3030/#account/forgot/' + options.id + '/' + options.key;
+
+        mailOptions = {
+            from: 'alexander_semak@gmail.com',
+            to: email,
+            subject: 'Forgot password?',
+            generateTextFromHTML: true,
+            html: 'Посилання на відновлення <a href="' + link + '">link</a>'
+        };
+        self.sendEmail(mailOptions, cb);
+    };
+
+    this.sendEmailConfirm = function (options, cb) {
+        var mailOptions;
+        var email = options.email;
+        var id = options.id;
+        var key = options.key;
+        var link = 'http://localhost:3030/#account/confirm/' + id + '/' + key + '/' + email;
+
+        mailOptions = {
+            from: 'alexander_semak@gmail.com',
+            to: email,
+            subject: 'Реєстрація на сайті',
+            generateTextFromHTML: true,
+            html: 'Для підтвердження реєстрації перейдіть по <a href="' + link + '">посиланню</a>'
+        };
+        self.sendEmail(mailOptions, cb);
+    };
 };

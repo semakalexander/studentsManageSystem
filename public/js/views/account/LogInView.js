@@ -85,10 +85,11 @@ define([
             this.$el.find('.alert').remove();
 
             $.ajax({
-                url: "account/forgotPasswordSubmit",
+                url: "account/confirmWithEmailSubmit",
                 method: "GET",
                 data: {
-                    email: email
+                    email: email,
+                    type:'reset password'
                 },
                 success: function () {
                     msg = 'Повідомлення надіслано. Перевірте свою пошту';

@@ -6,7 +6,6 @@ var notificationSchema = mongoose.Schemas.Notification;
 var userSchema = mongoose.Schemas.User;
 
 var Module = function (app, models) {
-    var io = app.get('io');
     var postModel = models.get('post', postSchema);
     var commentModel = models.get('comment', commentSchema);
     var notificationModel = models.get('notification', notificationSchema);

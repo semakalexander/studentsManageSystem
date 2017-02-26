@@ -6,6 +6,7 @@ define([
     'views/home/HomeView',
     'views/users/ListView',
     'views/users/MainView',
+    'views/account/ConfirmRegistrationView',
     'views/account/LogInView',
     'views/account/RegistrationView',
     'views/account/ResetPasswordView',
@@ -18,15 +19,17 @@ define([
     'views/profiles/TeacherProfile',
     'views/posts/PostsWallView',
     'views/marks/MainView',
-    'text!templates/helpers/notification.html'
-], function ($, _, io, Backbone, HomeView, UsersListView, UsersCrudView, LogInView, RegistrationView, ResetPasswordView,
-             NotificationsMainView, SubjectsCrudView, SubscribeTeacherMainView, GroupsMainView, GroupsCrudView,
-             CategoriesMainView, TeacherProfileView, PostsWallView, MarksMainView, notificationTemplate) {
+    'text!templates/helpers/popupNotification.html'
+], function ($, _, io, Backbone, HomeView, UsersListView, UsersCrudView, ConfirmRegistrationView, LogInView,
+             RegistrationView, ResetPasswordView, NotificationsMainView, SubjectsCrudView, SubscribeTeacherMainView,
+             GroupsMainView, GroupsCrudView, CategoriesMainView, TeacherProfileView, PostsWallView, MarksMainView,
+             PopupNotificationTemplate) {
     var AppRouter = Backbone.Router.extend({
         routes: {
             "": "index",
             "home": "index",
             "users/crud": "usersCrud",
+            "account/confirm/:id/:key/:email":"confirm",
             "account/logIn": "logIn",
             "account/logOut": "logOut",
             "account/registration": "registration",
@@ -52,13 +55,13 @@ define([
         },
         initialize: function (socket) {
             socket.on('addedPost', function (data) {
-                var template = _.template(notificationTemplate);
+                var template = _.template(PopupNotificationTemplate);
                 var notification = template({
                     title: data.title,
                     author: data.author
                 });
                 var $notification = $(notification);
-                $('#notifications').prepend($notification);
+                $('#popupNotifications').prepend($notification);
                 setTimeout(function () {
                     $notification.hide({bottom: '-=70'}, 500, function () {
                         $notification.remove();
@@ -98,7 +101,7 @@ define([
             this.on("route:logOut", function () {
                 $.ajax({
                     url: "account/logOut",
-                    method: "POST",
+                    method: "DELETE",
                     success: function () {
                         return Backbone.history.navigate("#home", {trigger: true});
                     },
@@ -116,7 +119,15 @@ define([
                 this.view = new ResetPasswordView({
                     id: id,
                     key: key
-                })
+                });
+            });
+
+            this.on("route:confirm", function (id, key, email) {
+                this.view = new ConfirmRegistrationView({
+                    id: id,
+                    key: key,
+                    email: email
+                });
             });
 
             this.on("route:notifications", function () {

@@ -20,7 +20,8 @@ module.exports = (function () {
         notifications: {
             elements: [{type: ObjectId, ref: 'notification'}],
             newCount: {type: Number, default: 0}
-        }
+        },
+        key:String
     }, {collection: 'users'});
 
 

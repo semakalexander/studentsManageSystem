@@ -3,9 +3,7 @@ define([
     'underscore',
     'backbone',
     'models/post/post',
-    'text!templates/posts/add.html',
-    'text!templates/helpers/notification.html',
-    'socketio'
+    'text!templates/posts/add.html'
 ], function ($, _, Backbone, PostModel, addPostTemplate) {
     var AddPostView = Backbone.View.extend({
         el: '#addPostWrapper',

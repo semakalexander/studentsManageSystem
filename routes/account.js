@@ -7,15 +7,18 @@ var eSession = require('../handlers/session.js');
 
 module.exports = function (models) {
     var handler = new Handler(models);
-var userHandler = new UserHandler(models);
+    var userHandler = new UserHandler(models);
 
-  	router.post('/logIn', handler.login);
-    router.post('/registration', userHandler.createUser);
-    router.post('/logOut', handler.logOut);
     router.get('/getLoggedUser', handler.getLoggedUser);
+    router.get('/confirmWithEmailSubmit', handler.confirmWithEmailSubmit);
+    router.delete('/confirmWithEmailAnswer', handler.confirmWithEmailAnswer);
 
-    router.get('/forgotPasswordSubmit', handler.forgotPasswordSubmit);
-    router.get('/forgotPasswordAnswer', handler.forgotPasswordAnswer);
+    router.post('/logIn', handler.login);
+    router.post('/registration', userHandler.createUser);
+
     router.patch('/changePassword/:id', handler.changePassword);
+
+    router.delete('/logOut', handler.logOut);
+
     return router;
 };

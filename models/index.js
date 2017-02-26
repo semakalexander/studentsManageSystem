@@ -1,6 +1,7 @@
 module.exports = (function () {
     require('./category');
     require('./comment');
+    require('./confirmKey');
     require('./group');
     require('./mark');
     require('./notification');

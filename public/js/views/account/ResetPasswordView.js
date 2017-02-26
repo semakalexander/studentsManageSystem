@@ -16,11 +16,12 @@ define([
             var self = this;
             this.id = options.id;
             $.ajax({
-                url: "account/forgotPasswordAnswer",
-                method: "GET",
+                url: "account/confirmWithEmailAnswer",
+                method: "DELETE",
                 data: {
                     id: options.id,
-                    key: options.key
+                    key: options.key,
+                    type: 'reset password'
                 },
                 success: function () {
                     self.render();

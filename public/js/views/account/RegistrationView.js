@@ -2,11 +2,13 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!templates/account/registration.html'
-], function ($, _, Backbone, registrationTemplate) {
+    'text!templates/account/registration.html',
+    'text!templates/helpers/alert.html'
+], function ($, _, Backbone, RegistrationTemplate, AlertTemplate) {
     var RegistrationView = Backbone.View.extend({
         el: "#container",
-        template: _.template(registrationTemplate),
+        template: _.template(RegistrationTemplate),
+        alertTemplate: _.template(AlertTemplate),
         events: {
             "click #btnRegister": "onBtnRegister"
         },
@@ -14,35 +16,28 @@ define([
             this.render();
         },
         onBtnRegister: function () {
-            var $panel = this.$el.find('.panel-body');
-            var email = $panel.find('#email')[0].value.trim();
-            var password = $panel.find('#password')[0].value.trim();
-            var firstName = $panel.find('#firstName')[0].value.trim();
-            var lastName = $panel.find('#lastName')[0].value.trim();
-            var course = $panel.find('#course')[0].value;
-            var age = $panel.find('#age')[0].value;
-
-            if ([email, password, firstName, lastName].indexOf('') > -1) {
-                return alert('check fields');
-            }
+            var self = this;
+            var $panel = this.$el.find('.panel');
+            var $panelBody = $panel.find('.panel-body');
+            var email = $panelBody.find('#email')[0].value.trim();
             $.ajax({
-                url: "/account/registration",
-                method: "POST",
+                url: "account/confirmWithEmailSubmit",
+                method: "GET",
                 data: {
                     email: email,
-                    password: password,
-                    firstName: firstName,
-                    lastName: lastName,
-                    login: firstName + ' ' + lastName,
-                    course: course,
-                    age: age
+                    type: 'confirm email'
                 },
                 success: function () {
-                    return Backbone.history.navigate('#', {trigger: true})
+                    $panel.before(self.alertTemplate({
+                        type: 'success',
+                        message: 'Ми вислали листа вам на пошту. Для закінчення реєстрації перейдіть за посиланням у листі.'
+                    }));
                 },
                 error: function (xhr) {
-                    alert('Не найдено');
-                    console.log(xhr);
+                    $panel.before(self.alertTemplate({
+                        type: 'error',
+                        message: xhr
+                    }));
                 }
             });
         },

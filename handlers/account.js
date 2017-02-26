@@ -2,11 +2,15 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 
 var userSchema = mongoose.Schemas.User;
+var confirmKeySchema = mongoose.Schemas.ConfirmKey;
+
 var Mailer = require('../helpers/mailer');
-var mailer = new Mailer();
 
 var Module = function (models) {
     var userModel = models.get('user', userSchema);
+    var confirmKeyModel = models.get('confirmKey', confirmKeySchema);
+
+    var mailer = new Mailer();
 
     this.logOut = function (req, res, next) {
         req.session.destroy();
@@ -61,44 +65,53 @@ var Module = function (models) {
         });
     };
 
-    this.forgotPasswordSubmit = function (req, res, next) {
+    this.confirmWithEmailSubmit = function (req, res, next) {
         var query = req.query;
-        if (typeof query.email === 'undefined') {
-            return next(new Error('should be email'));
-        }
         var email = query.email;
+        var type = query.type;
+        var key = Math.random().toString(36).substr(2, 36);
 
-        userModel.findOne({email: email}, function (err, user) {
+        var confirmKey = new confirmKeyModel({
+            email: email,
+            key: key,
+            type: type
+        });
+        confirmKey.save(function (err, model) {
             if (err) {
                 return next(err);
             }
-            if (!user) {
-                return next(new Error('В базі даних немає такого email'));
-            }
-
-            mailer.sendEmail({
+            var options = {
                 email: email,
-                id: user.id,
-                key: user.password
-            });
+                id: model._id,
+                key: key
+            };
+            if (type === 'reset password') {
+                mailer.sendEmailResetPassword(options);
+            } else if (type === 'confirm email') {
+                mailer.sendEmailConfirm(options);
+            }
             res.status(200).send();
         });
     };
 
-    this.forgotPasswordAnswer = function (req, res, next) {
-        var query = req.query;
-        var id = query.id;
-        var key = query.key;
-        userModel.findById(id, function (err, user) {
-            if (err) {
-                return next(err);
-            }
-            if (user.password !== key) {
-                err = new Error('Invalid key');
-                return next(err);
-            }
-            res.status(200).send();
-        });
+
+    this.confirmWithEmailAnswer = function (req, res, next) {
+        var body = req.body;
+        var id = body.id;
+        var key = body.key;
+        var type = body.type;
+
+        confirmKeyModel
+            .findOneAndRemove({_id: id, key: key, type: type}, function (err, doc, result) {
+                if (err) {
+                    return next(err);
+                }
+                if (!doc) {
+                    return next(new Error('Невірний код'));
+                }
+
+                res.status(200).send(result);
+            });
     };
 
     this.getLoggedUser = function (req, res, next) {
