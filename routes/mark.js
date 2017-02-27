@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var Handler = require('../handlers/marks');
-var eSession = require('../handlers/session');
+var Session = require('../handlers/session');
 
 module.exports = function(models){
     var handler = new Handler(models);
+    var session = new Session();
 
     router.get('/', handler.getAllMarks());
 

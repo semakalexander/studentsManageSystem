@@ -25,7 +25,7 @@ var SocketEvents = function (app) {
         });
 
         socket.on('disconnect', function () {
-            console.log(socket.id + ' disconnected');
+            // console.log(socket.id + ' disconnected');
             socket.disconnect();
         })
 

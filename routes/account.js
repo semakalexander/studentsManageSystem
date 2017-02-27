@@ -2,14 +2,14 @@ var express = require('express');
 var router = express.Router();
 var Handler = require('../handlers/account.js');
 var UserHandler = require('../handlers/user');
-
-var eSession = require('../handlers/session.js');
+var Session = require('../handlers/session.js');
 
 module.exports = function (models) {
     var handler = new Handler(models);
     var userHandler = new UserHandler(models);
+    var session = new Session();
 
-    router.get('/getLoggedUser', handler.getLoggedUser);
+    router.get('/getLoggedUser', session.isAuthenticatedStudent, handler.getLoggedUser);
     router.get('/confirmWithEmailSubmit', handler.confirmWithEmailSubmit);
     router.delete('/confirmWithEmailAnswer', handler.confirmWithEmailAnswer);
 
@@ -18,7 +18,7 @@ module.exports = function (models) {
 
     router.patch('/changePassword/:id', handler.changePassword);
 
-    router.delete('/logOut', handler.logOut);
+    router.delete('/logOut', session.isAuthenticatedStudent, handler.logOut);
 
     return router;
 };

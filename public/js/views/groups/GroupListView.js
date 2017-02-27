@@ -30,7 +30,7 @@ define([
 
             $.ajax({
                 url: "/groups/deleteFromGroup",
-                method: "POST",
+                method: "DELETE",
                 data: {
                     userId: userId,
                     groupId: self.groupId

@@ -32,7 +32,6 @@ var Module = function (app, models) {
             });
     };
 
-
     this.createPost = function (req, res, next) {
         var body = req.body;
         var title = body.title;
@@ -66,41 +65,41 @@ var Module = function (app, models) {
                     return next(err);
                 }
                 userModel
-                    .update({subscribing: userId}, {
-                        $push: {
-                            'notifications.elements': savedNotification._id
+                    .update(
+                        {subscribing: userId},
+                        {
+                            $push: {'notifications.elements': savedNotification._id},
+                            $inc: {'notifications.newCount': 1}
                         },
-                        $inc: {
-                            'notifications.newCount': 1
-                        }
-                    }, function (err) {
-                        if (err) {
-                            return next(err);
-                        }
-                        post.populate('categories', function (err) {
+                        {multi: true},
+                        function (err) {
                             if (err) {
                                 return next(err);
                             }
-                            res.status(200).send(post);
+                            post.populate('categories', function (err) {
+                                if (err) {
+                                    return next(err);
+                                }
+                                res.status(200).send(post);
+                            });
                         });
-                    });
             });
 
         });
     };
 
-    this.editPostById = function (req, res, next) {
-        var id = req.params.id;
-        var body = req.body;
-        postModel
-            .findOneAndUpdate({_id: id}, {$set: body}, {new: true})
-            .exec(function (err, post) {
-                if (err) {
-                    return next(err);
-                }
-                res.status(200).send(post);
-            });
-    };
+    // this.editPostById = function (req, res, next) {
+    //     var id = req.params.id;
+    //     var body = req.body;
+    //     postModel
+    //         .findOneAndUpdate({_id: id}, {$set: body}, {new: true})
+    //         .exec(function (err, post) {
+    //             if (err) {
+    //                 return next(err);
+    //             }
+    //             res.status(200).send(post);
+    //         });
+    // };
 
     this.deletePostById = function (req, res, next) {
         postModel

@@ -1,51 +1,29 @@
-var mongoose = require('mongoose');
+var Module = function () {
+    var self = this;
+    this.isAuthenticated = function (req, res, next, roles) {
+        var role = req.session.role || 'unauth';
 
+        if (roles.indexOf(role) > -1) {
+            next();
+        }
+        else {
+            var err = new Error("Access denied");
+            err.status = 401;
+            next(err);
+        }
+    };
 
-var err;
-function authenticatedUser(req, res, next) {
-    var session = req.session;
-    var wasLogged = session && session.loggedIn && session.userId;
+    this.isAuthenticatedStudent = function (req, res, next) {
+        self.isAuthenticated(req, res, next, ['student', 'teacher', 'admin']);
+    };
 
-    if (wasLogged) {
-        next();
-    }
-    else {
-        err = new Error('User is not auth');
-        err.status = 401;
-        next(err);
-    }
-}
+    this.isAuthenticatedTeacher = function (req, res, next) {
+        self.isAuthenticated(req, res, next, ['teacher', 'admin']);
+    };
 
-function authenticatedTeacher(req, res, next) {
-    var session = req.session;
-    var wasLogged = session && session.loggedIn && session.userId;
+    this.isAuthenticatedAdmin = function (req, res, next) {
+        self.isAuthenticated(req, res, next, ['admin']);
+    };
+};
 
-
-    if (wasLogged && session.role.toLowerCase() === 'teacher' ) {
-        next();
-    }
-    else {
-        err = new Error('Teacher is not auth');
-        err.status = 401;
-        next(err);
-    }
-}
-
-function authenticatedAdmin(req, res, next) {
-    var session = req.session;
-    var wasLogged = session && session.loggedIn && session.userId;
-
-
-    if(wasLogged && session.role.toLowerCase() === 'admin'){
-        next();
-    }
-    else{
-        err = new Error('Admin is not auth');
-        err.status = 401;
-        next(err);
-    }
-}
-
-exports.authenticatedUser = authenticatedUser;
-exports.authenticatedTeacher = authenticatedTeacher;
-exports.authenticatedAdmin = authenticatedAdmin;
+module.exports = Module;

@@ -29,7 +29,7 @@ define([
             "": "index",
             "home": "index",
             "users/crud": "usersCrud",
-            "account/confirm/:id/:key/:email":"confirm",
+            "account/confirm/:id/:key/:email": "confirm",
             "account/logIn": "logIn",
             "account/logOut": "logOut",
             "account/registration": "registration",
@@ -77,6 +77,9 @@ define([
                         if (xhr) {
                             socket.emit('connectedOnClient', {user: xhr});
                         }
+                    },
+                    error: function (xhr) {
+                        console.log(xhr);
                     }
                 });
             });
@@ -86,18 +89,23 @@ define([
                 $('#notifications-count').html(count);
             });
 
+
+            //all
             this.on("route:index", function () {
                 this.view = new HomeView();
             });
 
+            // admin
             this.on("route:usersCrud", function () {
                 this.view = new UsersCrudView();
             });
 
+            // all unauth
             this.on("route:logIn", function () {
                 this.view = new LogInView();
             });
 
+            // all auth
             this.on("route:logOut", function () {
                 $.ajax({
                     url: "account/logOut",
@@ -111,10 +119,12 @@ define([
                 });
             });
 
+            // all unauth
             this.on("route:registration", function () {
                 this.view = new RegistrationView()
             });
 
+            // all unauth
             this.on("route:forgot", function (id, key) {
                 this.view = new ResetPasswordView({
                     id: id,
@@ -122,6 +132,7 @@ define([
                 });
             });
 
+            // all unauth
             this.on("route:confirm", function (id, key, email) {
                 this.view = new ConfirmRegistrationView({
                     id: id,
@@ -130,34 +141,42 @@ define([
                 });
             });
 
+            // all auth
             this.on("route:notifications", function () {
                 this.view = new NotificationsMainView({});
             });
 
+            // admin
             this.on("route:subjectsCrud", function () {
                 this.view = new SubjectsCrudView();
             });
 
+            // all auth
             this.on("route:subscribeTeacher", function () {
                 this.view = new SubscribeTeacherMainView();
             });
 
+            // teachers
             this.on("route:groups", function () {
                 this.view = new GroupsMainView();
             });
 
+            // admin
             this.on("route:groupsCrud", function () {
                 this.view = new GroupsCrudView();
             });
 
+            // admin
             this.on("route:categoriesCrud", function () {
                 this.view = new CategoriesMainView();
             });
 
+            // teacher
             this.on("route:teacherProfile", function () {
                 this.view = new TeacherProfileView({socket: socket});
             });
 
+            // all auth
             this.on("route:postsByAuthor", function (author) {
                 this.view = new PostsWallView({
                     socket: socket,
@@ -165,12 +184,14 @@ define([
                 });
             });
 
+            // all auth
             this.on("route:postsByCategory", function (category) {
                 this.view = new PostsWallView({
                     socket: socket,
                     category: category
                 });
             });
+
 
             this.on("route:marksOfGroupForTeacher", function () {
                 this.view = new MarksMainView();
