@@ -10,6 +10,6 @@ module.exports = (function () {
     if (!mongoose.Schemas) {
         mongoose.Schemas = {};
     }
-    mongoose.Schemas.Category = categorySchema;
 
+    mongoose.Schemas.Category = categorySchema;
 })();

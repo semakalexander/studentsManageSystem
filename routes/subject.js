@@ -1,22 +1,22 @@
 var express = require('express');
 var router = express.Router();
 var Handler = require('../handlers/subject');
-var Session = require('../handlers/session');
+var SessionHandler = require('../handlers/session');
 
 module.exports = function (models) {
     var handler = new Handler(models);
-    var session = new Session();
+    var sessionHandler = new SessionHandler();
 
-    router.get('/getSubjectsByTeacher', session.isAuthenticatedTeacher, handler.getSubjectsByTeacher);
-    router.get('/', session.isAuthenticatedStudent, handler.getAllSubjects);
+    router.get('/', sessionHandler.isAuthenticatedStudent, handler.getAllSubjects);
+    router.get('/getSubjectsByTeacher', sessionHandler.isAuthenticatedTeacher, handler.getSubjectsByTeacher);
 
-    router.post('/subscribeTeacherOnSubject', session.isAuthenticatedAdmin, handler.subscribeTeacherOnSubject);
-    router.post('/unsubscribeTeacherOnSubject', session.isAuthenticatedAdmin, handler.unsubscribeTeacherOnSubject);
-    router.post('/', session.isAuthenticatedAdmin, handler.createSubject);
+    router.post('/', sessionHandler.isAuthenticatedAdmin, handler.createSubject);
 
-    router.patch('/:id', session.isAuthenticatedAdmin, handler.editSubjectById);
+    router.patch('/subscribeTeacherOnSubject', sessionHandler.isAuthenticatedAdmin, handler.subscribeTeacherOnSubject);
+    router.patch('/unsubscribeTeacherOnSubject', sessionHandler.isAuthenticatedAdmin, handler.unsubscribeTeacherOnSubject);
+    router.patch('/:id', sessionHandler.isAuthenticatedAdmin, handler.editSubjectById);
 
-    router.delete('/:id', session.isAuthenticatedAdmin, handler.deleteSubjectById);
+    router.delete('/:id', sessionHandler.isAuthenticatedAdmin, handler.deleteSubjectById);
 
     return router;
 };

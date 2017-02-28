@@ -13,6 +13,6 @@ module.exports = (function () {
     if (!mongoose.Schemas) {
         mongoose.Schemas = {};
     }
-    mongoose.Schemas.TeacherGroup = teacherGroupSchema;
 
+    mongoose.Schemas.TeacherGroup = teacherGroupSchema;
 })();

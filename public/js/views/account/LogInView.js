@@ -3,8 +3,9 @@ define([
     'underscore',
     'backbone',
     'text!templates/account/logIn.html',
-    'text!templates/helpers/alert.html'
-], function ($, _, Backbone, LogInTemplate, AlertTemplate) {
+    'text!templates/helpers/alert.html',
+    'text!templates/helpers/navbar.html'
+], function ($, _, Backbone, LogInTemplate, AlertTemplate, NavbarTemplate) {
     var LogInView = Backbone.View.extend({
         el: "#container",
         template: _.template(LogInTemplate),
@@ -40,6 +41,9 @@ define([
                     rememberMe: rememberMe
                 },
                 success: function (xhr) {
+                    var navbarTemplate = _.template(NavbarTemplate);
+                    var $navbarMenu = $('#navbarMenu');
+                    $navbarMenu.html(navbarTemplate({role: xhr.role}));
                     if (xhr.role == 'teacher') {
                         return Backbone.history.navigate('#profiles/teacher', {trigger: true});
                     }
@@ -86,7 +90,7 @@ define([
 
             $.ajax({
                 url: "account/confirmWithEmailSubmit",
-                method: "GET",
+                method: "POST",
                 data: {
                     email: email,
                     type:'reset password'

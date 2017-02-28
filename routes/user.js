@@ -1,27 +1,27 @@
 var express = require('express');
 var router = express.Router();
 var Handler = require('../handlers/user.js');
-var Session = require('../handlers/session.js');
+var SessionHandler = require('../handlers/session.js');
 var multipart = require('connect-multiparty');
 
 module.exports = function (models) {
     var handler = new Handler(models);
     var multipartMiddleware = new multipart();
-    var session = new Session();
+    var sessionHandler = new SessionHandler();
 
-    router.get('/', session.isAuthenticatedStudent, handler.getAllUsers);
-    router.get('/:id', session.isAuthenticatedStudent, handler.getUser);
-    router.get('/marks', session.isAuthenticatedStudent, handler.getMarks);
-    router.get('/byCourse', session.isAuthenticatedStudent, handler.getUsersByCourse);
+    router.get('/', sessionHandler.isAuthenticatedStudent, handler.getAllUsers);
+    router.get('/:id', sessionHandler.isAuthenticatedStudent, handler.getUser);
+    router.get('/marks', sessionHandler.isAuthenticatedStudent, handler.getMarks);
+    router.get('/byCourse', sessionHandler.isAuthenticatedStudent, handler.getUsersByCourse);
 
     router.post('/', handler.createUser);
-    router.post('/uploadProfilePhoto', session.isAuthenticatedStudent, multipartMiddleware, handler.uploadProfilePhoto);
+    router.post('/uploadProfilePhoto', sessionHandler.isAuthenticatedStudent, multipartMiddleware, handler.uploadProfilePhoto);
 
-    router.patch('/subscribeOnTeacher', session.isAuthenticatedStudent, handler.subscribeOnTeacher);
-    router.patch('/resetNotificationsCount/:id', session.isAuthenticatedStudent, handler.resetNewNotificationsCount);
-    router.patch('/:id', session.isAuthenticatedAdmin, handler.editUserById);
+    router.patch('/subscribeOnTeacher', sessionHandler.isAuthenticatedStudent, handler.subscribeOnTeacher);
+    router.patch('/resetNotificationsCount/:id', sessionHandler.isAuthenticatedStudent, handler.resetNewNotificationsCount);
+    router.patch('/:id', sessionHandler.isAuthenticatedAdmin, handler.editUserById);
 
-    router.delete('/:id', session.isAuthenticatedAdmin, handler.deleteUserById);
+    router.delete('/:id', sessionHandler.isAuthenticatedAdmin, handler.deleteUserById);
 
     return router;
 };

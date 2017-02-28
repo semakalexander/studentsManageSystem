@@ -9,7 +9,7 @@ var Module = function () {
         else {
             var err = new Error("Access denied");
             err.status = 401;
-            next(err);
+            res.status(401).send({error: err.msg + '\n' + err.stack});
         }
     };
 

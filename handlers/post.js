@@ -32,6 +32,7 @@ var Module = function (app, models) {
             });
     };
 
+
     this.createPost = function (req, res, next) {
         var body = req.body;
         var title = body.title;
@@ -39,7 +40,7 @@ var Module = function (app, models) {
         var content = body.content;
 
         var err;
-        if (!title.length || !categories || !content) {
+        if (!title.length || !content.length) {
             err = new Error('Error fields');
             err.status = 400;
             return next(err);
@@ -88,30 +89,6 @@ var Module = function (app, models) {
         });
     };
 
-    // this.editPostById = function (req, res, next) {
-    //     var id = req.params.id;
-    //     var body = req.body;
-    //     postModel
-    //         .findOneAndUpdate({_id: id}, {$set: body}, {new: true})
-    //         .exec(function (err, post) {
-    //             if (err) {
-    //                 return next(err);
-    //             }
-    //             res.status(200).send(post);
-    //         });
-    // };
-
-    this.deletePostById = function (req, res, next) {
-        postModel
-            .remove({_id: req.params.id})
-            .exec(function (err, resp) {
-                if (err) {
-                    return next(err);
-                }
-                res.status(200).send(resp);
-            });
-    };
-
     this.writeComment = function (req, res, next) {
         var body = req.body;
         var postId = body.postId;
@@ -144,6 +121,18 @@ var Module = function (app, models) {
                     });
                 });
         });
+    };
+
+
+    this.deletePostById = function (req, res, next) {
+        postModel
+            .remove({_id: req.params.id})
+            .exec(function (err, resp) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send(resp);
+            });
     };
 };
 

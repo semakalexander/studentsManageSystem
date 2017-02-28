@@ -1,14 +1,11 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 
-var userSchema = mongoose.Schemas.User;
-var Mailer = require('../helpers/mailer');
-var mailer = new Mailer();
+var userSchema = mongoose.Schemas.User;;
 var fs = require('fs');
 
 var Module = function (models) {
     var userModel = models.get('user', userSchema);
-
 
     this.getAllUsers = function (req, res, next) {
         userModel.find({}, function (err, users) {
@@ -33,15 +30,14 @@ var Module = function (models) {
             })
     };
 
-    this.resetNewNotificationsCount = function (req, res, next) {
-        var id = req.params.id;
-        userModel
-            .update({_id: id}, {$set: {'notifications.newCount': 0}}, function (err) {
-                if (err) {
-                    return next(err);
-                }
-                res.status(200).send();
-            })
+    this.getMarks = function (req, res, next) {
+        var session = req.session;
+        userModel.findOne({_id: session.userId}, function (err, user) {
+            if (err) {
+                return next(err);
+            }
+            res.status(200).send(user.marks);
+        });
     };
 
     this.getUsersByCourse = function (req, res, next) {
@@ -54,15 +50,6 @@ var Module = function (models) {
         })
     };
 
-    this.getMarks = function (req, res, next) {
-        var session = req.session;
-        userModel.findOne({_id: session.userId}, function (err, user) {
-            if (err) {
-                return next(err);
-            }
-            res.status(200).send(user.marks);
-        });
-    };
 
     this.createUser = function (req, res, next) {
         var body = req.body;
@@ -119,29 +106,6 @@ var Module = function (models) {
 
     };
 
-    this.editUserById = function (req, res, next) {
-        var id = req.params.id;
-        var body = req.body;
-        userModel.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).exec(function (err, user) {
-            if (err) {
-                return next(err);
-            }
-
-            res.status(200).send(user);
-        });
-    };
-
-    this.deleteUserById = function (req, res, next) {
-        userModel.remove({_id: req.params.id}).exec(
-            function (err, resp) {
-                if (err) {
-                    next(err);
-                }
-
-                res.status(200).send(resp);
-            }
-        )
-    };
 
     this.subscribeOnTeacher = function (req, res, next) {
         var body = req.body;
@@ -162,6 +126,42 @@ var Module = function (models) {
                         res.status(200).send(user);
                     });
             });
+    };
+
+    this.resetNewNotificationsCount = function (req, res, next) {
+        var id = req.params.id;
+        userModel
+            .update({_id: id}, {$set: {'notifications.newCount': 0}}, function (err) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(200).send();
+            })
+    };
+
+    this.editUserById = function (req, res, next) {
+        var id = req.params.id;
+        var body = req.body;
+        userModel.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).exec(function (err, user) {
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200).send(user);
+        });
+    };
+
+
+    this.deleteUserById = function (req, res, next) {
+        userModel.remove({_id: req.params.id}).exec(
+            function (err, resp) {
+                if (err) {
+                    next(err);
+                }
+
+                res.status(200).send(resp);
+            }
+        )
     };
 
 };

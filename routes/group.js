@@ -1,22 +1,22 @@
 var express = require('express');
 var router = express.Router();
 var Handler = require('../handlers/group');
-var Session = require('../handlers/session');
+var SessionHandler = require('../handlers/session');
 
 module.exports = function (models) {
     var handler = new Handler(models);
-    var session = new Session();
+    var sessionHandler = new SessionHandler();
 
-    router.get('/getGroupsByTeacher', session.isAuthenticatedTeacher, handler.getGroupsByTeacher);
-    router.get('/', session.isAuthenticatedTeacher, handler.getAllGroups);
+    router.get('/', sessionHandler.isAuthenticatedTeacher, handler.getAllGroups);
+    router.get('/getGroupsByTeacher', sessionHandler.isAuthenticatedTeacher, handler.getGroupsByTeacher);
 
-    router.post('/addToGroup', session.isAuthenticatedTeacher, handler.addUserToGroup);
-    router.post('/', session.isAuthenticatedAdmin, handler.createGroup);
+    router.post('/', sessionHandler.isAuthenticatedAdmin, handler.createGroup);
+    router.post('/addToGroup', sessionHandler.isAuthenticatedTeacher, handler.addUserToGroup);
 
-    router.patch('/:id', session.isAuthenticatedAdmin, handler.editGroupById);
+    router.patch('/:id', sessionHandler.isAuthenticatedAdmin, handler.editGroupById);
 
-    router.delete('/:id', session.isAuthenticatedAdmin, handler.deleteGroupById);
-    router.delete('/deleteFromGroup', session.isAuthenticatedTeacher, handler.deleteUserFromGroup);
+    router.delete('/deleteFromGroup', sessionHandler.isAuthenticatedTeacher, handler.deleteUserFromGroup);
+    router.delete('/:id', sessionHandler.isAuthenticatedAdmin, handler.deleteGroupById);
 
     return router;
 };

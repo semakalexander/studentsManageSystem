@@ -10,6 +10,6 @@ module.exports = (function () {
     if (!mongoose.Schemas) {
         mongoose.Schemas = {};
     }
-    mongoose.Schemas.Subject = subjectSchema;
 
+    mongoose.Schemas.Subject = subjectSchema;
 })();

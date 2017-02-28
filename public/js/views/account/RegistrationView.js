@@ -20,20 +20,30 @@ define([
             var $panel = this.$el.find('.panel');
             var $panelBody = $panel.find('.panel-body');
             var email = $panelBody.find('#email')[0].value.trim();
+            if(email === ''){
+                $('.alert').remove(300);
+                $panel.before(self.alertTemplate({
+                    type: 'error',
+                    message: 'Введіть свій email!'
+                }));
+                return;
+            }
             $.ajax({
                 url: "account/confirmWithEmailSubmit",
-                method: "GET",
+                method: "POST",
                 data: {
                     email: email,
                     type: 'confirm email'
                 },
                 success: function () {
+                    $('.alert').remove(300);
                     $panel.before(self.alertTemplate({
                         type: 'success',
                         message: 'Ми вислали листа вам на пошту. Для закінчення реєстрації перейдіть за посиланням у листі.'
                     }));
                 },
                 error: function (xhr) {
+                    $('.alert').remove(300);
                     $panel.before(self.alertTemplate({
                         type: 'error',
                         message: xhr

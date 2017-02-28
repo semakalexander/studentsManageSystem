@@ -1,21 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var Handler = require('../handlers/post');
-var Session = require('../handlers/session');
+var SessionHandler = require('../handlers/session');
 
 module.exports = function(app, models){
     var handler = new Handler(app, models);
-    var session = new Session();
+    var sessionHandler = new SessionHandler();
 
-    router.get('/', session.isAuthenticatedStudent, handler.getAllPosts);
+    router.get('/', sessionHandler.isAuthenticatedStudent, handler.getAllPosts);
     
-    router.post('/', session.isAuthenticatedTeacher, handler.createPost);
+    router.post('/', sessionHandler.isAuthenticatedTeacher, handler.createPost);
+    router.post('/writeComment', sessionHandler.isAuthenticatedStudent, handler.writeComment);
 
-    // router.patch('/:id', session.isAuthenticatedTeacher, handler.editPostById);
-
-    router.delete('/:id', session.isAuthenticatedTeacher, handler.deletePostById);
-
-    router.post('/writeComment', session.isAuthenticatedStudent, handler.writeComment);
+    router.delete('/:id', sessionHandler.isAuthenticatedTeacher, handler.deletePostById);
 
     return router;
 };

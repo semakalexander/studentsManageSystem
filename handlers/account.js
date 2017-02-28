@@ -12,10 +12,24 @@ var Module = function (models) {
 
     var mailer = new Mailer();
 
-    this.logOut = function (req, res, next) {
-        req.session.destroy();
-        res.status(200).send();
+    this.getLoggedUser = function (req, res, next) {
+        var id = req.session.userId;
+        userModel
+            .findById(id)
+            .populate('marks subjects notifications.elements')
+            .exec(function (err, user) {
+                if (err) {
+                    return next(err);
+                }
+                if (user != null) {
+                    res.status(200).send(user);
+                }
+                else {
+                    res.status(200).send();
+                }
+            });
     };
+
 
     this.login = function (req, res, next) {
         var body = req.body;
@@ -66,9 +80,9 @@ var Module = function (models) {
     };
 
     this.confirmWithEmailSubmit = function (req, res, next) {
-        var query = req.query;
-        var email = query.email;
-        var type = query.type;
+        var body = req.body;
+        var email = body.email;
+        var type = body.type;
         var key = Math.random().toString(36).substr(2, 36);
 
         var confirmKey = new confirmKeyModel({
@@ -95,6 +109,29 @@ var Module = function (models) {
     };
 
 
+    this.changePassword = function (req, res, next) {
+        var id = req.params.id;
+        var password = req.body.password;
+        var shaSum = crypto.createHash('sha256');
+        shaSum.update(password);
+
+        userModel
+            .findOneAndUpdate({_id: id}, {$set: {password: shaSum.digest('hex')}})
+            .exec(function (err, user) {
+                if (err) {
+                    return next(err);
+                }
+
+                res.status(200).send(user);
+            });
+    };
+
+
+    this.logOut = function (req, res, next) {
+        req.session.destroy();
+        res.status(200).send();
+    };
+
     this.confirmWithEmailAnswer = function (req, res, next) {
         var body = req.body;
         var id = body.id;
@@ -113,42 +150,6 @@ var Module = function (models) {
                 res.status(200).send(result);
             });
     };
-
-    this.getLoggedUser = function (req, res, next) {
-        var id = req.session.userId;
-        userModel
-            .findById(id)
-            .populate('marks subjects notifications.elements')
-            .exec(function (err, user) {
-                if (err) {
-                    return next(err);
-                }
-                if (user != null) {
-                    res.status(200).send(user);
-                }
-                else {
-                    res.status(200).send();
-                }
-            });
-    };
-
-    this.changePassword = function (req, res, next) {
-        var id = req.params.id;
-        var password = req.body.password;
-        var shaSum = crypto.createHash('sha256');
-        shaSum.update(password);
-
-        userModel
-            .findOneAndUpdate({_id: id}, {$set: {password: shaSum.digest('hex')}})
-            .exec(function (err, user) {
-                if (err) {
-                    return next(err);
-                }
-
-                res.status(200).send(user);
-            });
-    };
-
 };
 
 module.exports = Module;

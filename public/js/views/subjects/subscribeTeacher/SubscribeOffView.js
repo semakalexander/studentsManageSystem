@@ -25,7 +25,7 @@ define([
             var subjectId = $tr.data('id');
             $.ajax({
                 url: "/subjects/subscribeTeacherOnSubject/",
-                method: "POST",
+                method: "PATCH",
                 data: {
                     teacherId: teacherId,
                     subjectId: subjectId

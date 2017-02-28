@@ -2,23 +2,24 @@ var express = require('express');
 var router = express.Router();
 var Handler = require('../handlers/account.js');
 var UserHandler = require('../handlers/user');
-var Session = require('../handlers/session.js');
+var SessionHandler = require('../handlers/session.js');
 
 module.exports = function (models) {
     var handler = new Handler(models);
     var userHandler = new UserHandler(models);
-    var session = new Session();
+    var sessionHandler = new SessionHandler();
 
-    router.get('/getLoggedUser', session.isAuthenticatedStudent, handler.getLoggedUser);
-    router.get('/confirmWithEmailSubmit', handler.confirmWithEmailSubmit);
-    router.delete('/confirmWithEmailAnswer', handler.confirmWithEmailAnswer);
+    router.get('/getLoggedUser', sessionHandler.isAuthenticatedStudent, handler.getLoggedUser);
 
     router.post('/logIn', handler.login);
     router.post('/registration', userHandler.createUser);
+    router.post('/confirmWithEmailSubmit', handler.confirmWithEmailSubmit);
 
     router.patch('/changePassword/:id', handler.changePassword);
 
-    router.delete('/logOut', session.isAuthenticatedStudent, handler.logOut);
+    router.delete('/logOut', sessionHandler.isAuthenticatedStudent, handler.logOut);
+    router.delete('/confirmWithEmailAnswer', handler.confirmWithEmailAnswer);
+
 
     return router;
 };

@@ -1,0 +1,19 @@
+<ul class="nav navbar-nav">
+    <% if(role == 'admin'){ %>
+        <li><a href="#subjects/crud">subjects/crud</a></li>
+        <li><a href="#users/crud">users/crud</a></li>
+        <li><a href="#groups/crud">groups/crud</a></li>
+        <li><a href="#categories/crud">categories/crud</a></li>
+    <% } %>
+    <% if(role == 'teacher'){ %>
+        <li><a href="#groups/">Groups/</a></li>
+        <li><a href="#profiles/teacher">Profile</a></li>
+    <% } %>
+    <% if(!role){ %>
+        <li><a href="#account/logIn">Log In</a></li>
+        <li><a href="#account/registration">Registration</a></li>
+    <% } else { %>
+        <li><a href="#account/notifications">Notifications <span id="notifications-count" class="badge"></span></a></li>
+        <li><a href="#account/logOut">Log Out</a></li>
+    <% } %>
+</ul>

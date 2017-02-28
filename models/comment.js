@@ -6,16 +6,14 @@ module.exports = (function () {
         content: {type: String, required: true},
         author: {type: ObjectId, ref: 'user', required: true},
         dateOfCreation: {type: Date, required: true}
-        //postid
     });
-
 
     mongoose.model('comment', commentSchema);
 
     if (!mongoose.Schemas) {
         mongoose.Schemas = {};
     }
-    mongoose.Schemas.Comment = commentSchema;
 
+    mongoose.Schemas.Comment = commentSchema;
 })();
 

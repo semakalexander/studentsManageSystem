@@ -13,6 +13,6 @@ module.exports = (function () {
     if (!mongoose.Schemas) {
         mongoose.Schemas = {};
     }
-    mongoose.Schemas.TeacherSubject = teacherSubjectSchema;
 
+    mongoose.Schemas.TeacherSubject = teacherSubjectSchema;
 })();
