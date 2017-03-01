@@ -17,11 +17,10 @@ define([
         },
         initialize: function (options) {
             var self = this;
-            this.socket = options.socket;
             this.posts = [];
-            if (options.category || options.author) {
-                this.collection.fetch({
-                    success: function () {
+            this.collection.fetch({
+                success: function () {
+                    if (options) {
                         if (options.category) {
                             self.collection = self.collection.sort();
                             self.posts = self.collection.filterByCategory(options.category)
@@ -30,10 +29,12 @@ define([
                             self.author = options.author;
                             self.posts = self.collection.filterByAuthor(options.author).sort().toJSON();
                         }
-                        self.render();
+                    } else {
+                        self.posts = self.collection.toJSON();
                     }
-                });
-            }
+                    self.render();
+                }
+            });
         },
         onBtnAddComment: function (e) {
             var $btn = $(e.target);
@@ -75,9 +76,6 @@ define([
                     console.log(xhr)
                 }
             });
-            // this.socket.emit('subscribeOnAuthor',{
-            //     author:author
-            // });
         },
         render: function () {
             this.$el.html(this.template({

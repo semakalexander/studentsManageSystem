@@ -97,7 +97,7 @@ define([
             var posts = [];
             if (this.postCollection.size()) {
                 posts = _.filter(this.postCollection.toJSON(), function (post) {
-                    return post.author._id == self.model._id;
+                    return post.author && post.author._id == self.model._id
                 });
             }
 
@@ -130,7 +130,7 @@ define([
 
             this.listenTo(this.addPostView, 'addedNewPost', function (data) {
                 var post = data.post;
-                self.postCollection.set(post, {remove:false});
+                self.postCollection.set(post, {remove: false});
                 self.$('.modal-background div').hide();
                 self.$('.modal-background').hide();
                 var template = _.template(onePostTemplate);

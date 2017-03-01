@@ -9,7 +9,7 @@ module.exports = function(app, models){
 
     router.get('/', sessionHandler.isAuthenticatedStudent, handler.getAllPosts);
     
-    router.post('/', sessionHandler.isAuthenticatedTeacher, handler.createPost);
+    router.post('/', sessionHandler.isAuthenticatedStudent, handler.createPost);
     router.post('/writeComment', sessionHandler.isAuthenticatedStudent, handler.writeComment);
 
     router.delete('/:id', sessionHandler.isAuthenticatedTeacher, handler.deletePostById);

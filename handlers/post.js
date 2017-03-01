@@ -77,7 +77,7 @@ var Module = function (app, models) {
                             if (err) {
                                 return next(err);
                             }
-                            post.populate('categories', function (err) {
+                            post.populate('author categories', function (err) {
                                 if (err) {
                                     return next(err);
                                 }
@@ -85,7 +85,6 @@ var Module = function (app, models) {
                             });
                         });
             });
-
         });
     };
 

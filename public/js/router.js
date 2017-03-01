@@ -43,6 +43,7 @@ define([
                 "categories/crud": "categoriesCrud",
                 "profiles/teacher": "teacherProfile",
                 "profiles/:author": "postsByAuthor",
+                "posts/":"posts",
                 "posts/:category": "postsByCategory",
                 "marks/": "marksOfGroupForTeacher"
             },
@@ -84,6 +85,12 @@ define([
                         },
                         error: function (xhr) {
                             if (xhr.status == 401) {
+                                var fragments = Backbone.history.getFragment().split('/');
+                                if (fragments.length && fragments.length) {
+                                    if (fragments[0] == 'account') {
+                                        return;
+                                    }
+                                }
                                 return Backbone.history.navigate('#account/logIn', {trigger: true});
                             }
                         }
@@ -175,6 +182,10 @@ define([
                         socket: socket,
                         author: author
                     });
+                });
+
+                this.on("route:posts", function () {
+                   this.view = new PostsWallView();
                 });
 
                 this.on("route:postsByCategory", function (category) {
